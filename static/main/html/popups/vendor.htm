@@ -1,0 +1,37 @@
+<div class="vendor-wrap fade_3d_wrap transition-slow">
+  <div class="vendor-win" ng-style="styleWin" style="width: 780px;opacity: 0;">
+    <div class="popup-normal-title">
+      <h1>{{ modalTitle }}</h1>
+      <a class="popup-normal-close" href="javascript:void(0);" ng-click="close()"></a>
+    </div>
+    <div class="popup-normal-content">
+      <div class="main-item-content">
+        <h2>品牌名称</h2>
+        <input class="input input-long" type="text" ng-model="data.name" name="data.name" you-validation="required" maxlength="50" placeholder="请输入品牌名称">
+        <h2>品牌描述 <span class="theme-seo-tip">(选填)-还可输入{{60 - HTMLENCODE(data.sub_name).length}}个字</span></h2>
+        <input class="input input-long" type="text" ng-model="data.sub_name" you-validation="maxlength(60)" you-validation-encodehtml="true" maxlength="60" placeholder="请输入品牌描述" />
+        <h2>品牌图片 <span class="theme-seo-tip">(选填)-尺寸 200*200 以上，未指定时，使用默认图片</span></h2>
+        <div class="rect-uploadimg">
+          <div class="rect-uploadimg-noimg" ng-hide="imageUrl">
+            <input type="file" accept="image/gif, image/jpeg, image/jpg, image/png, image/webp" class="rect-uploadimg-noimg-file" ng-disabled="isSeoImgUploadin" onchange="angular.element(this).scope().onImgUpload(this);" /> <span class="pro-edit-noimages-add bg "></span> </div>
+          <div class="rect-uploadimg-img " ng-show="imageUrl "> <img src="{{imageUrl}} " alt="{{data.name}} ">
+            <div class="rect-uploadimg-img-hover transition-quick ">
+              <a class="rect-uploadimg-img-hover-del " href="javascript:void(0); " ng-click="onImgRemove() " title="删除 "> <span class="pro-ico-delete "></span> </a>
+            </div>
+          </div>
+        </div>
+        <h2>品牌介绍 <span class="theme-seo-tip">(选填)</span></h2>
+        <textarea class="input input-long" ng-model="data.introduce" you-validation="maxlengthSpecial(10000)" you-validation-encodehtml="true" style="height: 192px;" placeholder="请输入品牌介绍" ng-mousemove="inputFocus(this, $event)" ng-mouseleave="inputBlur(this);"></textarea>
+      </div>
+      <br>
+      <br>
+      <br> </div>
+    <div class="popup-normal-ctrl">
+      <div ng-show="!isSaving">
+        <you-btn text="取消" ng-click="close()"></you-btn>
+        <you-btn type="primary" text="保存" ng-click="save()"></you-btn>
+      </div>
+      <you-btn type="loading" ng-show="isSaving"></you-btn>
+    </div>
+  </div>
+</div>

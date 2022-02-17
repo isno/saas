@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
+  <%block name="head"></%block>
+    <meta name="keywords" content="私域营销,公众号运营,微信小程序开发,品牌电商服务,微信营销,电商ERP,微商城,o2o电子券系统,全渠道电子储值卡,社交礼品卡">
+    <meta name="description" content="爱优店,值得信赖的私域营销专家。基于SaaS模式,向商家提供强大的移动电商解决方案,用科技创意,赋能商家深度o2o营销能力。">
+<link rel="stylesheet" href="${static_url("lib/bootstrap-icons.css")}">
+  <link rel="stylesheet" href="${static_url("lib/bootstrap.min.css")}" >
+  <link href="${static_url("www/base.css")}" rel="stylesheet">
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<style>
+  html,body {
+        background-color:#f8f9fa;
+      }
+  </style>
+<body>
+ <nav class="navbar navbar-expand-lg  navbar-light shadow-sm" style="background: #fff;">
+  <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="/static/logo.png" style="height: 38px">
+        <a href="/wo/"><h5 class="text-secondary" style="display: inline-block;">商家后台管理</h5></a>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="菜单">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+      <div class="collapse navbar-collapse" id="menu">
+
+    <ul class="navbar-nav ml-md-auto">
+        <li class="nav-item">
+            <a class="nav-link"  href="/wo/">hi ${current_user.name | h},</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/wo/">我的品牌</a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link" href="/auth/logout"><i class="bi bi-box-arrow-right"></i> 退出</a>
+        </li>
+    </ul>
+  </div>
+  </div>
+</nav>
+   
+<%block name="main"></%block>
+
+<footer class="mt-5 text-center">
+  <div class="container">
+    <p class="text-black-50">&copy; 2021 iyoudian.cn All rights reserved.</p>
+  </div>
+</footer>
+<script src="${static_url("lib/jquery.min.js")}" crossorigin="anonymous"></script>
+<script src="${static_url("lib/bootstrap.bundle.min.js")}" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+<script src="${static_url("lib/bootstrapValidator.min.js")}"></script>
+<%block name="foot"></%block>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?100d0c848df96ba7e32a259f4f98a5c7";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+
+</html>

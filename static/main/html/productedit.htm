@@ -1,0 +1,298 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+        <span class="main-menu-ico"><you-ico type="product"></you-ico></span>{{ titleAction }}商品</h1>
+    <you-btn text="返回" ng-click="onClickBaseBack()"></you-btn>
+    <div class="btn-group">
+        <you-btn type="phone" ng-click="onClickBaseViewQrcode($event)" ng-disabled="!baseAvailable || isBaseLoading"></you-btn>
+    </div>
+    <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" ng-show="!isBaseSaving" ng-disabled="isBaseLoading"></you-btn>
+    <you-btn type="loading" ng-show="isBaseSaving"></you-btn>
+    <span class="main-menu-desc" title="{{ baseName }}">{{ baseName }}</span>
+    <div class="main-menu-right">
+        <you-appentry type="product_detail"></you-appentry>
+        <you-btn type="default" text="复制商品" ng-click="onClickBaseDuplicate()" ng-disabled="!baseAvailable || isBaseLoading"></you-btn>
+        <you-btn type="danger" text="删除" ng-click="onClickBaseDelete()" ng-disabled="!baseAvailable || isBaseLoading"></you-btn>
+    </div>
+</div>
+
+<div you-mainbody you-fadein>
+    <div class="transition-opacity transition-opacity-fast" ng-style="showGrid">
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content">
+                <h2>商品类型</h2>
+                <div class="page-visibility">
+                    <label class="label-block" ng-class="baseVisibility == 'true' ? 'checked':''">
+                        <input you-check type="radio" ng-model="baseVisibility" value="true"/>
+                        <div class="label-block-content">实物</div>
+                    </label>
+                    <label class="label-block" ng-class="baseVisibility == 'false' ? 'checked':''" style="width:190px;">
+                        <input you-check type="radio" ng-model="baseVisibility" value="false"/>
+                        <div class="label-block-content">虚拟物品<span style="font-size:12px;" class="text-muted">无需物流</span></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content">
+                <h2>商品名</h2>
+                <input class="input input-long" type="text" ng-model="baseName" placeholder="请输入商品名" you-validation="required|maxlength(100)" you-validation-encodehtml="true"/>
+
+                <h2>商品简介<span style="position: relative; left: 3px; top: 3px;" you-help>简述商品卖点等吸引顾客的信息</span> <span ng-if="200 - PARSEHTML(shortDesc).length >= 0" class="theme-seo-tip">还可输入{{200 - PARSEHTML(shortDesc).length}}个字</span> <span ng-if="200 - PARSEHTML(shortDesc).length < 0" class="text-danger" style="margin-left:8px;display:inline-block;">已经超出{{PARSEHTML(shortDesc).length - 200 }}个字</span></h2>
+                <textarea id="pro_shortdesc" rows="1" class="input input-long transition-quick" ng-model="shortDesc" placeholder="请输入商品简介" you-validation ng-style="shortDescStyle"></textarea>
+
+              
+
+                <div class="clearfix item-layout">
+                    <div class="item-layout-50">
+                        <h2>分类 <span style="position: relative; left: 3px; top: 3px;" you-help>如男装、上衣、衬衫</span> <span class="theme-seo-tip">最多可设置10个</span></h2>
+                        <you-tagselector data="dataTypeSeletor"></you-tagselector>
+                    </div>
+                    <div class="item-layout-50">
+                        <h2>品牌</h2>
+                        <you-tagselector data="dataVendorSeletor"></you-tagselector>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content" style="position:relative;">
+                <h2>橱窗图片<span style="position: relative; left: 3px; top: 3px;" you-help>可拖动图片更改排序</span></h2>
+                <div class="pro-edit-images">
+                    <div class="pro-edit-uploadImg">
+                        <div class="pro-edit-noimages"  style="height:160px;">
+                            <input type="file" accept="image/gif, image/jpeg, image/jpg, image/png, image/webp" class="pro-edit-noimages-file" onchange="angular.element(this).scope().onImgUpload(this);" />
+                            <span class="pro-edit-noimages-add bg"></span>
+                            <span class="pro-edit-noimages-tips" ng-show="bIslimit">建议不超过2M</span>
+                        </div>
+                    </div>
+                    <div style="position: relative;" ng-show="getProDone">
+                        <div class="text-nodata" style="margin-left: 170px;" ng-show="!proimages || proimages.length == 0"><i class="ico ico-nodata-arrow"></i>给商品添加橱窗图片，拖动可改变图片排序。</div>
+                    </div>
+                    <div class="pro-edit-images-each transition {{ i.is_cover ? 'pro-edit-images-each-hascover' : '' }}" ng-repeat="i in proimages" ng-mousedown="fDrag($event)" data-sort="{{ $index }}" data-imgid="{{ i.id }}" ng-style="i.fadestyle">
+                        <img ng-src="{{ i.url }}" alt="{{ i.alt }}" you-webp-fallback/>
+                        <div ng-show="{{ i.is_cover }}" class="pro-edit-images-each-cover"></div>
+                        <div class="pro-edit-images-each-ctrl transition-quick" ng-mousedown="fStopProp($event)">
+                            <a class="pro-edit-images-each-setCover" href="javascript:void(0);" ng-click="fSetCover($index)">
+                                <span class="pro-ico-cover"></span>
+                                设为封面
+                            </a>
+                            <a class="pro-edit-images-each-setTitle" title="{{ i.altshow }}"  ng-hide="i.editing" href="javascript:void(0);" ng-click="fAltIpt($index)">
+                                <span class="pro-ico-title"></span>
+                                {{ i.altshow }}
+                            </a>
+                            <a class="pro-edit-images-each-del" href="javascript:void(0);" ng-click="fConfirmDel($index)" title="删除">
+                                <span class="pro-ico-delete"></span>
+                            </a>
+                            <input class="pro-edit-images-each-ipt" onmouseover="this.focus();" ng-keyup="fSaveAltByKeyup($event, $index)" ng-mouseleave="fSaveAlt($index)" type="text" ng-model="i.alt" ng-show="i.editing" />
+                        </div>
+                        <you-cover></you-cover>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix main-item-nointro" style="padding-top:4px">
+            <div class="main-item-content" style="position:relative;">
+                <div class="pro-edit-sold-quantity">
+                    <span>实际销量：<strong ng-bind="sold_quantity"></strong></span>
+                    &nbsp;&nbsp;<span style="color:#aaa">|</span>&nbsp;&nbsp;
+                    <span>显示销量：<strong style="margin-right:10px;" ng-bind="sold_quantity_display" ng-hide="sold_display_edit"></strong><a ng-hide="sold_display_edit" class="text-link" href="javascript:void(0);" ng-click="fDisplaySale();">修改</a><span ng-show="sold_display_edit"><input class="input input-sold-display" ng-model="sold_display_edit_num" you-validation="required|integer|maxNumber" /> <you-btn type="primary" text="确定" ng-click="submitSold();"></you-btn> <you-btn type="default" text="取消" ng-click="fCancelSold();"></you-btn></span></span>
+                </div>
+                <table border="0" cellpadding="0" cellspacing="0" class="pro-edit-variant">
+                    <thead>
+                        <tr>
+                            <td class="pro-edit-variant-add">
+                                <div class="pro-edit-optionselector-layout">
+                                    <div ng-show="canSelectOptions()">
+                                        <you-tagselector data="dataOptionSeletor"></you-tagselector>
+                                    </div>
+                                    <i class="ico ico-add1" ng-hide="canSelectOptions()" class="disabled" style="position:relative; left: 4px;"></i>
+                                    <div class="tips-help-content tips-help-arrow-product-atr" >
+                                    <span class="b64-you-help tips-help-arrow arrow"></span>新增商品属性，最多添加3个</div>
+                                </div>
+                            </td>
+                            <td ng-repeat="i in data.options" ng-show="i.name != null">
+                                {{ i.name }}
+                                <a style="text-decoration: none;" href="javascript:void(0);" ng-click="deleteOption($index, $event)" title="删除商品属性">
+                                    <i class="ico ico-delete"></i>
+                                </a>
+                                <span style="position: relative; left: -10px;"><input style="display:none; " type="text" name="delete-option_{{$index}}" you-validation></span>
+                            </td>
+                            <td>售价</td>
+                            <td>库存</td>
+                            <td>积分</td>
+                            <td class="pro-edit-variant-ctrl" style="width: 80px;">关联图片</td>
+                            <td class="pro-edit-variant-ctrl" style="width:130px;">操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="i in data.variants">
+                            <td class="pro-edit-variant-add">&nbsp;</td>
+                            <td class="pro-edit-variant-editable" ng-click="editPrice(i, $index, 'option_1')" ng-show="data.options[0].name != null">
+                                <div class="pro-edit-variant-item" ng-hide="i.isEditing_option_1" style="color:#c1873c;">{{ i.option_1 }}</div>
+                                <input class="input" type="text" ng-show="i.isEditing_option_1" name="price_option_1_{{$index}}"
+                                       ng-blur="editPriceDone(i, $index, 'option_1')" ng-keydown="editPriceKeyPress(i, $index, 'option_1', $event)"
+                                       ng-model="i.option_1" you-validation maxlength="200" />
+                            </td>
+                            <td class="pro-edit-variant-editable" ng-click="editPrice(i, $index, 'option_2')" ng-show="data.options[1].name != null">
+                                <div class="pro-edit-variant-item" ng-hide="i.isEditing_option_2" style="color:#75a630;">{{ i.option_2 }}</div>
+                                <input class="input" type="text" ng-show="i.isEditing_option_2" name="price_option_2_{{$index}}"
+                                       ng-blur="editPriceDone(i, $index, 'option_2')" ng-keydown="editPriceKeyPress(i, $index, 'option_2', $event)"
+                                       ng-model="i.option_2" you-validation maxlength="200" />
+                            </td>
+                            <td class="pro-edit-variant-editable" ng-click="editPrice(i, $index, 'option_3')" ng-show="data.options[2].name != null">
+                                <div class="pro-edit-variant-item" ng-hide="i.isEditing_option_3" style="color:#4c67a5;">{{ i.option_3 }}</div>
+                                <input class="input" type="text" ng-show="i.isEditing_option_3" name="price_option_3_{{$index}}"
+                                       ng-blur="editPriceDone(i, $index, 'option_3')" ng-keydown="editPriceKeyPress(i, $index, 'option_3', $event)"
+                                       ng-model="i.option_3" you-validation maxlength="200" />
+                            </td>
+                            <td class="pro-edit-variant-editable" ng-click="editPrice(i, $index, 'price')">
+                                <div class="pro-edit-variant-item" ng-hide="i.isEditing_price" >{{YouPreset.$()}}<span style="font-weight:bold;">{{ i.price }}</span></div>
+                                <input class="input" type="text" ng-show="i.isEditing_price" name="price_price_{{$index}}"
+                                       ng-blur="editPriceDone(i, $index, 'price')" ng-keydown="editPriceKeyPress(i, $index, 'price', $event)"
+                                       ng-model="i.price" you-validation="required|number|float2|maxNumber"/>
+                            </td>
+                            <td class="pro-edit-variant-editable" ng-click="editPrice(i, $index, 'stock')">
+                                <div class="pro-edit-variant-item" ng-hide="i.isEditing_stock" >{{ i.stock }}</div>
+                                <input class="input" type="text" ng-show="i.isEditing_stock" name="price_stock_{{$index}}"
+                                       ng-blur="editPriceDone(i, $index, 'stock')" ng-keydown="editPriceKeyPress(i, $index, 'stock', $event)"
+                                       ng-model="i.stock" you-validation="integer|maxNumber"/>
+                            </td>
+                            <td ng-class="{'pro-edit-variant-editable': data.reward_point_enabled}" ng-click="data.reward_point_enabled && editPrice(i, $index, 'point')">
+                                <div class="pro-edit-variant-item" ng-hide="i.isEditing_point" >{{ data.reward_point_enabled ? i.point : '-' }}</div>
+                                <input class="input" type="text" ng-show="i.isEditing_point" name="price_point_{{$index}}"
+                                       ng-blur="editPriceDone(i, $index, 'point')" ng-keydown="editPriceKeyPress(i, $index, 'point', $event)"
+                                       ng-model="i.point" you-validation="required|integer|maxNumber"/>
+                            </td>
+                            <td class="pro-edit-variant-ctrl">
+                                <i class="ico ico-img-1" ng-hide="i.url4variantSmall"  style="cursor:pointer;" ng-click="editPriceImg(i)" title="关联图片"></i>
+                                <div ng-show="i.url4variantSmall" class="pro-edit-variant-img-small" ng-click="editPriceImg(i)" title="关联图片">
+                                    <img ng-src="{{ i.url4variantSmall }}" alt="{{ i.alt }}" />
+                                    <you-cover></you-cover>
+                                </div>
+                            </td>
+                            <td class="pro-edit-variant-ctrl">
+                                <you-btn type="simple-edit" ng-click="fEditVariant(i, $index)" title="修改"></you-btn>
+                                <you-btn type="simple-copy" ng-click="copyPrice(i);" ng-disabled="data.options[0].name == null" title="复制"></you-btn>
+                                <you-btn type="simple-delete" ng-click="fDelVari($index)" title="删除"></you-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-hide="data.variants.length" class="pro-edit-variant-nodata">
+                    <you-btn text="新增价格" type="primary" ng-click="fNewVariant(true);" style="width: 156px; height:60px;"></you-btn>
+                    <div style="position: absolute; top: 59px; left: 76px;"><input type="text" style="display: none;" name="setPrice" you-validation></div>
+                    <div class="text-nodata" style="margin-left: 162px;"><i class="ico ico-nodata-arrow"></i>请为该商品设置 SKU。</div>
+                </div>
+                <div ng-show="data.variants.length">
+                    <div class="pro-edit-variant-add-btn">
+                        <you-btn text="新增价格(SKU)" type="primary"  style="margin-top:14px;" ng-click="fNewVariant()" ng-mouseenter="toggleVariantAddBtnTip(true)" ng-mouseleave="toggleVariantAddBtnTip(false)"></you-btn>
+                        <div class="tips-help-content" ng-show="showVariantAddBtnTip"><span class="b64-you-help tips-help-arrow arrow"></span>需设置更多的商品属性，才可新<br>增更多的 SKU</div>
+                    </div>
+                    <you-btn text="商品属性排序" ng-disabled="cantSortOptions()" ng-click="sortOptions()" style="margin-top:14px;"></you-btn>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content">
+                <h2 class="main-item-content-h2span">商品详情</h2>
+                <div class="pro-editor {{ editCommon ? '' : 'pro-editor-mobile' }}">
+                    <a class="pro-editor-btn pro-editor-btn-common {{ editCommon ? 'pro-editor-btn-active' : '' }}" href="javascript:void(0);" ng-click="switchEditor();">
+                        <i class="ico ico-editmobile" class="active"></i>
+                        移动端
+                    </a>
+                  
+                    <span class="text-muted pro-editor-tips">
+                        样式与主题相关，请查看店铺确定实际效果
+                    </span>
+                    <div class="pro-editor-cnt" ng-show="editCommon">
+                    <textarea ui-tinymce="tinymceOptions" ng-model="baseDesc"></textarea></div>
+                    <div class="pro-editor-cnt" ng-hide="editCommon">
+                    <textarea ui-tinymce="tinymceOptionsMobile" ng-model="mobileDesc"></textarea></div>
+                    <div class="pro-editor-ctrl-tips" style="box-sizing: content-box;">
+                        <div class="text-muted">按 Enter 键创建新段落，按 Shift + Enter 键换行</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content" style="position:relative;">
+                <h2>运费模板 <a href="{{YouPreset.DOCS_HELP_SHIPMENT}}" target="_blank" title="点击查看帮助"><span class="b64-you-help you-help-ico you-help-position" ></span></a></h2>
+                <div style="position: relative; min-height: 38px;">
+                    <div style="position: absolute; left: 0; top: 0;max-width:500px;"><you-tagselector data="dataShipmentSeletor"></you-tagselector></div>
+                    <div class="text-nodata" style="margin-left: 132px;" ng-show="!shipment_templates || shipment_templates.length == 0"><i class="ico ico-nodata-arrow"></i>需要给商品添加一个运费模板。</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content">
+                <h2>商品状态</h2>
+                <div class="page-visibility">
+                    <label class="label-block" ng-class="baseVisibility == 'true' ? 'checked':''">
+                        <input you-check type="radio" ng-model="baseVisibility" value="true"/>
+                        <div class="label-block-content">上架</div>
+                    </label>
+                    <label class="label-block" ng-class="baseVisibility == 'false' ? 'checked':''" style="width:190px;">
+                        <input you-check type="radio" ng-model="baseVisibility" value="false"/>
+                        <div class="label-block-content">下架<span style="font-size:12px;" class="text-muted">（仅管理员可见）</span></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content" style="position:relative;">
+                <div class="main-item-sublink" style="margin:0;">
+                    <a href="javascript:void(0);" ng-click="clickMetaFieldStatus()">附加信息
+                        <i class="ico ico-expand-arrow" ng-hide="metaFieldStatusArrow"></i>
+                        <i class="ico ico-expand-arrow-down" ng-show="metaFieldStatusArrow"></i>
+                    </a>
+                    <a href="{{ YouPreset.DOCS_METAFIELDS }}" target="_blank" title="点击查看帮助" style="margin-left:5px;"><span class="b64-you-help you-help-ico you-help-position" ></span></a>
+                </div>
+                <div  class="transition-quick product-metafield"  style="padding-top:0px;" ng-style="metaFieldStatusStyle">
+                    <div class="product-metafield-wrap transition-quick" style="width: 790px;position:relative;" ng-show="aProductMetaField.length > 0">
+                        <i class="ico ico-mainitem-arr"></i>
+                        <div class="ng-scope product-metafield" ng-repeat="i in aProductMetaField">
+                            字段
+                            <div class="input-unit">
+                                <div class="input-group">
+                                    <div class="validation">
+                                        <input class="input input-long" type="text" ng-model="i.key" ng-blur="blurOff(i, $index)" you-validation name = "metafield-key"/>
+                                    </div>
+                                </div>
+                            </div>
+                            值
+                            <div class="input-unit metafield-long">
+                                <div class="input-group">
+                                    <div class="validation">
+                                        <input class="input input-long" type="text" ng-model="i.value" ng-blur="blurOff(i, $index)" you-validation name = "metafield-value"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ico ico-delete" type="delete" ng-click="removeOff(i,$index);" ng-show="true"></span>
+                        </div>
+                    </div>
+                    <div class="t-sub" style="margin-top: 20px;">
+                        <button ng-click="onClickNewMetaField()" class="btn btn-default">新增</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="clearfix item-bottom">
+            <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" ng-show="!isBaseSaving"></you-btn>
+            <you-btn type="loading" ng-show="isBaseSaving"></you-btn>
+        </div>
+
+    </div>
+</div>

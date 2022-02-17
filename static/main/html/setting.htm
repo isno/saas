@@ -1,0 +1,226 @@
+<div class="table-bar">
+    <div class="table-bar-each" ng-class="{'table-bar-each-active': tab == currentTab}" ng-repeat="tab in tabData" ng-click="switchTab(tab)">{{ tab.text }}</div>
+</div>
+<div class="main-page">
+<div you-mainbody you-fadein>
+    <div class="transition-opacity transition-opacity-fast" ng-style="showSetting" ng-switch="currentTab.value">
+    <!--base -->
+    <div ng-switch-when="base">
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                    <div class="setting-main">
+                        <h2>品牌名称<span class="theme-seo-tip">如海底捞、苏宁电器、华景国旅</span></h2>
+                        <input class="input input-long" type="text" placeholder="请填写网站名称" ng-model="data.shopName" you-validation="required" maxlength="500" />
+                        <!--<you-s-e-o></you-s-e-o>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                    <h2>品牌Logo<span class="theme-seo-tip">建议尺寸300*300</span></h2>
+                    <div class="rect-uploadimg">
+                        <div class="rect-uploadimg-noimg" ng-hide="data.logoImageUrl">
+                            <input type="file" accept="image/gif, image/jpeg, image/jpg, image/png, image/webp" class="rect-uploadimg-noimg-file" ng-disabled="isSeoImgUploading" onchange="angular.element(this).scope().onLogoImgUpload(this);" />
+                            <span class="pro-edit-noimages-add bg"></span>
+                        </div>
+                        <div class="rect-uploadimg-img" ng-show="data.logoImageUrl">
+                            <img ng-src="{{data.logoImageUrl}}" style="max-width:90px;" alt="{{baseName}}">
+                            <div class="rect-uploadimg-img-hover transition-quick">
+                                <a class="rect-uploadimg-img-hover-del" href="javascript:void(0);" ng-click="onLogoImgRemove()" title="删除">
+                                    <span class="iconfont icon-delete"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>联系电话 <span class="theme-seo-tip">买家可通过客服电话与你联系，将展示在订单详情中</span></h2>
+                    <input class="input input-long" type="text" ng-model="data.service_phone" placeholder="请填写客服电话" you-validation="maxlength(100)" you-validation-encodehtml="true" maxlength="100" />
+                   
+                    <h2>店铺公告 <span class="theme-seo-tip">(选填)- 还可输入{{128 - HTMLENCODE(data.announcement).length}}个字</span></h2>
+                    <textarea rows="3" class="input input-long" ng-model="data.announcement" placeholder="请输入店铺公告" you-validation="maxlengthSpecial(128)" you-validation-encodehtml="true" style="max-height: 72px;" maxlength="128"></textarea>
+                </div>
+            </div>
+
+            <div class="main-item clearfix" style="overflow:hidden">
+
+                <div class="main-item-content main-item-content-full" >
+                    <h2>品牌状态</h2>
+                    <div class="setting-status {{ data.shopStatus == '0' ? 'setting-status-checked' : '' }}" style="width:160px;">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.shopStatus" name="data.shopStatus" value="0" />
+                            <div class="label-block-content">正常运营</div>
+                        </label>
+                    </div>
+                    <!-- -->
+                    <div class="setting-status setting-status-pw {{ data.shopStatus == '2' ? 'setting-status-pw-checked' : '' }}" you-chkexpand expandConf="pwExpandConf">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.shopStatus" name="data.shopStatus" value="2" />
+                            <div class="label-block-content">
+                                密码保护
+                                <i class="ico ico-arrow-1"></i>
+                                <span class="setting-status-pw-edit" ng-show="data.shopStatus == '2'">
+                                    访问密码：
+                                    <input class="input" ng-model="data.shopPasswordNew" type="text" placeholder="设置密码" you-validation="required|shopPassword" maxlength="40" />
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+                    <!-- -->
+                    <div class="setting-status setting-status-off {{ data.shopStatus == '1' ? 'setting-status-off-checked' : '' }}" you-chkexpand expandConf="offExpandConf">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.shopStatus" name="data.shopStatus"  value="1" />
+                            <div class="label-block-content">
+                                维护关闭
+                                <i class="ico ico-arrow-1"></i>
+                                <span ng-show="showStatusTxt">
+                                    设置维护说明
+                                </span>
+                            </div>
+                            <div class="setting-status-off-input">
+                                <textarea class="setting-status-off-input-textarea" placeholder="维护说明" ng-model="data.closeStoreHtml"></textarea>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+         
+        </div>
+
+    <div ng-switch-when="order">
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                    <h2 style="position: relative;">
+                        订单（支付）有效时间
+                        &nbsp;&nbsp;
+                        <span ng-show="tradeExpiredClass" class="text-muted">拖动滑块或者使用键盘的方向键微调</span>
+                    </h2>
+                    <div class="setting-tradeExpired {{ tradeExpiredClass }}">
+                        30分钟 <input style="vertical-align:middle;width:500px;box-shadow:none" class="input" type="range" step="1" min="30" max="1440" ng-model="data.trade_expired_after" ng-change="onChangeTradeExpired();" ng-focus="onFocusTradeExpired(true);" ng-blur="onFocusTradeExpired(false);" /> 24小时
+                    </div>
+                    <div style="line-height:24px;">顾客完成下单后，订单将在 <span style="display:inline-block;padding:2px 6px;border:1px solid #c7d6e6;background:#f2f7fb;color:#637f9d;border-radius:3px">{{ trade_expired_time }}</span> 内有效。<br/><span class="text-muted">默认值为24小时。</span></div>
+                </div>
+            </div>
+
+    
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full" >
+                    <h2>物流自动确认收货</h2>
+                    <div class="setting-status {{ data.autoDeliveredReceived == 'true' ? 'setting-status-checked' : '' }}" style="width:230px;">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.autoDeliveredReceived" value="true" />
+                            <div class="label-block-content">开启物流自动确认收货 <span class="you-help-position-l3-t3" you-help>快件被顾客签收后自动结束订单</span></div>
+                        </label>
+
+                    </div>
+                    <div class="setting-status {{ data.autoDeliveredReceived == 'false' ? 'setting-status-checked' : '' }}" style="width:230px;">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.autoDeliveredReceived" value="false" />
+                            <div class="label-block-content">关闭物流自动确认收货</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full" >
+                    <h2>订单自动确认收货时间设置</h2>
+                    <div class="setting-status setting-status-autorecievdday {{ data.autoRecivedDayOn == 'true' ? 'setting-status-checked' : '' }}" you-chkexpand expandConf="autoRecivedDayConf">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.autoRecivedDayOn" value="true" />
+                            <div class="label-block-content">
+                                开启
+                                 <i class="ico ico-arrow-1"></i>
+                                <select class="input-select" ng-options="day as (day + '天') for day in autoRecivedDayRange" ng-model="data.autoRecivedDay" you-validation="required" ng-show="data.autoRecivedDayOn == 'true'">
+                                </select>
+                            </div>
+                        </label>
+
+                    </div>
+                    <div class="setting-status {{ data.autoRecivedDayOn == 'false' ? 'setting-status-checked' : '' }}" style="width:130px;">
+                        <label class="label-block">
+                            <input you-check type="radio" ng-model="data.autoRecivedDayOn" value="false" />
+                            <div class="label-block-content">关闭</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- end order -->
+    <!-- coin-->
+        <div ng-switch-when="coin">
+            <div class="main-item clearfix setting-point-block">
+                <div class="main-item-content main-item-content-full">
+                    <h2>是否启用积分功能<span class="you-help-position-l3-t3" you-help you-help-dir="top">顾客可以在消费中获取或使用积分</span></h2>
+                    <label class="label-block setting-search-label-block {{ data.point.reward_point_enabled == true ? 'checked' : '' }}">
+                        <input you-check type="radio" ng-model="data.point.reward_point_enabled" name="enable" ng-value="true" />
+                        <div class="label-block-content">启用</div>
+                    </label>
+                    <label class="label-block setting-search-label-block {{ data.point.reward_point_enabled == false ? 'checked' : '' }}" style="width:200px;">
+                        <input you-check type="radio" ng-model="data.point.reward_point_enabled" name="enable" ng-value="false" />
+                        <div class="label-block-content">不启用<span style="font-size:12px;" class="text-muted">（将不赠送积分）</span></div>
+                    </label>
+                    <div class="main-item-sublink-content-wrap transition-quick" ng-style="data.point.reward_point_enabled ? {maxHeight: '470px'} : null">
+                        <div class="main-item-sublink-content">
+                            <span class="ico ico-mainitem-arr "></span>
+                            <div class="setting-point-item">
+                                <div class="setting-point-item-title">积分获取</div>
+                                <div class="setting-point-item-main">
+                                    <div class="setting-point-item-line">
+                                        <b>新增商品</b> 初始积分系数设置：
+                                        <div class="input-unit">
+                                            <input type="text" class="input input-short" ng-model="data.point.initial_ratio" you-validation="required|percentNumber">
+                                            <span class="input-unit-text">%</span>
+                                        </div>
+                                        <span class="text-muted">（积分 = 商品售价 × 系数）</span>
+                                    </div>
+                                    <div class="setting-point-item-line">针对 <b>已有商品 SKU</b> 设置积分，请前往 <span class="text-link" ng-click="setQueryProduct()">商品管理</span> 进行编辑。</div>
+                                </div>
+                            </div>
+                            <div class="setting-point-item">
+                                <div class="setting-point-item-title">积分使用</div>
+                                <div class="setting-point-item-main">
+                                    <div class="setting-point-item-line">
+                                        积分抵现规则：不超过订单实际付款金额的
+                                        <div class="input-unit">
+                                            <input type="text" class="input input-short" ng-model="data.point.reward_point_limit" you-validation="required|oneToAHundred">
+                                            <span class="input-unit-text">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="setting-point-item-line">
+                                        积分兑换比例设置：1积分，抵
+                                        <div class="input-unit input-unit-short">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">￥</div>
+                                                <input type="text" class="input input-short" ng-model="data.point.exchange_ratio_yuan" you-validation="required|noZero|positiveNumber|float2|maxNumber">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="setting-point-item-line text-muted">
+                                        <b>提示：</b><br>
+                                        <ul>
+                                            <li>积分的数值精确到个位（小数点后全部舍弃，不进行四舍五入）</li>
+                                            <li>积分有效期最长2年，最短1年，即从获得积分开始至次年年底，逾期自动作废（例如，2015年12月31日将清空2014年度获得但未使用的积分）</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end coin-->
+
+       
+
+        <div class="clearfix item-bottom">
+            <you-btn type="primary" text="保存" ng-click="fSave();" ng-show="!isSaving"></you-btn>
+            <you-btn type="loading" ng-show="isSaving"></you-btn>
+        </div>
+
+    </div>
+</div>
+    </div>

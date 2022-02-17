@@ -1,0 +1,275 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+    <span class="main-menu-ico"><you-ico type="product"></you-ico></span>商品列表</h1>
+    <you-btn type="primary" ng-click="onClickNew()" text="新增商品"></you-btn>
+    <div class="main-menu-right">
+        <you-appentry type="product_overview"></you-appentry>
+        <a href="#!/product/type">
+            <you-btn type="default" text="分类管理"></you-btn>
+        </a>
+        <a href="#!/product/vendor">
+            <you-btn type="default" text="品牌管理"></you-btn>
+        </a>
+    </div>
+    <div ng-if="YouPreset.LEVEL_CODE == 'trial'" class="pro-edit-product-limitTips">当前为试用版，商品限制总数量为<b>5</b>个 &nbsp;<a href="{{YouPreset.OFFICIAL_WEBSITE_BUY_UPGRADE}}" target="_blank">升级版本</a></div>
+</div>
+<div you-mainfollow ng-style="showGrid" data="mainfollowResize">
+    <section>
+        <div class="grid-filter">
+            <form>
+                <table>
+                    <colgroup>
+                        <col width="160">
+                        <col>
+                        <col width="130">
+                        <col>
+                    </colgroup>
+                    <tbody class="grid-filter-body">
+                        <tr ng-show="dataTypes.list.length > 0">
+                            <td>
+                                <div class="grid-filter-k">{{YouText.PRODUCT_TYPE}} <span class="text-checkbtn-multi">{{YouText.CHECK_BTN_MULTI}}</span>：</div>
+                            </td>
+                            <td colspan="3">
+                                <div class="grid-filter-v">
+                                    <you-check-btn data="dataTypes" set-folder="true"></you-check-btn>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="dataVendors.list.length > 0">
+                            <td>
+                                <div class="grid-filter-k">{{YouText.PRODUCT_VENDOR}} <span class="text-checkbtn-multi">{{YouText.CHECK_BTN_MULTI}}</span>：</div>
+                            </td>
+                            <td colspan="3">
+                                <div class="grid-filter-v">
+                                    <you-check-btn data="dataVendors" set-folder="true"></you-check-btn>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="grid-filter-k">价格：</div>
+                            </td>
+                            <td>
+                                <div class="grid-filter-v">
+                                    <div class="input-group input-group-iai">
+                                        <div class="input-group input-group-left">
+                                            <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                            <input class="input input-long" type="text" ng-keypress="onSearch($event)" ng-model="param.amount_smaller" you-validation="nonNegativeNumber|float2|maxNumber" />
+                                        </div>
+                                        <span class="input-group-addon">-</span>
+                                        <div class="input-group input-group-right">
+                                            <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                            <input class="input input-long" type="text" ng-keypress="onSearch($event)" ng-model="param.amount_greater" you-validation="nonNegativeNumber|float2|maxNumber" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="grid-filter-k">库存：</div>
+                            </td>
+                            <td style="padding-right:10px;">
+                                <div class="grid-filter-v">
+                                    <div class="input-group input-group-iai">
+                                        <div class="t-wrap">
+                                            <input class="input input-long input-left" type="text" ng-keypress="onSearch($event)" ng-model="param.stock_smaller" you-validation="integer|maxNumber" />
+                                            <span class="t-text">件</span>
+                                        </div>
+                                        <span class="input-group-addon">-</span>
+                                        <div class="t-wrap">
+                                            <input class="input input-long" type="text" ng-keypress="onSearch($event)" ng-model="param.stock_greater" you-validation="integer|maxNumber" />
+                                            <span class="t-text">件</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="grid-filter-k">{{YouText.SEARCH}}：</div>
+                            </td>
+                            <td style="padding-right:10px;">
+                                <div class="grid-filter-v">
+                                    <input type="text" class="input input-search" placeholder="{{YouText.SEARCH_HOLDER}}{{YouText.PRODUCT_NAME}}" ng-model="param.search" you-validation="trim" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="grid-filter-k">积分：</div>
+                            </td>
+                            <td>
+                                <div class="grid-filter-v">
+                                    <div class="input-group input-group-iai">
+                                        <div class="t-wrap">
+                                            <input class="input input-long input-left" type="text" ng-keypress="onSearch($event)" ng-model="param.point_smaller" you-validation="integer|float2|maxNumber" />
+                                        </div>
+                                        <span class="input-group-addon">-</span>
+                                        <div class="t-wrap">
+                                            <input class="input input-long" type="text" ng-keypress="onSearch($event)" ng-model="param.point_greater" you-validation="integer|float2|maxNumber" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="grid-filter-k">创建时间：</div>
+                            </td>
+                            <td style="padding-right:10px;">
+                                <div class="grid-filter-v">
+                                    <you-date data="dataDate" class="order-filter-date"></you-date>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="grid-filter-k">{{YouText.VISIBILITY_STATUS}}：</div>
+                            </td>
+                            <td>
+                                <div class="grid-filter-v">
+                                    <you-check-btn data="dataVisibility"></you-check-btn>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="grid-filter-btns">
+                    <you-btn type="search" ng-click="onSearch()"></you-btn>
+                    <you-btn text="{{YouText.RESET}}" ng-click="onReset()"></you-btn>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div class="grid-header">
+            <you-btn type="refresh" ng-click="onRefresh()" ng-show="!isRefreshing"></you-btn>
+            <you-btn type="refreshing" ng-show="isRefreshing"></you-btn>
+            <div class="btn-group">
+                <you-btn text="上架" ng-disabled="opDisabled && !isBatchManageAll" ng-click="onClickMultiVisibility(true)"></you-btn>
+                <you-btn text="下架" ng-disabled="opDisabled && !isBatchManageAll" ng-click="onClickMultiVisibility(false)"></you-btn>
+            </div>
+            <div class="btn-group">
+                <div class="btn-drop-one">
+                    <button class="btn btn-primary" style="padding:8px 12px" ng-disabled="opDisabled && !isBatchManageAll">批量设置&nbsp;&nbsp;<span class="ico" ng-class="opDisabled && !isBatchManageAll ? 'ico-menu-uarr-inverse' : 'ico-menu-uarr'"></span></button>
+                    <div class="btn-drop-ls" style="width: auto;">
+                        <div class="btn-drop-ls-item" ng-repeat="item in batchSettings" ng-click="popBatchSetting(item)">{{item.text}}</div>
+                        <i class="ico ico-arrow-6"></i>
+                    </div>
+                </div>
+            </div>
+            <you-btn type="danger" text="删除" ng-disabled="opDisabled && !isBatchManageAll" ng-click="onClickMultiRemove()"></you-btn>
+            <span ng-show="!opDisabled || isBatchManageAll" class="text-muted" style="margin-left: 10px;">
+                <span ng-show="isBatchManageAll">已选择全部商品 <b>{{baseItemCount}}</b> 个。</span>
+            <span ng-hide="isBatchManageAll">已选中 <b>{{ selectedTotalCount }}</b> 个商品，商品总数为 <b>{{baseItemCount}}</b> 个。</span>
+            <a href="javascript:;" class="text-link" ng-click="isBatchManageAll = !isBatchManageAll" ng-hide="list.length == baseItemCount">
+                    {{ isBatchManageAll ? '取消选择全部商品' : '选择全部商品' }}
+                </a>
+            </span>
+            <div class="grid-header-right">
+                <div class="t-count">{{YouText.LIST_ITEM_COUNT_P1}}<span class="t-number">{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+    </section>
+</div>
+<div you-mainbody ng-style="showByMainBody">
+    <div class="transition-opacity" ng-style="showGrid">
+        <div class="grid-body">
+            <you-grid data="dataGrid">
+                <table>
+                    <colgroup>
+                        <col width="40">
+                        <col width="20%">
+                        <col width="10%">
+                        <col width="180">
+                        <col width="10%">
+                        <col width="180">
+                        <col width="8%">
+                        <col width="13%">
+                        <col width="10%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <!-- <th style="width: 75px;"><input type="checkbox" ng-hide="isEmpty" ng-disabled="isAllOnDealing"></th> -->
+                            <th style="width: 75px;"><input type="checkbox" ng-hide="isEmpty"></th>
+                            <th>{{YouText.PRODUCT_NAME}}</th>
+                            <th>价格</th>
+                            <th>{{YouText.PRODUCT_STOCK}}</th>
+                            <th>
+                                <span class="grid-body-order" ng-click="setOrder('sale')">实际销量<span ng-class="getOrderClass('sale')"></span></span>
+                            </th>
+                            <th>
+                                <span class="grid-body-order" ng-click="setOrder('created_at')">创建时间<span ng-class="getOrderClass('created_at')"></span></span>
+                            </th>
+                            <th>积分</th>
+                            <th>{{YouText.PRODUCT_TYPE}}</th>
+                            <th>{{YouText.PRODUCT_VENDOR}}</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0" you-event-delegate="gridEventDelegateData" use-capture>
+                        <tr ng-repeat="item in list">
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>
+                                <div class="grid-list-thumbnail">
+                                    <img ng-show="item.image" ng-src="{{item.image}}" alt="{{item.name}}" you-webp-fallback>
+                                    <you-cover></you-cover>
+                                </div>
+                                <span class="text-status text-status-valid" ng-if="item.top">已置顶</span>
+                                <span class="text-status text-status-invalid" ng-if="!item.visibility">已下架</span>
+                                <a href="#!/productedit?id={{item.id}}" you-click="onClickItem(item, $event)" title="{{ HTMLDECODE(item.name) }}">{{ HTMLDECODE(item.name) }}</a>
+                            </td>
+                            <td>
+                                <span title="{{YouPreset.$()}}{{item.price_min / 100}}" ng-if="item.price_min == item.price_max">
+                                    <span style="color:#999;">{{YouPreset.$()}}</span>{{item.price_min / 100}}
+                                </span>
+                                <span title="{{YouPreset.$()}}{{item.price_min / 100}}-{{YouPreset.$()}}{{item.price_max / 100}}" ng-if="item.price_min != item.price_max">
+                            <span style="color:#999;">{{YouPreset.$()}}</span>{{item.price_min / 100}}<span style="color:#999;">-{{YouPreset.$()}}</span>{{item.price_max / 100}}
+                                </span>
+                            </td>
+                            <td><span class="{{ item.stock_debt < 0 ? 'text-danger' : '' }}" title="{{getStock(item)}}">{{getStock(item)}}</span> <span class="text-danger" ng-show="item.stock_debt < 0">!</span>
+                                <a class="grid-tr-proeditstock" ng-hide="item.loading" href="javascript:void(0);" you-click="quickStock($event, item);">
+                                    <i class="ico ico-pen"></i>
+                                </a>
+                                <i class="ico ico-loading" ng-show="item.loading" ></i>
+                            </td>
+                            <td>{{item.sale}}</td>
+                            <td>{{item.created_at | date: 'yyyy/MM/dd HH:mm' }}</td>
+                            <td>
+                                <span title="{{item.point_min}}" ng-if="item.point_min == item.point_max">
+                            <span style="color:#999;"></span>{{item.point_min}}
+                                </span>
+                                <span title="{{item.point_min}}-{{item.point_max}}" ng-if="item.point_min != item.point_max">
+                            <span style="color:#999;"></span>{{item.point_min}}<span style="color:#999;">-</span>{{item.point_max}}
+                                </span>
+                            </td>
+                            <td>
+                                <span title="{{ HTMLDECODE(item.product_types) }}">{{ HTMLDECODE(item.product_types) }}</span>
+                                <span ng-if="!item.product_types">-</span>
+                            </td>
+                            <td>
+                                <span title="{{ HTMLDECODE(item.product_vendors) }}">{{ HTMLDECODE(item.product_vendors) }}</span>
+                                <span ng-if="!item.product_vendors">-</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+
+            <div class="grid-body-empty" ng-show="isAllEmpty">
+                <span class="grid-ico-empty grid-ico-empty-product"></span>
+                <div class="grid-body-empty-title">你还没有创建商品呢</div>
+                <div class="grid-body-empty-desc">创建的商品将会出现在这里</div>
+                <you-btn type="primary" text="新增商品" class="grid-body-empty-btn" ng-click="onClickNew()"></you-btn>
+                <div class="grid-body-empty-bottom"></div>
+            </div>
+        </div>
+
+        <div class="grid-body-none" ng-show="!isAllEmpty && isEmpty">{{YouText.GRID_SEARCH_NONE}}</div>
+
+        <div class="grid-footer" ng-show="!isAllEmpty">
+            <div class="grid-footer-right">
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+
+    </div>
+</div>

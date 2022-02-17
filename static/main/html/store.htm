@@ -1,0 +1,63 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+        <span class="main-menu-ico"><you-ico type=store></you-ico></span>门店列表
+    </h1>
+    <you-btn type="primary" ng-click="onClickNew()" text="新增门店"></you-btn>
+</div>
+<div you-mainbody you-fadein>
+    <div class=transition-opacity ng-style=showGrid>
+        <div class=grid-header>
+            <you-btn type=refresh ng-click=onRefresh() ng-show=!isRefreshing></you-btn>
+            <you-btn type=refreshing ng-show=isRefreshing></you-btn>
+            <div class="grid-header-right right-0">
+                <div class=t-count>{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+        <div class=grid-body>
+            <you-grid data=dataGrid>
+                <table>
+                    <colgroup>
+                        <col width=250>
+                        <col>
+                        <col width=250> </colgroup>
+                    <thead>
+                        <tr>
+                            <th>门店</th>
+                            <th>营业时间</th>
+                            <th>客服电话</th>
+                            <th>创建时间</th>
+                      </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0">
+                        <tr ng-repeat="item in list">
+                            <td> 
+                            <span class="text-status text-status-invalid" ng-if=!item.is_avalible>
+                            关闭中</span>
+                             <span class="text-status" ng-if=item.is_avalible>
+                            正常</span>  
+                            <a href="#!/storeedit?id={{item.id}}" ng-click="onClickItem(item, $event)" title={{item.name}}>{{item.name}}</a> 
+                            </td>
+                            <td>{{item.start_at}} ~ {{item.end_at}}</td>
+                            <td><span title={{item.phone}}>{{item.phone}}</span></td>
+                           
+                            <td><span ng-show=item.created_at title="{{item.created_at | date:'yyyy/MM/dd HH:mm:ss'}}" ng-bind="item.created_at | date:'yyyy/MM/dd HH:mm:ss'"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+            <div class="grid-body-empty" ng-show="isAllEmpty"> 
+                <span class="grid-ico-empty grid-ico-empty-account"></span>
+                <div class=grid-body-empty-title>目前暂未添加门店</div>
+                <you-btn type=primary text=新增门店 class="grid-body-empty-btn" ng-click=onClickNew()></you-btn>
+                <div class=grid-body-empty-bottom></div>
+            </div>
+        </div>
+        <div class=grid-body-none ng-show="!isAllEmpty && isEmpty">{{YouText.GRID_SEARCH_NONE}}</div>
+        <div class=grid-footer ng-show=!isAllEmpty>
+            <div class=grid-footer-right>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+    </div>
+</div>

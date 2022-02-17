@@ -1,0 +1,90 @@
+<%inherit file="_layout.htm"/>
+<%block name="main">
+<div class="container shops-container">
+<div class="row justify-content-center">
+
+<div class="col-9 rounded shadow-sm my-3 p-4 bg-white">
+<div class="page-header mt-2"><h4>品牌升级<small></small></h4></div>
+
+<form method="post" class="form form-horizontal" id="postform">
+
+<div class="form-group">
+  <label for="name">升级类型</label>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="shop_type"
+      value="1"
+      checked
+    />
+    <label class="form-check-label" for="shop_type">
+      普通版 （￥2388/年）<span class="text-muted">适用于1~5家门店的小型商户</span>
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="shop_type" value="2" />
+    <label class="form-check-label" for="shop_type">
+      专业版（7188/年）<span class="text-muted">适用于1~20家门店的中型商户</span>
+    </label>
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="name">购买时长</label>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="years"  value="1" checked />
+    <label class="form-check-label" for="years"> 1年 </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="years"  value="2" />
+    <label class="form-check-label"> 2年 </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="years"  value="3" />
+    <label class="form-check-label"> 3年 (7.5折) </label>
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="name">付费方式</label>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" checked name="pay_type" value="wxpay" />
+    <label class="form-check-label" for="pay_type"> 微信扫码 </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="pay_type" value="alipay" />
+    <label class="form-check-label"> 支付宝 </label>
+  </div>
+</div>
+
+
+<div class="border-bottom mt-3"></div>
+${xsrf_form_html()}
+           
+<div class="p-3">
+    <div class="text-right">
+        <p>需支付 <span class="h3 text-success" >￥323.00 </span></p>
+        <p><button type="submit" class="btn btn-lg  btn-danger">立即支付</button></p>
+    </div>
+                    
+</div>
+
+</form>
+
+
+
+</div>
+</div>
+    </div>
+</%block>
+
+
+<%block name="foot">
+<script type="text/javascript">
+$(function(){
+    $('#postform').bootstrapValidator({});
+    
+});
+</script>
+</%block>

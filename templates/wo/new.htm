@@ -1,0 +1,70 @@
+<%inherit file="../_layout.htm"/>
+<%block name="head">
+<title>创建店铺</title>
+</%block>
+<%block name="main">
+<div class="container shops-container">
+  <div class="row justify-content-center">
+
+<div class="col-9">
+    <div class="page-header mt-5">
+        <h4>创建品牌店铺<small></small></h4></div>
+       <%include file="/include/notice.htm" />
+        <form method="post" class="form form-horizontal" id="postform">
+            <div class="form-group">
+                <label for="name">店铺类型</label>
+           <div class="form-check">
+  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+  <label class="form-check-label" for="exampleRadios1">
+    微信小程序版
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+  <label class="form-check-label" for="exampleRadios2">
+    App内嵌版
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
+  <label class="form-check-label" for="exampleRadios3">
+    独立App商城
+  </label>
+</div>
+    </div>
+
+            <div class="form-group">
+            
+                    <label for="name">品牌名称</label>
+                    <input type="text" data-bv-notempty="true" 
+                data-bv-notempty-message="请填写品牌名称" class="form-control" name="name" id="name" placeholder="请填写品牌名称">
+              
+            </div>
+            <div class="form-group">
+                
+                    <label for="intro">简介</label>
+                    <textarea class="form-control" name="intro" id="intro" rows="3" placeholder="请填写品牌简介"></textarea>
+          
+            </div>
+
+            ${xsrf_form_html()}
+           
+                
+                    <button type="submit" class="btn btn-lg  btn-warning">创建</button>
+
+        </form>
+    </div>
+</div>
+    </div>
+</%block>
+
+
+<%block name="foot">
+<script type="text/javascript">
+$(function(){
+    $('#postform').bootstrapValidator({});
+    
+});
+</script>
+</%block>
+

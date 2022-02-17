@@ -1,0 +1,132 @@
+<div class="main-menu">
+    <h2 class="main-menu-title"><span class="main-menu-ico"><you-ico type="promotion"></you-ico></span>{{ titleAction }}满减活动</h2>
+    <you-btn text="返回" ng-click="onClickBaseBack()"></you-btn>
+    <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" ng-show="!isBaseSaving" ng-disabled="isBaseLoading"></you-btn>
+    <you-btn type="loading" ng-show="isBaseSaving"></you-btn>
+    <span class="main-menu-desc" title="{{data.name}}" ng-bind="data.name"></span>
+    <div class="main-menu-right">
+        <you-btn type="danger" text="删除" ng-click="onClickBaseDelete()" ng-disabled="!baseAvailable || isBaseLoading"></you-btn>
+    </div>
+</div>
+<div you-mainbody you-fadein>
+
+        <div class="promotion-block transition-opacity" ng-style="showGrid">
+
+            <div class="main-item clearfix">
+
+                <div class="main-item-content main-item-content-full">
+                    <h2>满减活动名称</h2>
+                    <input class="input input-long" type="text" ng-model="data.name" placeholder="请输入满减促销活动名称" you-validation="required"/>
+
+                    <h2 style="margin-top: 18px;">满减活动说明</h2>
+                    <textarea rows="1" class="input input-long transition-quick" ng-model="data.introduce" placeholder="请输入活动说明" you-validation="maxlength(2000)" ng-style="shortDescStyle"></textarea>
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+
+                <div class="main-item-content main-item-content-full">
+                    <h2>有效期</h2>
+                    <you-datetime data="dataDatetime" you-datetime-dir="bottom"></you-datetime>
+                    <div style="position: relative; left: 50px; top: -48px;"><input style="display: none" name="begin_data" you-validation /></div>
+                    <div style="position: relative; left: 50px;"><input style="display: none" name="expire_data" you-validation /></div>
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+
+                <div class="main-item-content main-item-content-full">
+                    <h2>满减规则<span class="text-muted" style="margin-left: 1em;">订单将采用金额满足最高门槛的规则</span></h2>
+                    <div class="promotion-offs">
+                        <div class="promotion-off" ng-repeat="i in data.promotion_offs">
+                            满
+                            <div class="input-unit input-unit-short">
+                                <div class="input-group">
+                                    <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                    <input type="text" class="input input-long" ng-model="i.active_amount" name="activeAmount_{{$index}}" ng-blur="blurOff(i, $index)" you-validation="required|positiveNumber|float2|maxNumber" ng-change="unSaved()"/>
+                                </div>
+                            </div>
+                            减
+                            <div class="input-unit input-unit-short">
+                                <div class="input-group">
+                                    <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                    <input type="text" class="input input-long" ng-model="i.discount_amount" name="discountAmount_{{$index}}" ng-blur="blurOff(i, $index)" you-validation="required|positiveNumber|float2|maxNumber" ng-change="unSaved()"/>
+                                </div>
+                            </div>
+                            <i class="ico ico-delete" ng-click="removeOff(i);" ng-show="data.promotion_offs.length > 1"></i>
+                        </div>
+                    </div>
+                    <you-btn type="primary" text="新增规则" ng-click="addOff();"></you-btn>
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+
+                <div class="main-item-content main-item-content-full" >
+                    <h2>参与满减活动的商品</h2>
+                    <div>
+                        <div class="promotion-range" ng-repeat="i in rangeTypes">
+                            <label class="label-block" ng-class="isRangeTypeChecked(i)">
+                                <input you-check type="radio" ng-model="data.range_type" name="rangeType" value="{{i.value}}"/>
+                                <div class="label-block-content">
+                                    {{i.text}}
+                                    <span ng-if="$index == 1" class="promotion-range-product">
+                                         <i class="ico ico-arrow-1"></i>
+                                        <you-btn ng-if="data.products.length == 0" type="primary" text="选择商品 (0)" ng-click="selectProducts()"></you-btn>
+                                        <you-btn ng-if="data.products.length > 0" text="选择商品 ({{data.products.length}})" ng-click="selectProducts()"></you-btn>
+                                        <div style="position: relative; left: 90px; top: -25px;"><input style="display: none" name="products" you-validation /></div>
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+
+                <div class="main-item-content main-item-content-full" >
+                    <h2>参与满减活动的顾客</h2>
+                    <div>
+                        <div class="promotion-range" ng-repeat="i in activeTypes">
+                            <label class="label-block" ng-class="isActiveTypeChecked(i)">
+                                <span ng-class="{'promotion-range-left-abs': i.value == 'customer_level'}">
+                                    <input you-check type="radio" ng-model="data.active_type" name="activeType" value="{{i.value}}"/>
+                                    {{i.text}}
+                                </span>
+                                <div class="label-block-content" ng-switch="i.value">
+                                    <span ng-switch-when="customer_level" class="promotion-range-customerlevel">
+                                         <i class="ico ico-arrow-1"></i>
+                                        <span ng-if="customer_levels">
+                                            <label class="labelmargin" ng-repeat="level in customer_levels">
+                                                <input you-check type="checkbox" ng-model="level.selected" ng-change="CustomerLevelChange(level)">{{level.name}}
+                                            </label>
+                                        </span>
+                                        <span ng-if="!customer_levels" class="level-empty">
+                                            未设置会员级别
+                                            <a href="#/customerlevel" class="text-link">前往设置会员级别</a>
+                                        </span>
+                                        <div style="position: relative; left: 50%; top: 5px;"><input style="display: none" name="customer_levels" you-validation /></div>
+                                    </span>
+                                    <span ng-switch-when="partial" class="promotion-range-product">
+                                        <i class="ico ico-arrow-1"></i>
+                                        <you-btn ng-if="data.customers.length == 0" type="primary" text="选择顾客 (0)" ng-click="selectCustomers()"></you-btn>
+                                        <you-btn ng-if="data.customers.length > 0" text="选择顾客 ({{data.customers.length}})" ng-click="selectCustomers()"></you-btn>
+                                        <div style="position: relative; left: 90px; top: -25px;"><input style="display: none" name="customers" you-validation /></div>
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="clearfix item-bottom">
+                <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" ng-show="!isBaseSaving"></you-btn>
+                <you-btn type="loading" ng-show="isBaseSaving"></you-btn>
+            </div>
+
+        </div>
+
+</div>

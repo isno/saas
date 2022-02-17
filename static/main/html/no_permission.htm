@@ -1,0 +1,15 @@
+<div class="main-menu">
+    <h1 class=main-menu-title><span class=main-menu-ico><you-ico type="{{ type }}"></you-ico></span>{{ name }}</h1></div>
+<div you-mainbody you-fadein>
+    <div class=bigtip-block>
+        <h1>抱歉，你没有当前功能的操作权限。</h1>
+        <p>请联系网站拥有者开通权限</p>
+    </div>
+    <div class=permission-block>
+        <h2 ng-show="linklist.length > 0">你当前拥有的权限：</h2>
+        <h2 ng-show="linklist.length == 0">请联系网站拥有者开通相关功能的权限。</h2>
+        <ul class=permission-list>
+            <li class=permission-item ng-repeat="i in linklist"><a href="#{{ i.link }}">{{ i.name }}</a></li>
+        </ul>
+    </div>
+</div>

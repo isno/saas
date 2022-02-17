@@ -1,0 +1,215 @@
+.media_edit {
+    width: 70%;
+    float: left;
+    padding:15px;
+    min-width: 600px;
+}
+
+.setting-status {
+    width: 180px;
+}
+
+
+.affix {
+    position: fixed;
+    top: 20px;
+}
+.card_preview  p {
+    padding:0px;
+    margin: 0px;
+
+}
+.card_preview_container {
+    float:left;
+    width:30%;
+    margin-top: 15px;
+}
+.card_preview {
+    border: 1px solid #e7e7eb;
+    border-radius: 6px;
+    width: 318px;
+    float:left;
+    margin-right: 16px;
+    padding-bottom: 0px;
+    overflow: hidden;
+    background: #fff;
+    margin-bottom: 20px;
+  
+}
+.card_preview .shop {
+    position: relative;
+    padding: 30px 26px 10px;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-bottom: 0;
+}
+
+.panel {
+    background-color: #63B359;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    text-align: left;
+    padding: 0 0 10px;
+    overflow: hidden;
+    position: relative;
+    background-size: 100% 100%;
+    background-size: cover;
+    background-position: top center;
+
+    min-height: 137px;
+    height: auto;
+}
+
+.logo_box {
+    margin: 0;
+    padding: 24px 20px 12px 66px;
+    text-align: left;
+    line-height: 20px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bolder;
+    text-shadow: 1px 1px 3px #666;
+}
+
+.card_preview .m-logo {
+    display: block;
+    width: 38px;
+    height: 38px;
+    padding-top: 0;
+    margin: 0 auto;
+    border-radius: 22px;
+    -moz-border-radius: 22px;
+    -webkit-border-radius: 22px;
+    float: none;
+    border: 1px solid #e7e7eb;
+    background-color: #fff;
+}
+
+
+.m-logo {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    top: 24px;
+    left: 20px;
+}
+
+.card_preview .m-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    -moz-border-radius: inherit;
+    -webkit-border-radius: inherit;
+}
+.card_name {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.qrcode {
+    width: 36px;
+    height: 36px;
+    background: url(./pigcms_static/image/User/member_card_control_z2dcda9.png) 0 -183px no-repeat;
+    position: absolute;
+    top: 26px;
+    right: 20px;
+}
+
+.card_preview .card_body {
+    padding: 2px 20px 10px;
+    margin-top: 30px;
+    position: relative;
+}
+
+.card_preview .card_no {
+    font-size: 17px;
+    font-family: menlo,tahoma;
+    text-shadow: 1px 1px 2px #666;
+    line-height: 18px;
+    color: #fff;
+}
+.icon_info {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    float: right;
+    background: url(./pigcms_static/image/User/member_card_control_z2dcda9.png) 0 -229px no-repeat;
+}
+
+.card_cell {
+    height: 60px;
+    background-color: #fff;
+}
+.card_cell li {
+    width: 33.3%;
+    height: 36px;
+    float: left;
+    box-sizing: border-box;
+    border-left: 1px solid #cccad7;
+    text-align: center;
+    line-height: 14px;
+    list-style: none;
+}
+.card_cell li:first-child {
+    border-left: 0;
+}
+.card_cell li span {
+    margin-top: 1px;
+    color: #676a6c;
+    display: inline-block;
+    vertical-align: top;
+}
+.card_cell li p {
+    color: "#333";
+    margin-top: 5px;
+}
+
+.quick_pay {
+    height: auto;
+    border-top: 0;
+        line-height: 14px;
+    text-align: center;
+}
+.quick_pay .btn_card_preview {
+    margin-bottom: 15px;
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    border-radius: 6px;
+    width: 136px;
+}
+
+.list {
+    border-bottom: 1px solid #e7e7eb;
+    border-top: 1px solid #e7e7eb;
+    margin: 0px;
+    padding: 0px;
+}
+.list li {
+    list-style: none;
+    padding-left: 15px;
+}
+.msg_card_section {
+    position: relative;
+}
+.list li .li_panel {
+    display: block;
+    padding: 11px 30px 11px 0;
+    border-bottom: 1px solid #e7e7eb;
+}
+.list li .li_panel .ic {
+    position: absolute;
+    top: 36%;
+    right: 5px;
+    width: 16px;
+    height: 15px;
+    background: url(./img_card_control.png) 0 -441px no-repeat;
+}

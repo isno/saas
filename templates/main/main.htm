@@ -1,0 +1,116 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="ie6"> <![endif]-->
+<!--[if IE 7 ]> <html class="ie7"> <![endif]-->
+<!--[if IE 8 ]> <html class="ie8"> <![endif]-->
+<!--[if IE 9 ]> <html class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]> ><! <![endif]-->
+<html lang='zh-CN' ng-app='Youdian'>
+<!-- <![endif] -->
+<head>
+<meta charset='utf-8'>
+<title>${shop.name |h } - 管理后台</title>
+<meta name="renderer" content="webkit">
+<link href="${static_url("main/libs/normalize.min.css")}" rel="stylesheet">
+
+% if handler.settings["debug"]:
+<%include file="_dev_css.htm" />
+% else:
+<%include file="_pro_css.htm" />
+% endif
+
+<link href='//at.alicdn.com/t/font_1748227_v5chu6kyphi.css' rel='stylesheet'>
+
+<style type="text/css">
+    .iconfont {
+        font-size: 14px;
+        
+    }
+    .main-navigation-link .iconfont {
+        font-size: 15px;
+        margin-right: 5px;
+    }
+    .icon-warn {
+        color:#ffac1f;
+    }
+    .icon-help {
+        color:#666;
+    }
+    .icon-alipay,.icon-alipay_wap_user,.icon-alipay_bank {
+        color:#1296db;
+        font-size: 16px;
+    }
+    .icon-weipay {
+        color:#04BE02;
+        font-size: 18px;
+    }
+    .icon-paypal {
+        color:#13227a;
+    }
+    .ico-payment-method {
+        width:30px;
+        display: inline-block;
+    }
+    .icon-themeFold {
+        color:#666;
+    }
+</style>
+
+
+
+<script type="text/javascript">
+    window.YoudianConf = {};
+    window.YoudianConf.version = "1.2";
+    window.YoudianConf.shop_id = "${shop.entity_id}";
+    window.YoudianConf.currency = "CNY";
+    window.YoudianConf.accountName = "isno";
+    window.YoudianConf.shopName = "${shop.name | h}";
+    window.YoudianConf.isOwner = true;
+    window.YoudianConf.serverTime = "${handler.cur_time}";
+    window.YoudianConf.myTime = new Date().getTime();
+    window.YoudianConf.levelCode = 'paid';
+    window.YoudianConf.showReport =  false;
+    window.YoudianConf.assetHost = 'http://iyoudian.shengyi8.com';
+    window.YoudianConf.accountModules = ${shop.store_modules}; //
+    window.YoudianConf.storeModules = ${shop.store_modules};
+    window.YoudianConf.upyun_policy = "${handler.upyun_policy}";
+    window.YoudianConf.upyun_signature = "${handler.upyun_signature}";
+    window.YoudianConf.upyun_apiendpoint = "http://v0.api.upyun.com/youdian360";
+</script>
+</head>
+<body>
+    <div id="app" class="main">
+    <you-navigation></you-navigation>
+    <div class='main-wrapper' id='main_cnt' ng-show='initDone' ui-view=''></div>
+</div>
+
+<script src="//at.alicdn.com/t/font_1844493_qc5dqb6kxps.js"></script>
+
+% if handler.settings["debug"]:
+<%include file="_dev_static.htm" />
+% else:
+<%include file="_pro_static.htm" />
+% endif
+
+<script>
+    var oHtmlHeight;
+    var oHtmlWidth;
+    window.fFrameworkAdjust = function(){
+        oHtmlHeight = document.documentElement.clientHeight;
+        oHtmlWidth = document.documentElement.clientWidth;
+        if(oHtmlHeight < 672){
+            window.impactMode = true;
+            $('body').addClass('smallScreen');
+        }else{
+            window.impactMode = false;
+            $('body').removeClass('smallScreen');
+        }
+    };
+    $(window).on('resize', function(){
+        setTimeout(function(){
+            fFrameworkAdjust();
+        }, 0);
+    });
+</script>
+
+</body>
+</html>

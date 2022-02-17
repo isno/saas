@@ -1,0 +1,452 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">处理订单</h1>
+    <you-btn text=返回 ng-click=onClickBaseBack()></you-btn> 
+    <span class=main-menu-desc>
+        <span title="订单编号：{{ data.no }}">{{ data.no }}</span>
+        <span class="b64-order-device ico-device-{{ data.device }}" title="订单来源：{{ getDeviceName(data.device) }}"></span>
+    </span>
+    <you-btn text="打印" ng-disabled="!data" onclick="javascript:window.print();"></you-btn>
+    <div class="main-menu-right">
+        <you-appentry type=order_detail></you-appentry>
+    </div>
+</div>
+<div you-mainbody you-fadein>
+    <div class="trade-edit transition-opacity" ng-style="showGrid">
+        <div class=clearfix>
+            <div class="trade-edit-status t-done" ng-if="data.status === '2'"> <b>交易成功</b> </div>
+            <div class="trade-edit-status t-refund" ng-if="data.status === '3'">
+                <div style="color:#c33"><b>顾客申请退单，请选择是否退单</b></div>
+                <div class="t-desc"><b>退单原因：</b>{{data.request_refund_reason}}</div>
+                <div>
+                    <you-btn type="danger" text="拒绝退单" ng-click="onTradeRefundFalse()"></you-btn>
+                    <you-btn type="danger" text="同意退单" ng-click="onTradeRefundTrue()" style="margin-left:5px"></you-btn>
+                </div>
+            </div><!--退款失败提示框-->
+            <div ng-if="refundInfo.content" ng-class="refundInfo.unrefundableClass" ng-click="delegateContentClick($event)">
+                <div class="t-status"> 
+                    <span class="t-status-label" ng-show="refundInfo.label">
+                        {{ refundInfo.label + (refundInfo.content ? '：' : '')}}
+                    </span>
+                    <div class="t-status-text" ng-bind-html="refundInfo.content"></div>
+                </div>
+            </div>
+            <div ng-if="data.status === '4'" ng-hide="refundInfo.loading" style="padding:20px"><!-- 退款提示框 -->
+                <div ng-if="refundInfo.refundable" class="trade-edit-status t-refund-money">
+                    <div>
+                        <b>退单完成，请对该订单进行退款</b>
+                        <a href="{{YouPreset.DOCS_HELP_RETURN_FUND}}" target="_blank">
+                            <span class="b64-you-help you-help-ico" title="点击查看退款详细说明"></span></a>
+                    </div>
+                    <div class="t-desc">退单原因：{{data.request_refund_reason}}</div>
+                    <you-btn type="orange" text="退款" ng-click="onRefundMoneyBefore()"></you-btn>
+                </div><!-- 退单完成提示框 -->
+                <div ng-if="!refundInfo.refundable" ng-class="refundInfo.unrefundableClass" ng-click="delegateContentClick($event)">
+                    <div>退单完成:{{data.request_refund_reason}}</div>
+                    <div class="t-status">
+                        <span class="t-status-label" ng-show="refundInfo.label">
+                            {{ refundInfo.label + (refundInfo.content ? '：' : '')}}
+                        </span>
+                        <div class="t-status-text" ng-bind-html="refundInfo.content"></div>
+                    </div>
+                </div></div>
+            </div>
+        <div class="t-left" ng-class="canEditShipment()?'':'trade-edit-lock'" style="margin-top:10px">
+            <div class="edit-field">
+                <div class="trade-edit-purchase">
+                    <div>
+                        <div class="trade-edit-purchase-header">
+                            <div class="trade-edit-purchase-header-state" ng-class="data.payment_status == '2' ? 't-success' : ''">
+                                {{YouText.PAYMENT_STATUS}}：{{getPaymentStatusText(data.payment_status)}}
+                            </div>
+                            <div class="trade-edit-purchase-header-gateway" title="{{ getGatewayTips() }}" ng-if="data.payment_method.gateway"> 
+                                <span class="b64-order-payment ico-payment-order-{{ data.payment_method.gateway }}"></span> 
+                            </div> 
+                            <a href=javascript:void(0); class="text-link trade-edit-purchase-header-payment" ng-click=onViewPaymentInfo()>查看支付信息</a>
+                            <div class=trade-edit-purchase-op-right>
+                                <div class=trade-edit-purchase-op-status>订单状态：{{ orderStatus }}</div>
+                                <div class=trade-edit-purchase-op-finish ng-if="data.status === '0'">
+                                    <span ng-click=onFinishOrder() style=margin-right:2px title=手动修改订单状态为“已完成”>订单已完成</span>
+                                </div> 
+                                    <span class=trade-edit-purchase-op-refund ng-if=refundMsg.refundable ng-click=onRefundMoneyBefore() style=margin-right:2px>退款</span> 
+                                    <span ng-if=allowTradeRefund>
+                                        <span ng-show="refundMsg.refundable && (refundMsg.amount != refundMsg.refund_amount)">
+                                            <div class=btn-drop-one style=margin-right:5px>
+                                                <span class=trade-edit-purchase-op-refund style=margin-right:2px ng-click=fnBtnDropClick($event)>退单
+                                                    <span class="ico ico-expand-arrow" style=margin-left:4px;top:-1px></span>
+                                                </span>
+                                            <div class=btn-drop-ls style=width:90px;top:30px;right:-16px>
+                                                <div class="btn-drop-ls-item disable" ng-hide=refundMsg.status title=正在退款中，操作暂无法使用>退单且退款</div>
+                                                <div class="btn-drop-ls-item" ng-click=onTradeRefundTrue(true) ng-show=refundMsg.status>退单且退款</div>
+                                                <div class="btn-drop-ls-item" ng-click=onTradeRefundTrue()>退单</div>
+                                             <i class="ico ico-arrow-6"></i>
+                                </div>
+                            </div>
+                            </span> 
+                            <span ng-hide="refundMsg.refundable && (refundMsg.amount != refundMsg.refund_amount)">
+                                <span class="trade-edit-purchase-op-refund" style="margin-right:2px" ng-click="onTradeRefundTrue()">退单</span> 
+                            </span> <a href={{YouPreset.DOCS_HELP_RETURN_ORDER}} target=_blank title=点击查看帮助>
+                            <span class="b64-you-help you-help-ico you-help-position"></span></a> </span>
+                        </div>
+                    </div>
+                    <div class="trade-edit-purchase-op">
+                        <div class="trade-edit-purchase-op-ctrl">
+                            <div class="trade-edit-purchase-op-checkbox">
+                                <input you-check type="checkbox" ng-checked="isCheckAll()" ng-click="onClickCheckAll()" ng-disabled="!canCheckAll()"> </div>
+                            <you-btn text=发货 style="margin-left:6px;vertical-align:middle" ng-disabled="!canMultiOp() || !canSendShipment()" ng-click="onMultiSendShipment()"></you-btn>
+                            <div class="btn-group" style="margin-left:5px">
+                                <you-btn text="合并运单" ng-disabled="!canMergeShipment()" ng-click="onMergeShipment()"></you-btn>
+                                <you-btn text="拆分运单" ng-disabled="!canSplitShipment()" ng-click="onSplitShipment()"></you-btn>
+                            </div>
+                        </div>
+                        <div class="trade-edit-purchase-header-date">{{YouText.TRADE_CREATED_TIME}}：{{data.created_at | date: 'yyyy/MM/dd HH:mm'}}</div>
+                    </div>
+                </div>
+                <div class="trade-edit-purchase-shipments" ng-repeat="item in data.shipments">
+                    <div class="trade-edit-purchase-shipment clearfix t-{{item.status}}" ng-show=!item.shipment.isEdit>
+                        <div class="trade-edit-purchase-shipment-left">
+                            <div style="margin-top:14px;float:left">
+                                <input type="checkbox" you-check ng-disabled="item.status !== 0" ng-model="item.isChecked" /> </div>
+                            <div class="trade-edit-purchase-shipment-state">
+                                <div style="margin-top:6px"><span class="b64-order-status trade-edit-purchase-shipment-state-ico"></span></div> <span>{{getShipmentStatusText(item.status)}}</span> </div>
+                        </div>
+                        <div class="trade-edit-purchase-shipment-info" ng-show=!item.isEdit> <span ng-show="item.ssid !== YouPreset.SHIPMENT_SUPPLIER_NONE_VALUE">
+                            <span style="color:#999">物流供应商：</span>{{item.scsname ? item.scsname: item.ssname ? item.ssname: '未填写'}}&nbsp;&nbsp;&nbsp; 
+                            <span style="color:#999">运单号：</span>
+                            {{item.ship_no ? item.ship_no : '未填写'}} </span> <span ng-show="item.ssid === YouPreset.SHIPMENT_SUPPLIER_NONE_VALUE">{{YouText.SHIPMENT_SUPPLIER_NONE}}</span>
+                            <you-btn type="simple-edit" ng-click="onClickEditShipment(item)"></you-btn>
+                        </div>
+                        <div class="trade-edit-purchase-shipment-edit clearfix" ng-show=item.isEdit>
+                            <div style="max-width:150px;float:left">
+                                <you-tagselector class="t-select" data=item.dataSupplier></you-tagselector>
+                            </div>
+                            <div style="width:12%;min-width:100px;float:left;margin-left:10px" ng-show="item.isOtherSupplier">
+                                <input type="text" class="input input-long" placeholder=物流供应商 ng-model=item.otherSupplier name="otherSupplier_{{$index}}" you-validation="required|shipmentNameCheck" maxlength=255> </div>
+                            <div style="width:12%;min-width:100px;float:left;margin-left:10px" ng-show="!item.isNoneSupplier">
+                                <input type="text" class="input input-long" placeholder="运单号" ng-model="item.tempNumber" name="shipmentNumber_{{$index}}" you-validation="required|urisnippet" maxlength=255 ng-if=!item.isOtherSupplier>
+                                <input type="text" class="input input-long" placeholder=运单号 ng-model="item.tempNumber" name="shipmentNumber_{{$index}}" you-validation=urisnippet maxlength=255 ng-if="item.isOtherSupplier"> </div>
+                            <div style="float:left;margin-left:10px">
+                                <you-btn text="保存" ng-click="onSaveShipment(item, $index)" ng-show=!item.isSaving></you-btn>
+                                <you-btn type=loading ng-show=item.isSaving></you-btn>
+                            </div>
+                        </div>
+                        <div class="trade-edit-purchase-shipment-right"> 
+                            <span style="color:#999">配送要求：</span>{{getShipmentTypeText(item.ship_type)}} 
+                            <span style="color:#999;margin-left:5px">运费：</span>{{YouPreset.$()}}{{item.amount / 100}} 
+                            <span class="trade-edit-purchase-send" style="margin-left:12px">
+                                <you-btn type="primary" text="发货" ng-click="onSendShipment(item)" ng-disabled="item.status !== 0 || !canSendShipment()"></you-btn>
+                            </span> 
+                        </div>
+                    </div>
+                    <table>
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col width=120>
+                            <col width=100> </colgroup>
+                        <tbody class=trade-edit-purchase-products>
+                            <tr class=t-item ng-repeat="product in item.items">
+                                <td class=t-img>
+                                    <div class="grid-list-thumbnail"> 
+                                        <img ng-src={{product.image}}>
+                                        <you-cover></you-cover>
+                                    </div>
+                                </td>
+                                <td class=t-desc>
+                                    <div class=t-desc-title>{{product.name}}</div>
+                                    <div class=t-desc-style><span title={{product.options_desc}}>{{product.options_desc}}</span></div>
+                                    <div class=t-desc-number> 
+                                        <span title=品牌：(无) ng-if="product.vendor_name == null" style=max-width:200px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap>品牌: (无)</span> 
+                                        <span title=品牌：{{product.vendor_name}} ng-if="product.vendor_name != null" style=max-width:200px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap>品牌: {{product.vendor_name}}</span> &nbsp;&nbsp;&nbsp;<span title="编号: {{product.barcode}}&nbsp;&nbsp;&nbsp;库存: {{product.stock}}" style=max-width:500px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap>编号: {{product.barcode}}&nbsp;&nbsp;&nbsp;库存: {{product.stock}}</span> 
+                                    </div>
+                                </td>
+                                <td class=t-price><span class=t-quantity>{{product.quantity}} x </span>{{YouPreset.$()}}{{product.price / 100}}</td>
+                                <td class=t-cost>{{YouPreset.$()}}{{product.quantity * product.price / 100}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class=t-footer>
+                    <table>
+                        <colgroup>
+                            <col>
+                            <col width=110>
+                            <col width=100> </colgroup>
+                        <tbody class=trade-edit-purchase-count>
+                            <tr>
+                                <td rowspan=6 class=t-memo>
+                                    <div class=t-k ng-if="data.reward_point_enabled && (data.status !== '1' || data.status !== '4')"> <span ng-if="data.status !== '2' && data.reward_point">待</span>赠送积分：<span style=font-weight:400>{{data.reward_point || 0}}</span> </div>
+                                    <div class=t-k>顾客备注：</div>
+                                    <div ng-if=!data.customer_remarks>(无)</div>
+                                    <div class=limitWidth>{{data.customer_remarks}}</div>
+                                </td>
+                                <td class="t-item t-light">总价 :</td>
+                                <td class="t-item t-light">{{YouPreset.$()}}{{data.item_amount / 100}}</td>
+                            </tr>
+                            <tr>
+                                <td class="t-item t-light">运费 :</td>
+                                <td class="t-item t-light">{{YouPreset.$()}}{{data.shipment_amount / 100}}</td>
+                            </tr>
+                            <tr ng-show=data.preferential_records.length>
+                                <td class="t-item t-light"> <span>优惠 :</span> </td>
+                                <td class="t-item t-light" style=overflow:visible> <span you-help type=eye you-help-content={{discount}} style=z-index:10>                                    <span class=you-help-eye></span> </span> <span>减{{YouPreset.$()}}{{data.discount_amount / 100}}</span> </td>
+                            </tr>
+                            <tr>
+                                <td class="t-item t-bold">共计 :</td>
+                                <td class="t-item t-bold" ng-class="hasChangeAmount() ? 't-delete': ''">{{YouPreset.$()}}{{data.auto_total_amount / 100}}</td>
+                            </tr>
+                            <tr ng-show=hasChangeAmount()>
+                                <td class="t-item t-bold">修改后的价格 :</td>
+                                <td class="t-item t-bold">{{YouPreset.$()}}{{data.total_amount / 100}}</td>
+                            </tr>
+                            <tr class=trade-edit-purchase-change-amount ng-show="data.payment_status == '0'">
+                                <td colspan=2><span class=t-change ng-click=onClickChangeAmount()>改价</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="edit-field" style="display:none;">
+            <div class="text-heading">订单备注</div>
+            <div class="trade-edit-memo">
+                <div class="input-group right">
+                    <textarea class="input" rows="2" placeholder="输入备注信息" style="resize: none;" ng-model="data.remarks"></textarea> <span class="input-group-addon"><button class="btn btn-default" ng-click="onClickSaveRemark()">保存备注</button></span> </div>
+            </div>
+        </div>
+        <div class=edit-field>
+            <div class="trade-note edit-pannel">
+                <div class=t-header>订单笔记</div>
+                <div class=trade-note-cont>
+                    <ul class=trade-note-cont-list>
+                        <li ng-repeat="note in data.notes">
+                            <div class=trade-note-cont-list-info>
+                                <div class=trade-note-cont-list-avatar><img ng-src={{note.avatarUrl}} alt="{{ decodeHtml(note.account.name) }}" /></div>
+                                <a ng-if=!note.account.is_owner class="text-link trade-note-cont-list-name" href=javascript:void(0); ng-click="checkAdmin(note.account.id, note.account.is_owner)" ng-bind=decodeHtml(note.account.name) title=查看该管理员></a><span style=cursor:text title="" ng-if=note.account.is_owner class="text-link trade-note-cont-list-name" ng-bind=decodeHtml(note.account.name)></span><span class=trade-note-cont-list-date>{{note.created_at | date: 'yyyy/MM/dd HH:mm:ss'}}</span> </div>
+                            <div class=trade-note-cont-list-text ng-bind-html=Util.parseHtml(note.note)></div>
+                        </li>
+                    </ul>
+                    <div class=trade-edit-memo>
+                        <div class="input-group right">
+                            <textarea class="input input-note" rows=2 placeholder=输入笔记内容 style=resize:none ng-model=newNote ng-blur=fTrimThis();></textarea> <span class=input-group-addon><button class="btn btn-default" ng-click=onClickSaveNote()>保存笔记</button></span> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=edit-field><!--无操作记录 -->
+            <div class="trade-history-box-wrap edit-pannel" ng-show="data.history.length == 0">
+                <div class=t-header>订单操作记录</div>
+                <div style="padding:50px 0;text-align:center;color:#aaa">无订单操作记录</div>
+            </div> <!--有操作记录 -->
+            <div class="trade-history-box-wrap edit-pannel" id=trade_history_box ng-style=tradeHistoryBoxStyle>
+                <div class=t-header>订单操作记录</div>
+                <div class=t-select> <span class="check-btn {{isSelect.zero}}" ng-click="historyType('zero')">全部</span> <span class="check-btn {{isSelect.one}}" ng-click="historyType('one')"><span class="ico ico-2"></span>常规</span> <span class="check-btn {{isSelect.two}}" ng-click="historyType('two')"><span class="ico ico-1"></span>物流</span> <span class="check-btn {{isSelect.four}}" ng-click="historyType('four')"><span class="ico ico-4"></span>退款</span> <span class="check-btn {{isSelect.three}}" ng-click="historyType('three')"><span class="ico ico-3"></span>退单</span>
+                </div> <!-- 记录列表 -->
+                <div class=trade-history-box ng-show="data.history.length != 0">
+                    <table cellpadding=0 cellspacing=0>
+                        <colgroup>
+                            <col width=35>  <!--
+                            <col width="100">-->
+                            <col>
+                            <col width=100> </colgroup>
+                        <tbody class=trade-history-box-list ng-show="getDone ">
+                            <tr>
+                                <th class=th-date-null colspan=3 ng-show="bNotShipment && nowSelect == 'two'">无物流操作记录</th>
+                            </tr>
+                            <tr>
+                                <th class=th-date-null colspan=3 ng-show="bNotBack && nowSelect == 'three'">无退单操作记录</th>
+                            </tr>
+                            <tr>
+                                <th class=th-date-null colspan=3 ng-show="bNotBack && nowSelect == 'four'">无退款操作记录</th>
+                            </tr>
+                        </tbody>
+                        <tbody class=trade-history-box-list ng-repeat="item in historyDataArray">
+                            <tr>
+                                <th class=th-date colspan=3 ng-show="item.history.length > 0">{{item.date}}</th>
+                            </tr>
+                            <tr ng-repeat="i in item.history" class=trade-history-eachTr>
+                                <td>
+                                    <div class=tr-minheight> <span class="ctrType-ico ctrType-ico-nom" ng-show="i.type == 0"></span> <span class="ctrType-ico ctrType-ico-ship" ng-show="i.type == 1"></span> <span class="ctrType-ico ctrType-ico-return" ng-show="i.type == 2"></span> <span class="ctrType-ico ctrType-ico-refund" ng-show="i.type == 3"></span> </div>
+                                </td>
+                                <td> <!--非配送信息修改操作 -->
+                                    <div ng-show="i.description_type != 'address_change'" class="t-desc tr-minheight" style="padding:15px 20px;border-left:1px solid #e4e4e4"> <span ng-show="i.operator.type == 1"><a ng-if=!i.operator.is_owner class=trade-history-admin ng-click=checkAdmin(i.operator.id); href=javascript:void(0); title=查看该管理员>{{ decodeHtml(i.operator.name) }}</a><span ng-if=i.operator.is_owner class=trade-history-admin>{{ decodeHtml(i.operator.name) }}</span></span> <span ng-show="i.operator.type == 4"><a class=trade-history-admin href=#/apps/private title=查看私有应用>私有应用：{{ decodeHtml(i.operator.name) }}</a></span> <span ng-show="i.operator.type == 3"><a class=trade-history-admin href=#/apps title=查看应用插件>应用插件：{{ decodeHtml(i.operator.name) }}</a></span> {{ decodeHtml(i.description) }}  </div> <!--非配送信息修改操作 -->
+                                    <div ng-show="i.description_type == 'address_change'" class="t-desc tr-minheight" style="padding:15px 20px;border-left:1px solid #e4e4e4"> <span ng-show="i.operator.type == 1"><a ng-if=!i.operator.is_owner class=trade-history-admin ng-click=checkAdmin(i.operator.id); href=javascript:void(0); title=查看该管理员>{{ decodeHtml(i.operator.name) }}</a><span ng-if=i.operator.is_owner class=trade-history-admin>{{ decodeHtml(i.operator.name) }}</span></span>修改的配送信息
+                                        <br> <span>修改前：<span ng-repeat="ctr in i.description.before">{{ decodeHtml(ctr) }}<span ng-if="$index != 3">，</span></span>
+                                        <br> <span>修改后：<span ng-repeat="ctr in i.description.after" class="{{i.description.before[$index] == ctr ? '' :'trade-history-ctr-bold'}}">{{ decodeHtml(ctr) }}<span ng-if="$index != 3">，</span></span>
+                                        </span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="t-time tr-minheight" style="padding:15px 20px;font-size:14px">{{i.actived_at | date: 'HH:mm:ss'}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class=clearfix></div>
+    </div>
+    <div class=t-right>
+        <div class=edit-field>
+            <div class="trade-edit-customer edit-pannel">
+                <div class=t-header> 顾客信息
+                    <div class=t-header-right> 
+                        <a href="#/customeredit?id={{data.customer.id}}" class=text-link>详细信息</a> 
+                    </div>
+                </div>
+                <table>
+                    <colgroup>
+                        <col width=100>
+                        <col width=80> </colgroup>
+                    <tbody class=trade-edit-customer-table>
+                        <tr>
+                            <td rowspan=4>
+                                <div class=avatar> <img src={{data.customer.avatar_url}}> </div>
+                            </td>
+                            <td class=t-k>顾客</td>
+                            <td class=t-v> <span ng-hide="data.customer.regist_source == 100" class="ico ico-social ico-social-{{data.customer.regist_source}}" style=top:3px;margin-right:4px></span> {{data.customer.name}} </td>
+                        </tr>
+                        <tr>
+                            <td class=t-k>手机</td>
+                            <td class=t-v>{{data.customer.phone}}</td>
+                        </tr>
+                        <tr ng-show={{data.data.customer.level}}>
+                            <td class=t-k>会员等级</td>
+                            <td class=t-v>{{data.customer.level_name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class=edit-field>
+            <div class="trade-edit-dispatch edit-pannel">
+                <div class=t-header> 物流配送信息
+                    <div class=t-header-right> <span class=text-link ng-click=modifyShipping() ng-show=canEditShipment()>修改<span class=trade-modify-ico></span></span>
+                    </div>
+                </div>
+                <table>
+                    <colgroup>
+                        <col width=80>
+                        <col> </colgroup>
+                    <tbody class=trade-edit-dispatch-table>
+                        <tr>
+                            <td class=t-k>收件人</td>
+                            <td class=t-v>{{ decodeHtml(data.address.name) }}</td>
+                        </tr>
+                        <tr>
+                            <td class=t-k>收件地址</td>
+                            <td class=t-v>
+                                {{ decodeHtml(data.address.detail) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class=t-k>联系电话</td>
+                            <td class=t-v>{{data.address.phone ? data.address.phone: '-'}}</td>
+                        </tr>
+                   
+                    </tbody>
+                </table>
+                <div class=trade-edit-dispatch-sub>
+                    <div class=t-item>
+                        <span class=t-k>总体积 : </span>
+                        {{data.total_volume ? Util.volumeMeterShow(data.total_volume): '0'}} 立方米
+                    </div>
+                    <div class=t-item>
+                        <span class=t-k>总重量 : </span>
+                        {{data.total_weight ? Util.weightKg(data.total_weight): '0'}} 千克
+                    </div>
+                </div> <!-- 地图 -->
+                <div class=map-block-open ng-hide=isShowMapBlock> 
+                    <span class=text-link ng-click=showMap() ng-hide=isShowMapLoading>查看地图</span>
+                    <i class="ico ico-loading" ng-show=isShowMapLoading></i>
+                </div>
+                <div class=map-block> 
+                    <span class=map-block-tip ng-show="mapImgSrc == '' || mapImgSrc == null">
+                    地图上找不到该收货地址</span>
+                    <a href={{mapAhref}} target=_blank title=点击查看地图 ng-show=showImgpic>
+                        <img ng-src={{mapImgSrc}} />
+                    </a>
+                </div> <!--物流-->
+                <div ng-show="shipmentInfo.length == 0">
+                    <div class="trade-ship-empty">无物流信息</div>
+                </div>
+                <div ng-repeat="item in shipmentInfo">
+                    <div class=trade-ship-box-header ng-click=onClickShowTrackers(item)>
+                        <div class=t-title title="{{item.items.length}}件商品 {{item.ssname}} {{item.ship_no}}"> 
+                            <span class="ico ico-expand-arrow-up" ng-show=!item.showTrackers></span> 
+                            <span class="ico ico-expand-arrow-down" ng-show=item.showTrackers></span> {{item.items.length}}件商品 {{item.ssname}} {{item.ship_no}} 
+                        </div> 
+                        <a class="text-link trade-ship-box-header-refresh" href=javascript:void(0); ng-click="onClickRefreshTrackers(item, $event)" ng-hide="item.ssid == YouPreset.SHIPMENT_SUPPLIER_OTHER_VALUE">刷新</a> 
+                    </div>
+                    <div class=trade-ship-box ng-show=item.showTrackers>
+                        <div class=t-loading ng-show=item.loadingTrackers>
+                             <i class="ico ico-loading"></i> 查询中 </div>
+                        <table ng-hide="item.loadingTrackers || item.status === 2">
+                            <tr class=trade-ship-autoreceive>
+                                <td>
+                                    <div class="t-count">
+                                        <i class="ico ico-miaobiao" style="margin-bottom:-2px" title="自动收货时间"></i> 自动确认收货，还剩{{item.auto_received_in}}天 </div>
+                                </td>
+                                <td>
+                                    <div class=t-link> <span class="text-link" ng-click="changeShipmentAutoReceiveDay(item)">延长收货时间</span> </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table ng-hide=item.loadingTrackers>
+                            <colgroup>
+                                <col>
+                                <col width=33%> </colgroup>
+                            <tbody class=trade-ship-box-list>
+                                <tr ng-if="(!item.trackers || item.trackers.length === 0) && item.ssid != YouPreset.SHIPMENT_SUPPLIER_OTHER_VALUE">
+                                    <td ng-show="item.ssid != YouPreset.SHIPMENT_SUPPLIER_OTHER_VALUE">
+                                        <div class="t-desc">暂无物流信息</div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr ng-if="(!item.trackers || item.trackers.length === 0) && item.ssid == YouPreset.SHIPMENT_SUPPLIER_OTHER_VALUE">
+                                    <td colspan=2 style="padding:5px 0">
+                                        <div class=t-desc>选择“其他物流”无法获取对应的物流信息</div>
+                                    </td>
+                                </tr> <!--&& v.ssid != YouPreset.SHIPMENT_SUPPLIER_OTHER_VALUE-->
+                                <tr ng-repeat="i in item.trackers">
+                                    <td>
+                                        <div class="t-desc">{{i.context || i.content}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="t-time">{{i.time | date: 'yyyy/MM/dd HH:mm'}}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=edit-field>
+            <div class="trade-edit-metafields edit-pannel">
+                <div class=t-header> 附加信息 <a href="{{ YouPreset.DOCS_METAFIELDS }}" target=_blank title=点击查看帮助><span style=top:3px class="b64-you-help you-help-ico you-help-position"></span></a> </div>
+                <div ng-show="!data.attribute_meta_field.fields || Object.get(data.attribute_meta_field.fields).length === 0">
+                    <div style="padding:46px 0;text-align:center;color:#aaa">无附加信息</div>
+                </div>
+                <div ng-hide="!data.attribute_meta_field.fields || Object.get(data.attribute_meta_field.fields).length === 0">
+                    <dl class=trade-edit-metafields-dl>
+                        <div ng-repeat="(key, value) in data.attribute_meta_field.fields">
+                            <dt class=t-k>{{key}}:</dt>
+                            <dd class=t-v>
+                                <input class="input input-long" type=text ng-model=data.attribute_meta_field.fields[key]>
+                            </dd>
+                        </div>
+                    </dl>
+                    <div class=t-sub>
+                        <button ng-click=onClickSaveMetaField() class="btn btn-default">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="edit-field">
+            <div class="trade-edit-ip"> <span class="t-k">下单IP : </span>{{data.customer_ip}} </div>
+        </div></div>
+    <div class=clearfix></div>
+</div>
+</div>

@@ -1,0 +1,109 @@
+<div class="main-menu">
+    <h2 class=main-menu-title><span class=main-menu-ico><you-ico type=promotion></you-ico></span>{{ titleAction }}满免邮活动</h2>
+    <you-btn text=返回 ng-click=onClickBaseBack()></you-btn>
+    <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-show=!isBaseSaving ng-disabled=isBaseLoading></you-btn>
+    <you-btn type=loading ng-show=isBaseSaving></you-btn> <span class=main-menu-desc title={{data.name}} ng-bind=data.name></span>
+    <div class=main-menu-right>
+        <you-btn type=danger text=删除 ng-click=onClickBaseDelete() ng-disabled="!baseAvailable || isBaseLoading
+"></you-btn>
+    </div>
+</div>
+<div you-mainbody you-fadein>
+    <div class="discount-block transition-opacity" ng-style=showGrid>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>满免邮活动名称</h2>
+                <input class="input input-long" type=text ng-model=data.name placeholder=请输入免邮活动名称 you-validation=required />
+                <h2 style=margin-top:18px>满免邮活动说明</h2>
+                <textarea rows=1 class="input input-long transition-quick" ng-model=data.introduce placeholder=请输入活动说明 you-validation=maxlength(2000) ng-style=shortDescStyle></textarea>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>有效期</h2>
+                <you-datetime data=dataDatetime you-datetime-dir=bottom></you-datetime>
+                <div style=position:relative;left:50px;top:-48px>
+                    <input style=display:none name=begin_data you-validation/>
+                </div>
+                <div style=position:relative;left:50px>
+                    <input style=display:none name=expire_data you-validation/>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>                        满免邮活动规则<span style=margin-left:1em;color:#aaa>按运费模板分运单</span>                        <!-- <span class="b64-you-help you-help-ico you-help-position" you-help>一个订单可以包含多个运单；<br/>免邮规则只对运单有效</span> !-->                   </h2>
+                <div class=discount-active-amount>
+                    <label class=label-block ng-class=isActiveAmountChecked(0)>
+                        <input you-check type=radio ng-model=isActiveAmount name=isActiveAmount ng-value=0 />
+                        <div class=label-block-content>运单里包含任意指定的商品，则此运单免邮</div>
+                    </label>
+                </div>
+                <div class=discount-active-amount>
+                    <label class=label-block ng-class=isActiveAmountChecked(1)>
+                        <input you-check type=radio ng-model=isActiveAmount name=isActiveAmount ng-value=1 />
+                        <div class=label-block-content> 运单里包含任意指定的商品并达到一定金额，则此运单免邮 <span class=discount-active-amount-input>  <i class="ico ico-arrow-1"></i>                                    买满                                    <div class="input-unit input-unit-short">                                        <div class=input-group>                                            <div class=input-group-addon>{{YouPreset.$()}}</div>                                            <input class=input ng-model=data.active_amount type=text you-validation=required|positiveNumber|float2 />                                        </div>                                    </div>                                    享受免邮                                </span> </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>不参与满免邮活动地区</h2>
+                <div class="discount-area clearfix">
+                    <div style=float:left>
+                        <you-btn text=设置不参与满免邮活动地区 ng-click=setArea()></you-btn> <span style=color:#aaa;margin-left:15px;vertical-align:middle>当前设置：</span> </div>
+                    <div class=discount-area-cities> <span ng-show="areas.length == 0">无限制，均可参与</span> <span ng-show="areas.length != 0">                                不参与地区 -                                <span ng-repeat="i in areas"><span ng-if="$index > 0">、</span>{{i.name}}<span ng-if=!i.isSelectedAll><span you-hint={{getCityNames(i.cities)}}><span style=color:#49d>({{i.cities.length}})</span></span>
+                        </span>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>参加满免邮的配送方式<input style="display:none" you-validation name="deliveryType"></h2>
+                <div>
+                    <label class="label-block discount-shipment" ng-repeat="i in shipments" ng-class="i.isChecked ? 'checked':''" ng-click=clickShipment()>
+                        <input you-check type="checkbox" ng-model="i.isChecked" />
+                        <div class="label-block-content">{{i.text}}</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>指定满免邮商品</h2>
+                <div>
+                    <div class=discount-range ng-repeat="i in rangeTypes">
+                        <label class=label-block ng-class=isRangeTypeChecked(i)>
+                            <input you-check type=radio ng-model=data.range_type name=rangeType value={{i.value}} />
+                            <div class=label-block-content> {{i.text}} <span ng-if="$index == 1" class=discount-range-product>                                        <i class="ico ico-arrow-1"></i>                                       <you-btn ng-if="data.products.length == 0" type=primary text="选择商品 (0)" ng-click=selectProducts()></you-btn>                                        <you-btn ng-if="data.products.length > 0" text="选择商品 ({{data.products.length}})" ng-click=selectProducts()></you-btn>                                        <div style=position:relative;left:90px><input style=display:none name=products you-validation/></div>                                    </span> </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>参与满免邮活动的顾客</h2>
+                <div>
+                    <div class=promotion-range ng-repeat="i in activeTypes">
+                        <label class=label-block ng-class=isActiveTypeChecked(i) ng-disabled="i.value == 'customer_level' && !YouLevel.CUSTOMER_LEVEL_ENABLE" ng-style="{'min-width' : (i.value == 'customer_level' && !YouLevel.CUSTOMER_LEVEL_ENABLE) ? '285px' : '160px'} "> <span ng-class="{'promotion-range-left-abs': i.value == 'customer_level'}">                                    <input you-check type=radio ng-model=data.active_type name=activeType value={{i.value}} ng-disabled="i.value == 'customer_level' && !YouLevel.CUSTOMER_LEVEL_ENABLE"/> {{i.text}}<span ng-show="i.value == 'customer_level' && !YouLevel.CUSTOMER_LEVEL_ENABLE">（专业版/企业版/旗舰版）</span> </span>
+                            <div class=label-block-content ng-switch=i.value> <span ng-switch-when=customer_level class=promotion-range-customerlevel>                                        <i class="ico ico-arrow-1"></i>                                        <span ng-if=customer_levels>                                            <label class=labelmargin ng-repeat="level in customer_levels">                                                <input you-check type=checkbox ng-model=level.selected ng-change=CustomerLevelChange(level)>{{level.name}}                                            </label>                                        </span> <span ng-if=!customer_levels class=level-empty>                                            未设置会员级别                                            <a href=#/customerlevel class=text-link>前往设置会员级别</a>                                        </span>
+                                <div style=position:relative;left:50%;top:5px>
+                                    <input style=display:none name=customer_levels you-validation/>
+                                </div>
+                                </span> <span ng-switch-when=partial class=promotion-range-product>                                         <i class="ico ico-arrow-1"></i>                                       <you-btn ng-if="data.customers.length == 0" type=primary text="选择顾客 (0)" ng-click=selectCustomers()></you-btn>                                        <you-btn ng-if="data.customers.length > 0" text="选择顾客 ({{data.customers.length}})" ng-click=selectCustomers()></you-btn>                                        <div style=position:relative;left:90px;top:-25px><input style=display:none name=customers you-validation/></div>                                    </span> </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix item-bottom">
+            <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-show=!isBaseSaving></you-btn>
+            <you-btn type=loading ng-show=isBaseSaving></you-btn>
+        </div>
+    </div>
+</div>

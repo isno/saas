@@ -1,0 +1,45 @@
+<div class="main-menu">
+    <h1 class=main-menu-title>
+        <span class=bigtip-discount-ico ng-show="type != 'discount' "></span>
+        <span class=main-menu-ico ng-show="type == 'discount' "><you-ico type=discount></you-ico></span>{{ name }}
+    </h1>
+</div>
+<div you-mainbody you-fadein ng-show="type != 'discount' ">
+    <div class=bigtip-block ng-hide="type == 'account' ">
+        <h1>当前的套餐尚未包含此功能，请购买开通</h1>
+        <p>需到爱有店官网购买开启此功能</p></div>
+    <div class=bigtip-block ng-show="type == 'account' ">
+        <h1>抱歉，你没有当前功能的操作权限。</h1> </div>
+</div>
+<div you-mainbody you-fadein ng-show=" type == 'discount' ">
+    <div class=bigtip-discount>
+        <div class=titile><span ng-if="YouPreset.LEVEL_CODE == 'startup'">起航版无法创建优惠活动</span> <span ng-if="YouPreset.LEVEL_CODE == 'devel'">开发版无法创建优惠活动</span>
+            <br>
+            <a href={{YouPreset.OFFICIAL_WEBSITE_BUY_UPGRADE}} target=_blank>
+                <you-btn type=primary text=升级为正式版></you-btn>
+            </a>
+        </div>
+        <div> <span class=title2>优惠活动功能介绍</span>
+            <div class=textfull>
+                <div class=text-block>
+                    <div class="text-block-left left-block"><span class=discout-d>满减优惠</span></div>
+                    <div class=text-block-left>
+                        <div class=discout-text>全场或指定商品参与满减活动
+                            <br>如满{{YouPreset.$()}}300-{{YouPreset.$()}}30，满{{YouPreset.$()}}300-{{YouPreset.$()}}50 </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class=textfull>
+                    <div class=text-block>
+                        <div class="text-block-left left-block"><span class=discout-d>免邮优惠</span></div>
+                        <div class=text-block-left>
+                            <div class="discout-text discount-fee">全场或指定商品参与免邮活动</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style=margin-top:28px><a style=text-decoration:none;color:#49d href={{YouPreset.DOCS_HELP_DISCOUNT}} target=_blank>更多介绍</a></div>
+        </div>
+    </div>
+</div>'

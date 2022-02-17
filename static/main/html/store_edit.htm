@@ -1,0 +1,74 @@
+<div class="main-menu">
+    <h2 class="main-menu-title">
+    {{titleAction }}分店</h2>
+    <you-btn text="返回" ng-click="onClickBaseBack()"></you-btn>
+    <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" 
+    ng-show="!isBaseSaving && !isOwner" ng-disabled=isBaseLoading></you-btn>
+    <you-btn type=loading ng-show=isBaseSaving></you-btn>
+    <div class="main-menu-right" ng-hide="isOwner">
+        <you-btn type="danger" text=删除 ng-click=onClickBaseDelete() ng-disabled="!baseAvailable || isBaseLoading"></you-btn> 
+    </div>
+</div>
+<div class="main-page">
+<div you-mainbody you-fadein>
+    <div class="transition-opacity store" ng-style=showGrid> <!--新建-->
+        <div>
+             <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                    <h2>分店名称</h2>
+                    <input class="input" type=text style="min-width:200px;max-width:50%"  ng-model="data.name" placeholder={{YouText.INPUT_PLACEHOLDER}}分店名称 you-validation=required /> 
+
+                    
+                    <h2>联系电话 <span class="theme-seo-tip">客户联系使用</span></h2>
+                    <input class="input" type=text style="min-width:200px;max-width:50%"  ng-model="data.phone" placeholder={{YouText.INPUT_PLACEHOLDER}}联系电话 you-validation=required /> 
+
+                    <h2>分店地址（省市区）</h2>
+                    <you-areaselector data="areaSelector"></you-areaselector>
+                    <h2>详细地址 <span class="theme-seo-tip">请填写详细准确的地址，以便于用户经纬度定位</span></h2>
+                    <input class="input input-long" type=text style="min-width:200px;max-width:35%" ng-model="data.address" placeholder={{YouText.INPUT_PLACEHOLDER}}分店地址 you-validation=required />
+
+                     <h2>交通指引</h2>
+                      <textarea rows="3" class="input input-long" style="min-width:200px;max-width:50%"  ng-model="data.traffic_guide" placeholder="如1号线地铁2号出口， 公交51路南站下" you-validation="maxlengthSpecial(128)" you-validation-encodehtml="true" style="max-height: 72px;" maxlength="128"></textarea>
+                   
+                </div>
+            </div>
+
+              <div class="main-item clearfix">
+
+                <div class="main-item-content main-item-content-full">
+                    <h2>营业时间<span class="theme-seo-tip">24小时制, 营业结束提前半小时将不再接收订单</span></h2>
+                    <you-datetime data="dataDatetime" you-datetime-dir="bottom"></you-datetime>
+                    <div style="position: relative; left: 50px; top: -48px;">
+                        <input style="display: none" name="begin_data" you-validation />
+                    </div>
+                    <div style="position: relative; left: 50px;">
+                        <input style="display: none" name="expire_data" you-validation />
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-item clearfix main-item-nointro">
+            <div class="main-item-content">
+                <h2>运营状态</h2>
+                <div class="page-visibility">
+                    <label class="label-block" ng-class="data.is_avalible=='true'? 'checked':''">
+                        <input you-check type="radio" ng-model="data.is_avalible" value="true"/>
+                        <div class="label-block-content">正常运营</div>
+                    </label>
+                    <label class="label-block" ng-class="data.is_avalible=='false'? 'checked':''">
+                        <input you-check type="radio" ng-model="data.is_avalible" value="false"/>
+                        <div class="label-block-content">关店维护</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+            <div class="clearfix item-bottom">
+                <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-show="!isBaseSaving" ng-disabled=isBaseLoading></you-btn>
+                <you-btn type=loading ng-show=isBaseSaving></you-btn>
+            </div>
+        </div> <!--编辑-->
+     
+    </div>
+</div>
+    </div>

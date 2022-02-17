@@ -1,0 +1,61 @@
+<%inherit file="../_layout.htm"/>
+<%block name="head">
+<title>联系我们 - 爱优店 - 品牌电商营销、新媒体营销推广、O2O解决方案的领导者|梅逸科技(上海)有限公司</title>
+</%block>
+
+<%block name="main">
+<div class="container">
+<div class="row justify-content-center mt-5">
+<div class="col-md-10 col-sm-11">
+
+  <div class="page-header">
+    <h4>欢迎您的咨询 <small class="text-secondary">联系我们，我们将免费为您的需求提供技术方案</small> </h4>
+  </div>
+  <div class="row">
+    <div class="col-md-5">
+      <!--<p><h5>爱优店 - 梅逸科技(上海)有限公司</h5></p>-->
+      <p><b>地址</b>： <span>上海市浦东新区康桥路1789号F-Space，2F</span> </p>
+      <p><b>Email</b>： <span>info@iyoudian.cn</span> </p>
+      <p><b>微信扫码联系</b></p>
+      <p><img src="/static/www/qrcode.png" style="padding:5px;border:1px solid #333;width:150px;border-radius: 5px;"></p>
+    </div>
+    <div class="col-md-7">
+      <div id="map_bot" style="width: 100%; height: 330px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+</%block>
+<%block name="foot">
+
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.3&key=86318c89a2235c4d6ebe403e725b03b1"></script>
+<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script type="text/javascript">
+var map = new AMap.Map('map_bot', {
+    resizeEnable: true,
+    scrollWheel: false,
+    center: ['121.586329', '31.150881'],
+    zooms: [2, 18],
+    zoom: 10
+});
+var infoWindow = new AMap.InfoWindow({
+    offset: new AMap.Pixel(10, 0)
+});
+var marker = new AMap.Marker({
+    map: map,
+    center: ['121.586329', '31.150881']
+});
+marker.content = '<div class="info-title">爱优店 - 上海纳瑾信息科技有限公司</div><div class="info-content">上海市浦东新区康桥路1789号</div>';
+marker.on('click', markerClick);
+marker.emit('click', {
+    target: marker
+});
+function markerClick(e) {
+    infoWindow.setContent(e.target.content);
+    infoWindow.open(map, e.target.getPosition());
+}
+</script>
+</%block>

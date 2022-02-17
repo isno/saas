@@ -1,0 +1,138 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+        <span class="main-menu-ico">
+            <you-ico type="promotion"></you-ico>
+        </span>营销活动列表
+    </h1>
+    <you-btn type="primary" ng-click="addPromotion()" text="新增营销活动"></you-btn>
+    <span you-help you-help-dir="bottom" 
+    style="position:relative; z-index:3; vertical-align:top; line-height:1; top:20px;">同件商品不能参与多个有效的营销活动（满免邮除外）</span>
+</div>
+
+<div you-mainfollow ng-style="showGrid">
+    <section>
+        <div class="grid-filter">
+            <form>
+                <table>
+                    <colgroup>
+                        <col width="130">
+                        <col width="400">
+                        <col width="130">
+                    </colgroup>
+                    <tbody class="grid-filter-body">
+                    <tr>
+                        <td>
+                            <div class="grid-filter-k">活动类型：</div>
+                        </td>
+                        <td>
+                            <div class="grid-filter-v">
+                                <you-check-btn data="dataType"></you-check-btn>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="grid-filter-k">活动状态：</div>
+                        </td>
+                        <td>
+                            <div class="grid-filter-v">
+                                <you-check-btn data="dataStatus"></you-check-btn>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="grid-filter-k">有效时间：</div>
+                        </td>
+                        <td style="padding-right:10px;">
+                            <div class="grid-filter-v">
+                                <you-date data="dataDate"></you-date>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="grid-filter-k">{{YouText.SEARCH}}：</div>
+                        </td>
+                        <td>
+                            <div class="grid-filter-v">
+                                <input type="text" class="input input-search" placeholder="{{YouText.SEARCH_HOLDER}}营销活动名称" ng-keypress="onSearch($event)" ng-model="param.search" you-validation="trim" />
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="grid-filter-btns">
+                    <you-btn type="search" ng-click="onSearch()"></you-btn>
+                    <you-btn text="{{YouText.RESET}}" ng-click="onReset()"></you-btn>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div class="grid-header">
+            <you-btn type="refresh" ng-click="onRefresh()" ng-show="!isRefreshing"></you-btn>
+            <you-btn type="refreshing" ng-show="isRefreshing"></you-btn>
+            <div class="grid-header-right">
+                <div class="t-count">{{YouText.LIST_ITEM_COUNT_P1}}<span class="t-number">{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div you-mainbody ng-style="showByMainBody">
+    <div class="transition-opacity" ng-style="showGrid">
+        <div class="grid-body">
+            <you-grid data="dataGrid">
+                <table>
+                    <colgroup>
+                        <col width="35%">
+                        <col width="10%">
+                        <col width="30%">
+                        <col width="15%">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>活动名称</th>
+                        <th>活动类型</th>
+                        <th>有效时间</th>
+                        <th>创建日期</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0">
+                    <tr ng-repeat="item in list">
+                        <td>
+                            <span class="text-status text-status-invalid" ng-if="item.status == 'expired'">{{getStatusText(item.status)}}</span>
+                            <span class="text-status" ng-if="item.status == 'actived'">{{getStatusText(item.status)}}</span>
+                            <span class="text-status text-status-coming" ng-if="item.status == 'pending'">{{getStatusText(item.status)}}</span>
+                            <a href="#!/{{getTypePath(item.discount_type)}}?id={{item.id}}" ng-click="onClickItem(item, $event)" title="{{item.name}}">{{item.name}}</a>
+                        </td>
+                        <td>{{getTypeText(item.discount_type)}}</td>
+                        <td>
+                            <span title="{{item.actived_at == -1 ? '永久': (item.actived_at | date:'yyyy/MM/dd HH:mm')}} - {{item.expired_at == -1 ? '永久': (item.expired_at | date:'yyyy/MM/dd HH:mm')}}">
+                            {{item.actived_at == -1 ? '永久': (item.actived_at | date:'yyyy/MM/dd HH:mm')}} - {{item.no_expires == true ? '永久': (item.expired_at | date:'yyyy/MM/dd HH:mm')}}
+                            </span>
+                        </td>
+                        <td>{{ (item.created_at | date:'yyyy/MM/dd HH:mm') }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+
+            <div class="grid-body-empty" ng-show="isAllEmpty">
+                <span class="grid-ico-empty grid-ico-empty-promotion"></span>
+                <div class="grid-body-empty-title">你还没有创建过营销活动</div>
+                <div class="grid-body-empty-desc">创建后营销活动将出现在这里</div>
+                <you-btn type="primary" text="新增营销活动" class="grid-body-empty-btn" ng-click="addPromotion()"></you-btn>
+
+                <div class="grid-body-empty-bottom"></div>
+            </div>
+        </div>
+
+        <div class="grid-body-none" ng-show="!isAllEmpty && isEmpty">{{YouText.GRID_SEARCH_NONE}}</div>
+
+        <div class="grid-footer" ng-show="!isAllEmpty">
+            <div class="grid-footer-right">
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+
+    </div>
+</div>

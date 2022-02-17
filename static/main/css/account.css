@@ -1,0 +1,83 @@
+.account-sel {
+    padding-top:20px;
+    padding-left:28px;
+    border:1px solid #bbb;
+    min-weight:300px;
+    width:80%
+}
+.account-sel-label {
+    padding-right:20px;
+    color:#555;
+    white-space:nowrap;
+    width:auto
+}
+.account-sel-label-chk {
+    vertical-align:baseline;
+    margin-right:10px;
+    position:relative;
+    top:2px
+}
+.account-typeSel-part {
+    width:100%;
+    overflow:hidden;
+    padding-bottom:0
+}
+.account-typeSel-part h3 {
+    font-size:14px;
+    margin:0 0 5px;
+    padding-left:0;
+    color:#444;
+    width:80px;
+    vertical-align:top;
+    font-weight:700
+}
+.account-typeSel-part-cont {
+    width:calc(100% - 110px);
+    display:inline-block
+}
+.account-typeSel-part-cont.menhu {
+    width:calc(100% - 190px)
+}
+.account-typeSel-part-cont.new-menhu {
+    width:53%;
+    padding:15px 0 0
+}
+.accountedit-field {
+    margin-top:20px;
+}
+.accountedit-field>div {
+    display:inline-block;
+    vertical-align:top;
+    border:1px solid #bcd;
+    height:280px
+}
+.accountedit-ifo {
+    width:26.5%;
+    margin-right:10px
+}
+.accountedit-ifo img {
+    width:85px;
+    height:85px;
+    border-radius:50%;
+    margin:5px auto 0;
+    display:block
+}
+.accountedit-ifo p {
+    margin:0 0 18px;
+    font-size:14px;
+    color:#555;
+    padding-left:15px
+}
+.accountedit-right {
+    width:calc(73.5% - 44px);
+    padding:0 0 0 30px;
+    position:relative
+}
+.accountedit-right h2 {
+    color:#444;
+    font-size:14px
+}
+.accountedit-right .btn {
+    position:absolute;
+    right:88px
+}

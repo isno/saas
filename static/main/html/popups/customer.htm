@@ -1,0 +1,178 @@
+<div class=pop-customer-wrap>
+    <div class=pop-customer-win ng-class=popWinClass>
+        <div class=pop-customer-list>
+            <div class=pop-customer-list-header> <span class=pop-customer-list-title-text>{{data.title}}的顾客</span> <span ng-class="{hidden: !listCustomers.length}" class=pop-customer-list-title-count you-hint={{data.title}}的顾客共{{listCustomers.length}}个>                    <span class=text-count>{{listCustomers.length}}</span> </span> <span class=pop-customer-list-title-btn>                    <you-btn text=清空列表 ng-click=removeListCustomers() ng-disabled="listCustomers.length == 0"></you-btn>                </span> </div>
+            <div class=pop-customer-list-selected>
+                <div class=pop-customer-list-item ng-class=listItemClass ng-repeat="customer in listCustomers" ng-init="customer.listItemAmount=1">
+                    <div class=pop-customer-list-item-text> <span class="ico ico-social ico-social-{{customer.regist_source}}" style=top:3px;margin-right:4px title={{getPresetText(customer.regist_source)}}></span> <a href=javascript:; title={{customer.name}}>{{customer.name}}</a> </div>
+                    <div ng-if="mode == 'distribute'" class=pop-customer-list-input-wrap>
+                        <div class=input-unit>
+                            <input type=text class="input input-short" ng-model=customer.listItemAmount name=listItemAmount_{{$index}} you-validation=required|positiveInteger|maxNumber ng-change=unSaved() ng-if=!msg.single />
+                            <input type=text class="input input-short" ng-model=customer.listItemAmount name=listItemAmount_{{$index}} you-validation=required|positiveInteger|maxNumber ng-change=unSaved() ng-if=msg.single disabled=disabled title=每个账户限用一张 /> <span class=input-unit-text>张</span> </div>
+                    </div> <span class=pop-customer-list-item-op>                        <span class="ico ico-remove-1" ng-mousedown=stopPropagation($event) type=remove-1 title=移除 ng-click=clickCustomer(customer)></span> </span>
+                </div>
+                <div ng-if="listCustomers.length == 0" class=pop-product-list-none>
+                    <div><span class=pop-product-list-none-img></span></div>
+                    <div class=pop-product-list-none-text>请在右侧选择要{{data.title}}的顾客</div>
+                </div>
+            </div>
+            <div class=pop-customer-list-foot>
+                <you-btn type=primary text=确定 ng-click=popSave()></you-btn>
+                <you-btn text=取消 ng-click=popCancel()></you-btn>
+            </div>
+        </div>
+        <div class=pop-customer-content>
+            <div class=pop-customer-grid-header>
+                <div class=pop-customer-grid-header-title> <span class=pop-customer-grid-header-title-text>顾客列表</span> <span class=pop-customer-grid-header-title-count you-hint=总共{{baseItemCount}}个顾客，{{data.title}}的顾客共{{currentItemCount()}}个>                        <span class=text-count>{{currentItemCount()}}/{{baseItemCount}}</span> </span>
+                </div>
+            </div>
+            <div you-mainfollow ng-style=showGrid>
+                <section>
+                    <div class=grid-filter>
+                        <form>
+                            <table>
+                                <colgroup>
+                                    <col width=160>
+                                    <col>
+                                    <col width=180> </colgroup>
+                                <tbody class=grid-filter-body> <!--
+                                    <tr>
+                                        <td>
+                                            <div class="grid-filter-k">是否接受推广</div>
+                                        </td>
+                                        <td>
+                                            <div class="grid-filter-v">
+                                                <you-check-btn data="dataMarketing"></you-check-btn>
+                                            </div>
+                                        </td>
+                                    </tr>-->
+                            
+                                    <tr>
+                                        <td>
+                                            <div class=grid-filter-k>{{YouText.CUSTOMER_TRADE_COUNT}}：</div>
+                                        </td>
+                                        <td>
+                                            <div class=grid-filter-v>
+                                                <div class="input-group input-group-iai">
+                                                    <div class=t-wrap>
+                                                        <input class="input input-long input-left" type=text ng-keypress=onSearch($event) ng-model=param.count_smaller you-validation=integer|maxNumber /> <span class=t-text>单</span> </div> <span class=input-group-addon>-</span>
+                                                    <div class=t-wrap>
+                                                        <input class="input input-long" type=text ng-keypress=onSearch($event) ng-model=param.count_greater you-validation=integer|maxNumber /> <span class=t-text>单</span> </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class=grid-filter-k>{{YouText.CUSTOMER_TRADE_TOTAL_AMOUNT}}：</div>
+                                        </td>
+                                        <td>
+                                            <div class=grid-filter-v>
+                                                <div class="input-group input-group-iai">
+                                                    <div class="input-group input-group-left">
+                                                        <div class=input-group-addon>{{YouPreset.$()}}</div>
+                                                        <input class="input input-long" type=text ng-keypress=onSearch($event) ng-model=param.amount_smaller you-validation=nonNegativeNumber|float2|maxNumber /> </div> <span class=input-group-addon>-</span>
+                                                    <div class="input-group input-group-right">
+                                                        <div class=input-group-addon>{{YouPreset.$()}}</div>
+                                                        <input class="input input-long" type=text ng-keypress=onSearch($event) ng-model=param.amount_greater you-validation=nonNegativeNumber|float2|maxNumber /> </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class=grid-filter-k>{{YouText.SEARCH}}：</div>
+                                        </td>
+                                        <td>
+                                            <div class=grid-filter-v>
+                                                <input type=text class="input input-search" placeholder={{YouText.SEARCH_HOLDER}}{{YouText.CUSTOMER_PHONE}} ng-model=param.search ng-keypress=onSearch($event) you-validation=trim /> </div>
+                                        </td>
+                                        <td ng-show=dataLevel>
+                                            <div class=grid-filter-k>{{YouText.CUSTOMER_LEVEL}}：</div>
+                                        </td>
+                                        <td ng-show=dataLevel>
+                                            <div class=grid-filter-v id=customer-level-filter> </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class=grid-filter-btns>
+                                <you-btn type=search ng-click=onSearch()></you-btn>
+                                <you-btn text={{YouText.RESET}} ng-click=onReset()></you-btn>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <section>
+                    <div class=grid-header>
+                        <you-btn type=refreshing ng-show=isRefreshing></you-btn>
+                        <div class=grid-header-right>
+                            <div class=t-count>{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                            <you-pagination data=dataPagination></you-pagination>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div you-mainbody ng-style=showByMainBody class=customer-block>
+                <div class=transition-opacity ng-style=showGrid>
+                    <div class=grid-body>
+                        <you-grid data=dataGrid class=pop-product-grid-table>
+                            <table>
+                                <colgroup>
+                                    <col width=15%>
+                                    <col width=80px>
+                                    <col width=15%>
+                                    <col width=10%>
+                                    <col width=10%>
+                                    <col width=15%>
+                                    <col width=15%> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>{{YouText.CUSTOMER_NAME}}</th>
+                                        <th>{{YouText.CUSTOMER_AVATAR}}</th>
+                                        <th><span class=grid-body-order ng-click="setOrder('created_at')">{{YouText.CUSTOMER_CREATED_TIME}}<span ng-class="getOrderClass('created_at')"></span></span>
+                                        </th>
+                                        <th><span class=grid-body-order ng-click="setOrder('trade_total_count')">{{YouText.CUSTOMER_TRADE_COUNT}}<span ng-class="getOrderClass('trade_total_count')"></span></span>
+                                        </th>
+                                        <th><span class=grid-body-order ng-click="setOrder('trade_total_amount')">{{YouText.CUSTOMER_TRADE_TOTAL_AMOUNT}}<span ng-class="getOrderClass('trade_total_amount')"></span></span>
+                                        </th>
+                                        <th>{{YouText.CUSTOMER_LAST_TRADE}}</th>
+                                        <th><span class=grid-body-order ng-click="setOrder('last_trade_date')">{{YouText.CUSTOMER_LAST_TRADE_DATE}}<span ng-class="getOrderClass('last_trade_date')"></span></span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="list.length > 0"> <!-- 此处you-grid这个directive会off掉click事件 -->
+                                    <tr ng-repeat="item in list" data-role=gridCustomer ng-class=isGridCustomerSelected(item)>
+                                        <td style=position:relative;padding-left:35px> <span class="pop-product-grid-table-selected ico ico-selected-1 ico ico-selected-1" type=selected-1 ng-show=item.selected></span> <span class="ico ico-social ico-social-{{item.regist_source}}" style=top:3px;margin-right:4px title={{getPresetText(item.regist_source)}}></span> <a href=javascript:; title={{item.name}}>{{item.name}}</a> </td>
+                                        <td> <span class=grid-list-thumbnail>                                        <img ng-src={{getCustomerAvatar(item)}}>                                        <you-cover></you-cover>                                    </span> </td>
+                                        <td>{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}</td>
+                                        <td>{{item.trade_total_count}}</td>
+                                        <td><span title="{{YouPreset.$()}}{{item.trade_total_amount / 100}}">{{YouPreset.$()}}{{item.trade_total_amount / 100}}</span></td>
+                                        <td> <a href=javascript:; title={{item.last_trade_no}}>{{item.last_trade_no}}</a> <span ng-if=!item.last_trade_no>-</span> </td>
+                                        <td> <span title="{{item.last_trade_date | date: 'yyyy/MM/dd HH:mm'}}">{{item.last_trade_date | date: 'yyyy/MM/dd HH:mm'}}</span> <span ng-if=!item.last_trade_date>-</span> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                        <div class=grid-body-empty ng-show=isAllEmpty> <span class="grid-ico-empty grid-ico-empty-customer"></span>
+                            <div class=grid-body-empty-title>顾客注册后将出现在这里</div>
+                            <div class=grid-body-empty-desc>在这里你可以查看和处理顾客信息</div>
+                            <div class=grid-body-empty-bottom></div>
+                        </div>
+                    </div>
+                    <div class=grid-body-none ng-show="!isAllEmpty && isEmpty">{{YouText.GRID_SEARCH_NONE}}</div>
+                    <div class=grid-body-none ng-show="isReceived && !list.length > 0">该用户已领取优惠劵</div>
+                    <div class=grid-footer ng-show=!isAllEmpty>
+                        <div class=grid-footer-right>
+                            <you-pagination data=dataPagination></you-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <you-mask type=black></you-mask> <!-- 防止小屏模式下露出html背景色 -->
+    <style>
+    html {
+        background: #f2f7fb
+    }
+    </style>
+</div>

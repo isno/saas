@@ -1,0 +1,186 @@
+.tips-box {
+  position: relative;
+  line-height: 28px;
+  padding: 10px 20px;
+  color: #555;
+  border: 1px solid #f1ebc2;
+  background-color: #fffdf1;
+  margin: 0 auto; }
+
+.customer-level-disable {
+  top: 56px;
+  position: relative;
+  padding: 40px; }
+
+.customer-level-disable .tips-box {
+  text-align: center;
+  width: 60%;
+  font-size: 14px;
+  margin-top: 60px; }
+
+.customer-level-disable .tips-box .btn {
+  margin-left: 15px; }
+
+.customer-level-disable .tips-box .text-muted {
+  font-size: 14px; }
+
+.customer-level-pop {
+  overflow: visible; }
+
+.customer-level-pop .pop-cont {
+  padding: 20px 0; }
+
+.customer-level-pop .pop-cont .face-edit {
+  width: 150px;
+  float: left;
+  margin-right: 30px; }
+
+.customer-level-pop .pop-cont .face-edit .customer-level-uploadImg {
+  height: 120px;
+  width: 120px;
+  float: none;
+  margin-right: 0;
+  margin-left: 15px; }
+
+.customer-level-pop .pop-cont .face-edit .customer-level-noimages {
+  height: 120px;
+  width: 120px;
+  border: 1px solid #DDD; }
+
+.customer-level-pop .pop-cont .face-edit .customer-level-noimages-file {
+  height: 120px;
+  width: 120px; }
+
+.customer-level-pop .pop-cont .face-edit .face-img-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 118px;
+  height: 118px;
+  text-align: center;
+  line-height: 118px;
+  font-size: 0;
+  background-color: #fafafa; }
+
+.customer-level-pop .pop-cont .face-edit .face-img-show {
+  max-width: 100%;
+  max-height: 100%;
+  display: inline;
+  vertical-align: middle; }
+
+.customer-level-pop .pop-cont .face-edit .show {
+  top: -20px; }
+
+.customer-level-pop .pop-cont .face-edit .face-edit-btn {
+  position: relative;
+  padding: 10px 0 0;
+  text-align: center; }
+
+.customer-level-pop .pop-cont .face-edit .face-edit-btninput {
+  position: absolute;
+  top: -12px;
+  left: 15px;
+  height: 53px;
+  width: 90px;
+  opacity: 0;
+  cursor: pointer; }
+
+.customer-level-pop .pop-cont .face-edit .face-edit-btn-tips {
+  line-height: 20px;
+  padding-top: 6px;
+  color: #aaa; }
+
+.customer-level-pop .pop-cont .face-edit .face-edit-suggest-tips {
+  margin-top: 10px; }
+
+.customer-level-pop .pop-cont .input-edit {
+  float: left;
+  width: 400px;
+  margin-bottom: 15px; }
+
+.customer-level-pop .pop-cont .input-edit .txt-name {
+  line-height: 14px;
+  margin-bottom: 10px; }
+
+.customer-level-pop .pop-cont .input-edit .txt-input {
+  width: 100%;
+  padding: 6px;
+  line-height: normal;
+  font-size: 14px; }
+
+.customer-level-pop .pop-cont .input-edit .txt-input-long {
+  width: 368px;
+  margin-bottom: 0; }
+
+.customer-level-pop .pop-cont .input-edit h2 {
+  font-size: 14px;
+  line-height: 1;
+  color: #444;
+  margin: 10px 0;
+  font-weight: 400; }
+
+.customer-level-pop .pop-cont .input-edit-discount .label-block {
+  display: block;
+  min-height: 48px;
+  margin-top: 10px; }
+
+.customer-level-pop .pop-cont .input-edit-discount .label-block .ico-arrow-1 {
+  margin: 0 10px; }
+
+.customer-level-pop .pop-cont .input-edit-discount .label-block .input-unit {
+  position: relative;
+  top: -7px;
+  vertical-align: top; }
+
+.customer-level-icons-library {
+  padding: 15px 21px;
+  overflow: visible; }
+
+.customer-level-icons-library .icons-lib-list {
+  padding: 0;
+  font-size: 0; }
+
+.customer-level-icons-library .icons-lib-list li {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  margin: 15px 8px; }
+
+.customer-level-icons-library .icons-lib-list li img {
+  width: 54px;
+  height: 54px;
+  vertical-align: middle;
+  border: 2px solid #fff;
+  border-radius: 50%; }
+
+.customer-level-icons-library .icons-lib-list li img:hover {
+  border-color: #49d;
+  cursor: pointer; }
+
+.customer-level-icons-library .icons-lib-list li.on {
+  background: url(../img/customer-icon-on.png) center no-repeat; }
+
+.icons-lib-uploadimg {
+  position: absolute;
+  top: -7px;
+  left: 0;
+  height: 37px;
+  width: 92px;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  font-size: 0; }
+
+.icons-lib-uploadimg-wrap {
+  position: absolute;
+  bottom: -40px;
+  left: 33px;
+  overflow: hidden; }
+
+.icons-lib-uploadimg-wrap .btn, .pro-edit-noimages {
+  position: relative;
+  z-index: 1; }
+
+/*# sourceMappingURL=customer_level.css.map */

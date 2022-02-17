@@ -1,0 +1,232 @@
+<p ng-switch="data.column" style="margin-top:0;">
+    <b>已选中 {{ batchCount }} 个商品</b>，
+    <span ng-switch-when="types">每个商品只能设置10个分类。</span>
+    <span ng-switch-when="vendor">每个商品只能设置1个品牌。</span>
+    <span ng-switch-when="shipment_template">每个商品只能设置1个运费模板。</span>
+    <span ng-switch-when="top">请选择：</span>
+    <span ng-switch-default>请选择批量设置方式：</span>
+</p>
+<div ng-switch="data.column">
+    <div ng-switch-when="price">
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('reset')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="reset"/>
+                <div class="label-block-content">
+                    重置{{ batchText }}
+                    <span ng-if="isActiveType('reset')">
+                        <i class="ico ico-arrow-1"></i>
+                        <div class="input-unit input-unit-normal">
+                            <div class="input-group">
+                                <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|nonNegativeNumber|float2|maxNumber">
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </label>
+        </div>
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('plus')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="plus"/>
+                <div class="label-block-content">
+                    增加{{ batchText }}
+                    <span ng-if="isActiveType('plus')">
+                        <i class="ico ico-arrow-1"></i>
+                        <select class="select-input" ng-model="state.isAdjustRatio">
+                            <option value="">按售价</option>
+                            <option value="true">按百分比</option>
+                        </select>
+                        <div class="input-unit input-unit-short" ng-if="state.isAdjustRatio != 'true'">
+                            <div class="input-group">
+                                <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|positiveNumber|floatNoZero|float2|maxNumber">
+                            </div>
+                        </div>
+                        <div class="input-unit" ng-if="state.isAdjustRatio == 'true'">
+                            <input type="text" class="input input-short" ng-model="data.adjust_ratio" you-validation="required|oneToAHundred">
+                            <span class="input-unit-text">%</span>
+                        </div>
+                        <span you-help you-need-compile="true" class="you-help-position-l3-t3">
+                            选择 <b>按售价</b>：商品售价 + {{YouPreset.$()}}X<br>
+                            选择 <b>按百分比</b>：商品售价 + 商品售价 * X%
+                        </span>
+                    </span>
+                </div>
+            </label>
+        </div>
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('minus')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="minus"/>
+                <div class="label-block-content">
+                    减少{{ batchText }}
+                    <span ng-if="isActiveType('minus')">
+                        <i class="ico ico-arrow-1"></i>
+                        <select class="select-input" ng-model="state.isAdjustRatio">
+                            <option value="">按售价</option>
+                            <option value="true">按百分比</option>
+                        </select>
+                        <div class="input-unit input-unit-short" ng-if="state.isAdjustRatio != 'true'">
+                            <div class="input-group">
+                                <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|positiveNumber|floatNoZero|float2|maxNumber">
+                            </div>
+                        </div>
+                        <div class="input-unit" ng-if="state.isAdjustRatio == 'true'">
+                            <input type="text" class="input input-short" ng-model="data.adjust_ratio" you-validation="required|oneToAHundred">
+                            <span class="input-unit-text">%</span>
+                        </div>
+                        <span you-help you-need-compile="true" class="you-help-position-l3-t3">
+                            选择 <b>按售价</b>：商品售价 + {{YouPreset.$()}}X<br>
+                            选择 <b>按百分比</b>：商品售价 + 商品售价 * X%
+                        </span>
+                    </span>
+                </div>
+                <p ng-if="isActiveType('minus')" class="text-muted">当商品{{ batchText }}小于需要减少的{{ batchText }}时，将维持商品已有的{{ batchText }}。</p>
+            </label>
+        </div>
+    </div>
+    <div ng-switch-when="stock">
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('reset')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="reset"/>
+                <div class="label-block-content">
+                    重置{{ batchText }}
+                    <span ng-if="isActiveType('reset')">
+                        <i class="ico ico-arrow-1"></i>
+                        <div class="input-unit">
+                            <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|integer|maxNumber">
+                            <span class="input-unit-text">件</span>
+                        </div>
+                    </span>
+                </div>
+            </label>
+        </div>
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('plus')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="plus"/>
+                <div class="label-block-content">
+                    增加{{ batchText }}
+                    <span ng-if="isActiveType('plus')">
+                        <i class="ico ico-arrow-1"></i>
+                        <div class="input-unit">
+                            <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|positiveInteger|maxNumber">
+                            <span class="input-unit-text">件</span>
+                        </div>
+                    </span>
+                </div>
+            </label>
+        </div>
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('minus')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="minus"/>
+                <div class="label-block-content">
+                    减少{{ batchText }}
+                    <span ng-if="isActiveType('minus')">
+                        <i class="ico ico-arrow-1"></i>
+                        <div class="input-unit">
+                            <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|positiveInteger|maxNumber">
+                            <span class="input-unit-text">件</span>
+                        </div>
+                    </span>
+                </div>
+                <p ng-if="isActiveType('minus')" class="text-muted">当商品{{ batchText }}小于需要减少的{{ batchText }}时，将维持商品已有的{{ batchText }}。</p>
+            </label>
+        </div>
+    </div>
+    <div ng-switch-when="point">
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('reset')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="reset"/>
+                <div class="label-block-content">
+                    重置{{ batchText }}
+                    <span ng-if="isActiveType('reset')">
+                        <i class="ico ico-arrow-1"></i>
+                        商品售价 ×
+                        <div class="input-unit">
+                            <input type="text" class="input input-short" ng-model="data.point_ratio" you-validation="required|percentNumber">
+                            <span class="input-unit-text">%</span>
+                        </div>
+                    </span>
+                </div>
+            </label>
+        </div>
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('plus')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="plus"/>
+                <div class="label-block-content">
+                    增加{{ batchText }}
+                    <span ng-if="isActiveType('plus')">
+                        <i class="ico ico-arrow-1"></i>
+                        <div class="input-unit">
+                            <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|positiveInteger|maxNumber">
+                            <span class="input-unit-text">积分</span>
+                        </div>
+                    </span>
+                </div>
+            </label>
+        </div>
+        <div class="label-block-wrap">
+            <label class="label-block" ng-class="{checked: isActiveType('minus')}">
+                <input you-check type="radio" name="data.type" ng-model="data.type" value="minus"/>
+                <div class="label-block-content">
+                    减少{{ batchText }}
+                    <span ng-if="isActiveType('minus')">
+                        <i class="ico ico-arrow-1"></i>
+                        <div class="input-unit">
+                            <input type="text" class="input input-short" ng-model="data.amount" you-validation="required|positiveInteger|maxNumber">
+                            <span class="input-unit-text">积分</span>
+                        </div>
+                    </span>
+                </div>
+                <p ng-if="isActiveType('minus')" class="text-muted">当商品{{ batchText }}小于需要减少的{{ batchText }}时，将维持商品已有的{{ batchText }}。</p>
+            </label>
+        </div>
+    </div>
+    <div ng-switch-when="types">
+        <div class="option-tile-wrap">
+            <div class="option-tile option-tile-multi" ng-class="{checked: isActiveType('add')}">
+                <label class="option-tile-flex">
+                    <div class="option-tile-left">
+                        <input you-check type="radio" name="data.type" ng-model="data.type" value="add"/>
+                        新增分类
+                    </div>
+                    <div class="option-tile-right" ng-if="isActiveType('add')">
+                        <i class="ico ico-arrow-1" style="margin-right: 9px;"></i>
+                        <you-tagselector data="dataSelector"></you-tagselector>
+                        <div style="position: relative; left: 50px; top: 5px;"><input id="types_ids" style="display: none" name="types_ids" you-validation /></div>
+                        <p class="text-muted" style="margin-bottom:0;margin-left:-106px;">商品的分类达到上限后，将无法继续新增。</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="option-tile-wrap">
+            <div class="option-tile option-tile-multi" ng-class="{checked: isActiveType('reset')}">
+                <label class="option-tile-flex">
+                    <div class="option-tile-left">
+                        <input you-check type="radio" name="data.type" ng-model="data.type" value="reset"/>
+                        重置分类
+                    </div>
+                    <div class="option-tile-right" ng-if="isActiveType('reset')">
+                        <i class="ico ico-arrow-1" style="margin-right: 9px;"></i>
+                        <you-tagselector data="dataSelector"></you-tagselector>
+                        <p class="text-muted" style="margin-bottom:0;margin-left:-106px;">重置分类会覆盖当前商品的分类</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div ng-switch-when="top">
+        <label class="label-block setting-search-label-block" ng-class="{checked: isActiveType('true')}">
+            <input you-check type="radio" ng-model="data.type" name="data.type" value="true"/>
+            <div class="label-block-content">置顶</div>
+        </label>
+        <label class="label-block setting-search-label-block" ng-class="{checked: isActiveType('false')}">
+            <input you-check type="radio" ng-model="data.type" name="data.type" value="false"/>
+            <div class="label-block-content">取消置顶</div>
+        </label>
+    </div>
+    <div ng-switch-default>
+        <you-tagselector data="dataSelector"></you-tagselector>
+        <div ng-if="data.column == 'shipment_template'" style="position: relative; left: 50%; top: 5px;"><input id="shipment_template_ids" style="display: none" name="shipment_template_ids" you-validation /></div>
+    </div>
+</div>

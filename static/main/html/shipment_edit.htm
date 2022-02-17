@@ -1,0 +1,245 @@
+<div class="main-menu">
+    <h2 class="main-menu-title"><span class="main-menu-ico"><you-ico type="shipment"></you-ico></span>{{ titleAction }}运费模板</h2>
+    <you-btn text="返回" ng-click="onClickBaseBack()"></you-btn>
+    <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" ng-show="!isBaseSaving" ng-disabled="isBaseLoading"></you-btn>
+    <you-btn type="loading" ng-show="isBaseSaving"></you-btn>
+    <div class="main-menu-right">
+        <you-btn type="default" text="复制运费模板" ng-click="onClickBaseDuplicate()" ng-disabled="!baseAvailable || isBaseLoading"></you-btn>
+        <you-btn type="danger" text="删除" ng-click="onClickDelete()" ng-disabled="!baseAvailable || isBaseLoading"></you-btn>
+    </div>
+</div>
+<div you-mainbody you-fadein>
+    <div class="store-block transition-opacity" ng-style="showGrid">
+
+        <div class="main-item clearfix">
+
+            <div class="main-item-content main-item-content-full">
+                <h2>运费模板名称</h2>
+                <input class="input input-long" type="text" placeholder="请输入运费模板名称" ng-model="data.name" you-validation="required"/>
+                <h2>发货所在地</h2>
+                <div class="shipment-edit-send-location">
+                    <you-areaselector data="areaSelector"></you-areaselector>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix">
+
+            <div class="main-item-content main-item-content-full">
+                <h2>计价方式<span class="text-heading-tips">{{cantChangeCalculate ? '不可修改':'保存后不可修改'}}</span></h2>
+                <div class="shipment-edit-price-type">
+                    <label class="label-block" ng-class="isTypeChecked(c.value)" ng-repeat="c in calculates" ng-disabled="cantChangeCalculate">
+                        <input you-check type="radio" ng-model="calculate.value" value="{{c.value}}" ng-disabled="cantChangeCalculate"/>
+                        <div class="label-block-content">按{{c.text}}</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-item clearfix">
+
+             <div class="main-item-content main-item-content-full">
+                 <div>
+                     <div class="shipment-edit-method-wrap" ng-repeat="rule in rules">
+                         <div class="text-heading-large" ng-if="$index == 0"><strong>在线支付</strong>选用的配送方式与运费</div>
+                         <div ng-if="$index == YouPreset.SHIPMENT_TEMPLATE_RULE.length" style="padding-top: 20px;">
+                             <div class="text-heading-large"><strong>货到付款</strong>选用的配送方式与运费</div>
+                             <div>
+                                 <span ng-show="isOfflineActive()" class="shipment-edit-method-title-state">已启用</span>
+                                 <span ng-show="!isOfflineActive()" class="shipment-edit-method-title-state disabled">未启用</span>
+                                 <span class="shipment-edit-method-title-expand" ng-click="toggleOffline()">
+                                     <span ng-show="!showOffline">展开</span><span ng-show="showOffline">收起</span>配置
+                                     <span class="shipment-edit-method-title-icon">
+                                        <i class="ico ico-arrow-3" ng-show="!showOffline"></i>
+                                        <i class="ico ico-arrow-4" ng-show="showOffline"></i></span>
+                                 </span>
+                             </div>
+                         </div>
+                         <div class="shipment-edit-method-item" ng-show="$index < YouPreset.SHIPMENT_TEMPLATE_RULE.length || showOffline" ng-class="rule.is_actived ? 'isActive':''">
+                             <div class="shipment-edit-method" ng-class="rule.isOpen ? 'expanded': ''" ng-click="toggleRule(rule)">
+                                 <div class="shipment-edit-method-title">{{rule.text}}
+                                    <i class="ico ico-arrow-3" ng-if="!rule.isOpen"></i>
+                                    <i class="ico ico-arrow-4" ng-if="rule.isOpen"></i></div>
+                                 <div class="text-active" ng-if="rule.is_actived">
+                                     <svg width="53" height="53">
+                                         <polygon points="0,0 53,0 0,53"></polygon>
+                                     </svg>
+                                     <span class="text-active-text">已启用</span>
+                                 </div>
+                                 <div class="text-active" disabled ng-if="!rule.is_actived">
+                                     <svg width="53" height="53">
+                                         <polygon points="0,0 53,0 0,53"/>
+                                     </svg>
+                                     <div class="text-active-line">
+                                         <svg width="53" height="53">
+                                             <line x1="0" y1="53" x2="53" y2="0"/>
+                                         </svg>
+                                     </div>
+                                     <span class="text-active-text">未启用</span>
+                                 </div>
+                             </div>
+                             <div class="shipment-edit-method-content" ng-if="rule.isOpen && rule.is_actived">
+                                 <div class="shipment-edit-method-default">
+                                     默认运费规则
+                                     <span you-hint3>除指定地区外，其余地区的运费采用“默认运费”</span>
+                                     <i class="ico ico-arrow-2"></i>
+                                     <div class="input-unit">
+                                         <!-- 件 跟 重量、体积的数据验证不一样 -->
+                                        <input ng-if="calculate.value == 2" class="input" you-validation="required|positiveInteger|maxNumber" ng-model="rule.feeDefault.start" name="ruleFeeDefaultStart_{{$index}}" ng-change="unSaved()">
+                                        <input ng-if="calculate.value != 2" class="input" you-validation="required|positiveNumber|float2|maxNumber" ng-model="rule.feeDefault.start" name="ruleFeeDefaultStart_{{$index}}" ng-change="unSaved()">
+                                        <span class="input-unit-text">{{calculate.unit}}</span>
+                                    </div>
+                                    以内，运费
+                                    <div class="input-unit input-unit-short">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                            <input class="input" you-validation="required|nonNegativeNumber|float2|maxNumber" ng-model="rule.feeDefault.postage" name="ruleFeeDefaultPostage_{{$index}}" ng-change="unSaved()">
+                                        </div>
+                                    </div>；每增加
+                                    <div class="input-unit">
+                                        <!-- 件 跟 重量、体积的数据验证不一样 -->
+                                        <input ng-if="calculate.value == 2" class="input" you-validation="required|positiveInteger|maxNumber" ng-model="rule.feeDefault.plus" name="ruleFeeDefaultPlus_{{$index}}" ng-change="unSaved()">
+                                        <input ng-if="calculate.value != 2" class="input" you-validation="required|positiveNumber|float2|maxNumber" ng-model="rule.feeDefault.plus" name="ruleFeeDefaultPlus_{{$index}}" ng-change="unSaved()">
+                                        <span class="input-unit-text">{{calculate.unit}}</span>
+                                    </div>，增加运费
+                                    <div class="input-unit input-unit-short">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                            <input class="input" you-validation="required|nonNegativeNumber|float2|maxNumber" ng-model="rule.feeDefault.postageplus" name="ruleFeeDefaultPostagePlus_{{$index}}" ng-change="unSaved()">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shipment-edit-method-table" ng-if="rule.fees.length > 0">
+                                    <div class="table">
+                                        <table>
+                                            <colgroup>
+                                                <col>
+                                                <col>
+                                                <col width="12%">
+                                                <col width="12%">
+                                                <col width="12%">
+                                                <col width="12%">
+                                                <col width="50">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th class="table-checkbox" style="padding-left: 0 !important; width: 20px;"><input type="checkbox" you-check ng-model="rule.isFeeCheckedAll" ng-click="changeFeeChecked(rule, true)"></th>
+                                                <th>运送到</th>
+                                                <th style="text-align: center;">首{{calculate.desc}}</th>
+                                                <th style="text-align: center;">首费</th>
+                                                <th style="text-align: center;">续{{calculate.desc}}</th>
+                                                <th style="text-align: center;">续费</th>
+                                                <th style="text-align: center;">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody var="{{rule.index = $index}}">
+                                            <tr ng-repeat="fee in rule.fees">
+                                                <td class="table-checkbox" style="padding-left: 0 !important;"><input type="checkbox" you-check ng-model="fee.isChecked" ng-click="changeFeeChecked(rule)"/></td>
+                                                <td class="shipment-edit-method-table-text">
+                                                <span ng-show="fee.areas.length == 0">
+                                                    <span>未添加地区</span><input you-validation style="display: none;" name="feeAreas_{{rule.index}}_{{$index}}">
+                                                    <span class="shipment-edit-method-edit-area-text" ng-click="editArea(fee, rule, $index, rule.index)">设置地区</span>
+                                                </span>
+                                                <span ng-show="fee.areas.length != 0">
+                                                    <span ng-repeat="i in fee.areas"><span ng-if="$index > 0">、</span>{{i.name}}<span ng-if="!i.isSelectedAll"><span you-hint="{{getCityNames(i.cities)}}"><span style="color: #4499dd">({{i.cities.length}})</span></span></span></span>
+                                                </span>
+                                                <span class="shipment-edit-method-edit-area-ico" ng-click="editArea(fee, rule, $index, rule.index)">
+                                                    <i class="ico ico-pen"></i>
+                                                </span>
+                                                </td>
+                                                <td class="shipment-edit-method-table-input">
+                                                    <div class="input-unit">
+                                                        <!-- 件 跟 重量、体积的数据验证不一样 -->
+                                                        <input ng-if="calculate.value == 2" class="input" you-validation="required|positiveInteger|maxNumber" ng-model="fee.start" name="feeStart_{{rule.index}}_{{$index}}" ng-change="unSaved()">
+                                                        <input ng-if="calculate.value != 2" class="input" you-validation="required|positiveNumber|float2|maxNumber" ng-model="fee.start" name="feeStart_{{rule.index}}_{{$index}}" ng-change="unSaved()">
+                                                        <span class="input-unit-text">{{calculate.unit}}</span>
+                                                    </div>
+                                                </td>
+                                                <td class="shipment-edit-method-table-input">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                                        <input class="input" you-validation="required|nonNegativeNumber|float2|maxNumber" ng-model="fee.postage" name="feePostage_{{rule.index}}_{{$index}}" ng-change="unSaved()">
+                                                    </div>
+                                                </td>
+                                                <td class="shipment-edit-method-table-input">
+                                                    <div class="input-unit">
+                                                        <!-- 件 跟 重量、体积的数据验证不一样 -->
+                                                        <input ng-if="calculate.value == 2" class="input" you-validation="required|positiveInteger|maxNumber" ng-model="fee.plus" name="feePlus_{{rule.index}}_{{$index}}" ng-change="unSaved()">
+                                                        <input ng-if="calculate.value != 2" class="input" you-validation="required|positiveNumber|float2|maxNumber" ng-model="fee.plus" name="feePlus_{{rule.index}}_{{$index}}" ng-change="unSaved()">
+                                                        <span class="input-unit-text">{{calculate.unit}}</span>
+                                                    </div>
+                                                </td>
+                                                <td class="shipment-edit-method-table-input">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">{{YouPreset.$()}}</div>
+                                                        <input class="input" you-validation="required|nonNegativeNumber|float2|maxNumber" ng-model="fee.postageplus" name="feePostagePlus_{{rule.index}}_{{$index}}" ng-change="unSaved()">
+                                                    </div>
+                                                </td>
+                                                <td class="shipment-edit-method-table-op">
+                                                    <you-btn type="simple-delete" ng-click="removeRuleFee(fee, rule)"></you-btn>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="shipment-edit-method-op clearfix">
+                                    <div class="shipment-edit-method-op-left">
+                                        <you-btn text="添加指定地区设置" ng-click="addRuleFee(rule)"></you-btn>
+                                        <you-btn text="批量设置价格" ng-click="editRuleFeeBatch(rule, $index)" ng-disabled="!canBatchRule(rule)"></you-btn>
+                                        <you-btn text="批量删除" ng-click="removeRuleFeeBatch(rule)" ng-disabled="!canBatchRule(rule)"></you-btn>
+                                    </div>
+                                    <div class="shipment-edit-method-op-right">
+                                        <you-btn text="设置不出售地区" ng-click="editExcludedArea(rule)"></you-btn>
+                                        <span you-hint3>顾客填写的收货地址如果<br>包含在<strong>不出售地区</strong>中，则无法购买</span>
+                                    </div>
+                                    <div class="shipment-edit-method-op-excluded clearfix" ng-if="rule.exclude_areas">
+                                        <div class="shipment-edit-method-op-excluded-wrap" ng-if="rule.excludedAreas.length <= 5">
+                                            <div>
+                                                <span style="color:#DD5555;">不出售地区：</span>
+                                                <span ng-repeat="i in rule.excludedAreas"><span ng-if="$index > 0">、</span>{{i.name}}<span ng-if="!i.isSelectedAll"><span you-hint="{{getCityNames(i.cities)}}"><span style="color: #DD5555">({{i.cities.length}})</span></span></span></span>
+                                            </div>
+                                            <span class="ico ico-help-arrow"></span>
+                                        </div>
+                                        <div class="shipment-edit-method-op-excluded-wrap" ng-if="rule.excludedAreas.length > 5">
+                                            <div ng-if="!rule.showExcludedArea">
+                                                <span style="color:#DD5555;">不出售地区：</span>
+                                                <span ng-repeat="i in rule.excludedAreas" ng-if="$index < 4"><span ng-if="$index > 0">、</span>{{i.name}}<span ng-if="!i.isSelectedAll"><span you-hint="{{getCityNames(i.cities)}}"><span style="color: #DD5555">({{i.cities.length}})</span></span></span></span>
+                                                ...
+                                                <span class="shipment-edit-method-op-excluded-trigger" ng-click="rule.showExcludedArea = true">展开 
+                                                    <i class="ico ico-arrow-3"></i>
+                                                </span>
+                                            </div>
+                                            <div class="shipment-edit-method-op-excluded-text-limit-width" ng-if="rule.showExcludedArea">
+                                                <span style="color:#DD5555;">不出售地区：</span>
+                                                <span ng-repeat="i in rule.excludedAreas"><span ng-if="$index > 0">、</span>{{i.name}}<span ng-if="!i.isSelectedAll"><span you-hint="{{getCityNames(i.cities)}}"><span style="color: #DD5555">({{i.cities.length}})</span></span></span></span>
+                                                <span class="shipment-edit-method-op-excluded-trigger" ng-click="rule.showExcludedArea = false">收起 
+                                                    <i class="ico ico-arrow-4"></i></span>
+                                            </div>
+                                            <span class="ico ico-help-arrow"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="shipment-edit-method-active" ng-if="rule.isOpen">
+                                <you-btn type="primary" text="启用" ng-show="!rule.is_actived" ng-click="rule.is_actived = !rule.is_actived; unSaved();"></you-btn>
+                                <div ng-show="rule.is_actived">
+                                    <you-btn type="danger" text="停用" ng-click="rule.is_actived = !rule.is_actived; unSaved();"></you-btn>
+                                    <span style="margin-left: 6px">
+                                        <a href="javascript:;" class="text-link" ng-click="toggleRule(rule)">收起 <i class="ico ico-arrow-4" style="position: relative; top: -3px;"></i></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix item-bottom">
+            <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" ng-show="!isBaseSaving"></you-btn>
+            <you-btn type="loading" ng-show="isBaseSaving"></you-btn>
+        </div>
+
+    </div>
+</div>

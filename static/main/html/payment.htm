@@ -1,0 +1,89 @@
+<div class="main-menu">
+    <h2 class=main-menu-title>
+        <span class=main-menu-ico><you-ico type=payment></you-ico></span>收款方式</h2>
+</div>
+<div you-mainbody>
+    <div class=transition-opacity ng-style=showGrid>
+        <!-- 已实名认证 -->
+        <div class="main-item clearfix" style=border:none>
+            <div class="main-item-content payment-item-content">
+                <!--
+                <div ng-repeat="cate in data.normal" ng-class="cate.length > 1 ? 'payment-category': 'payment-category-single'">-->
+                   
+                <div class=payment-category ng-repeat="cate in data.payment_method">
+                    <div class="" ng-if="$index == 0 && cate.length > 0">
+                        <div class=payment-method-title> 已启用支付渠道 </div>
+                        <div>
+                            <ng-include src="'payment_item.html'"></ng-include>
+                        </div>
+                    </div>
+                    <div class="" ng-if="$index == 1" style=margin-top:20px>
+                        <div class=payment-method-title> 待启用支付渠道 </div>
+                        <div>
+                            <ng-include src="'payment_item.html'"></ng-include>
+                        </div>
+                    </div>
+                </div>
+                <div class=clearfix></div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script type=text/ng-template id=payment_item.html>
+    <div class="payment-list">
+        <div class="grid-body">
+            <you-grid data="dataGrid">
+                <table>
+                    <colgroup>
+                        <col width="32%">
+                        <col width="12%">
+                        <col width="12%">
+                        <col width="15%">
+                        <col width="10%">
+                        <col width="110"> </colgroup>
+                    <thead>
+                        <tr>
+                            <th>支付渠道</th>
+                            <th>应用场景</th>
+                            <th>结算币种</th>
+                            <th>费率</th>
+                            <th>自动退款</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="cate.length > 0">
+                        <tr ng-repeat="item in cate track by $index">
+                            <td> 
+                                <span class="iconfont ico-payment-method ico-payment-method-small icon-{{item.pay_type}}" 
+                                title="{{item.name}}" 
+                                ng-if="!(['nihaopay_unionpay', 'nihaopay_alipay', 'nihaopay_wechatpay', 'meizhipay'].indexOf(item.pay_type) > -1)">
+                                </span> 
+                                <span class="ico-payment-method-nihaopay" title="{{item.name}}" ng-if="item.pay_type == 'nihaopay_unionpay' || item.pay_type == 'nihaopay_alipay' || item.pay_type == 'nihaopay_wechatpay'"></span> 
+                                <span class="ico-payment-method-meizhipay" title="{{item.name}}" ng-if="item.pay_type == 'meizhipay'"></span> 
+                                <span style="margin-left: 68px;" title="{{item.name}}">{{ item.name || item.pay_type }}</span> 
+                                <span class="ico ico-payment-method payment-collecthot {{ item.collect_by_youdian ? 'active-youdian' : '' }}" ng-show="item.collect_by_youdian" title="爱优店代收"></span> 
+                                <span class="ico ico-payment-method payment-collecthot {{ item.hot ? 'active-hot' : '' }}" ng-show=" item.hot" title="推荐使用"></span> </td>
+                            <td style="position: relative">
+                                <div class="payment-item-scene-wrap" style="position:absolute;">
+                                    <div class="payment-item-scene" ng-bind-html="item.browser_scene_icon" title="{{item.browser_scene_desc}}"></div>
+                                </div>
+                            </td>
+                            <td> <span title="人民币" ng-show="item.currency.length == 1 && item.currency[0] == 'CNY'">人民币</span> <span title="多币种" ng-hide="item.currency.length == 1 && item.currency[0] == 'CNY'">多币种</span></td>
+                            <td style="padding-right: 20px;"> <span class="fee-ratio" ng-if="!item.collect_by_youdian" title="{{ item.fee_ratio  ? item.fee_ratio : '-'  }}">{{ item.fee_ratio  ? item.fee_ratio : '-'  }}</span> <span class="fee-ratio" ng-if="item.collect_by_youdian" title="2%">2%  <!--下面的代码是开始时代收费率为3%-5% 默认为5%  交了保证金之后为3%的逻辑 js里保证金逻辑弹窗还留着 --!>                                <!--{{ data.security_deposit_charged ? '3%' : '5%'}}                                 <span class="reduce-security" ng-click="reduceSecurity(item,$event)" ng-show="item.collect_by_youdian && item.is_actived">                                    {{data.security_deposit_charged ? '已降低费率' : '降低费率'}}                                </span>--> </span>
+                            </td>
+                            <td> <span class="text-enable">{{ item.auto_refund ? '支持' : '不支持' }}</span> </td>
+                            <td>
+                                <you-btn type="simple" ng-click="paymentIntroduce(item, $event)" text="介绍"></you-btn>
+                                <you-btn type="primary" ng-if="!item.collect_by_youdian && !item.is_actived" ng-click="paymentUse(item, $event)" text="启用" style="padding: 6px 12px;font-size: 12px;border-radius: 3px;"></you-btn>
+                                <you-btn type="danger" ng-if="!item.collect_by_youdian && item.is_actived" ng-click="paymentUse(item, $event)" text="停用" style="padding: 6px 12px;font-size: 12px;border-radius: 3px;"></you-btn>
+                                <you-btn type="primary" text="启用" ng-if="item.collect_by_youdian && !item.is_actived" ng-click="setActive(item, true)" style="padding: 6px 12px;font-size: 12px;border-radius: 3px;"></you-btn>
+                                <you-btn type="danger" text="停用" ng-if="item.collect_by_youdian && item.is_actived" ng-click="setActive(item, false)" style="padding: 6px 12px;font-size: 12px;border-radius: 3px;"></you-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+        </div>
+    </div>
+</script>

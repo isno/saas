@@ -1,0 +1,27 @@
+<%inherit file="../_layout.htm"/>
+<%block name="head">
+<title>欢迎加入爱优店</title>
+</%block>
+
+<%block name="main">
+<div class="container mt-5" >
+<div class="row  justify-content-center">
+    <div class="col-8">
+
+        <div class="page-header">
+            <h2><span class="glyphicon glyphicon-ok"></span>注册成功<small></small></h2>
+        </div>
+        <div class="success-message">
+            <p>欢迎成为爱优店用户！</p>
+            <p>您的登录账号为 <strong style="color:green;font-family:Georgia;font-size:16px;">${current_user.account}</strong></p>
+            
+            <p>
+                <a href="/my/shops" class="btn btn-light">去商家后台</a>&nbsp;  
+                <a href="/my/shops/new" class="btn btn-warning">创建 “店铺”</a>&nbsp;
+            </p>
+        </div>
+    </div>
+</div></div>
+
+</%block>
+

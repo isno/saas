@@ -1,0 +1,266 @@
+.setting-main .setting-favicon-block {
+  position: relative;
+  width: 321px;
+  height: 83px;
+  background: url(../img/setting_browser.png) no-repeat; }
+
+.setting-main .setting-favicon-block img {
+  position: absolute;
+  top: 14px;
+  left: 51px;
+  width: 16px;
+  height: 16px; }
+
+.setting-main .setting-favicon-upload {
+  position: relative;
+  margin-top: 10px; }
+
+.setting-main .setting-favicon-upload input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 92px;
+  height: 32px;
+  opacity: 0;
+  cursor: pointer; }
+
+.setting-main .setting-favicon-upload a {
+  margin-left: 14px;
+  vertical-align: middle; }
+
+.setting-status-pw .btn,
+.setting-status-pw .input {
+  vertical-align: top;
+  top: -7px;
+  position: relative; }
+
+.setting-status {
+  margin-bottom: 10px;
+  background: #fff;
+  border: 1px solid #E4E4E4;
+  border-radius: 2px; }
+
+.setting-status-checked {
+  background: #f2f7fb;
+  border: 1px solid #bcd; }
+
+.setting-status-allowfrom-checked .label-block, .setting-status-off-checked .label-block, .setting-status-pw-checked .label-block {
+  background: #f2f7fb; }
+
+.setting-status .label-block {
+  width: 220px;
+  border: 0;
+  padding-top: 16px; }
+
+.setting-status-allowfrom-checked, .setting-status-pw-checked {
+  border: 1px solid #bcd; }
+
+.setting-status .ico-arrow-1 {
+  margin: 0 0 0 10px; }
+
+.setting-status-pw .label-block {
+  width: auto;
+  min-height: 48px; }
+
+.setting-status-pw .btn {
+  left: 8px; }
+
+.setting-status-autorecievdday .label-block {
+  width: 100%;
+  min-height: 48px; }
+
+.setting-status-autorecievdday .input-select {
+  margin-left: 10px;
+  margin-top: -8px; }
+
+.setting-status-allowfrom-input, .setting-status-off-input {
+  margin-top: 18px;
+  width: 100%; }
+
+.setting-status-allowfrom .label-block {
+  padding-right: 20px;
+  min-height: 48px;
+  max-width: 700px;
+  padding-bottom: 20px;
+  width: 100%; }
+
+.setting-status-allowfrom-input-textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  height: 200px;
+  line-height: 24px;
+  resize: none; }
+
+.setting-status-off-checked {
+  border: 1px solid #bcd; }
+
+.setting-status-off .label-block {
+  padding-right: 20px;
+  min-height: 48px;
+  max-width: 700px;
+  padding-bottom: 20px;
+  width: 100%; }
+
+.setting-status-off-input-textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  height: 200px;
+  line-height: 24px;
+  resize: none; }
+
+/** setting order */
+.setting-tradeExpired {
+  line-height: 48px;
+  border: 1px solid #e4e4e4;
+  width: 630px;
+  padding: 0 10px;
+  margin: 14px 0 10px; }
+
+.setting-tradeExpiredFocus {
+  border-color: #c7d6e6;
+  background: #f2f7fb;
+  box-shadow: 0 0 10px 0 rgba(199, 214, 230, 0.6); }
+
+.setting-search-label-block {
+  width: 150px; }
+
+.setting-status-autorecievdday .label-block {
+  width: 100%;
+  min-height: 48px; }
+
+/** setting order end */
+/** setting zhuce */
+.setting-create-way .txt, .setting-third-party-login .txt {
+  margin-left: 10px;
+  color: #aaa; }
+
+.setting-create-way .create-way-block {
+  padding: 10px 0 0;
+  width: 320px; }
+
+.setting-create-way .labelmargin {
+  margin-right: 40px; }
+
+.setting-create-way .labelmargin label, .setting-create-way .lastlabel label {
+  margin-right: 6px; }
+
+.setting-third-party-login .third-party-login-block {
+  padding: 10px 0 0;
+  width: 710px;
+  position: relative; }
+
+.setting-third-party-login .third-party-login-block .you-help {
+  position: absolute;
+  top: 12px; }
+
+.setting-third-party-login .third-party-login-block .you-help-weibo {
+  left: 54px; }
+
+.setting-third-party-login .third-party-login-block .you-help-qq {
+  left: 142px; }
+
+.setting-third-party-login .third-party-login-block .you-help-renren {
+  left: 236px; }
+
+.setting-third-party-login .third-party-login-block .you-help-douban {
+  left: 330px; }
+
+.setting-third-party-login .third-party-login-block .you-help-163 {
+  left: 466px; }
+
+.setting-third-party-login .third-party-login-block .you-help-wechat {
+  left: 560px; }
+
+.setting-third-party-login .third-party-login-block .you-help-facebook {
+  left: 688px; }
+
+.setting-third-party-login .labelmargin {
+  margin-right: 40px; }
+
+.setting-third-party-login .labelmargin label, .setting-third-party-login .lastlabel label {
+  margin-right: 6px; }
+
+.setting-third-party-in .txt {
+  padding-bottom: 5px;
+  color: #aaa; }
+
+.setting-third-party-in .open-content {
+  padding: 15px 20px;
+  border: 1px solid #e4e4e4;
+  border-radius: 3px;
+  width: 610px;
+  color: #555; }
+
+.setting-third-party-in .padding-b-5 {
+  padding-bottom: 5px; }
+
+.setting-third-party-in .padding-b-12 {
+  padding-bottom: 12px; }
+
+.setting-third-party-in .mishi {
+  font-weight: 700;
+  margin-right: 15px; }
+
+.item-bottom {
+  margin-left: 50px;
+  margin-top: 14px;
+  padding-bottom: 40px; }
+
+.item-bottom .btn {
+  margin-right: 8px; }
+
+/** setting zhuce end */
+/** setting coin */
+.main-item-sublink-content-wrap {
+  max-height: 0;
+  overflow: hidden; }
+
+.main-item-sublink-content-wrapExpandAdv {
+  max-height: 384px; }
+
+.main-item-sublink-content-wrapExpandRobot {
+  max-height: 168px; }
+
+.main-item-sublink-content {
+  background: #fafafa;
+  padding: 4px 20px 34px;
+  border: 1px solid #ddd;
+  margin-top: 12px;
+  position: relative;
+  border-radius: 2px; }
+
+.main-item-sublink-content .ico-mainitem-arr {
+  position: absolute;
+  top: -6px;
+  left: 22px; }
+
+.setting-point-block .main-item-sublink-content {
+  padding: 0; }
+
+.setting-point-item {
+  padding: 10px 20px 20px; }
+
+.setting-point-item .setting-point-item-title {
+  padding: 10px 0;
+  font-size: 18px; }
+
+.setting-point-item .setting-point-item-line {
+  padding: 10px 0;
+  line-height: 1.5; }
+
+.setting-point-item .setting-point-item-line ul {
+  margin: 6px 0 0 12px;
+  padding: 0;
+  list-style: url(../img/intro-list-style-img.png); }
+
+.setting-point-item ~ .setting-point-item {
+  border-top: 1px solid #ddd; }
+
+.main-item-sublink-content .ico-mainitem-arr {
+  position: absolute;
+  top: -6px;
+  left: 22px; }
+
+/*# sourceMappingURL=setting.css.map */

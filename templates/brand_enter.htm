@@ -1,0 +1,158 @@
+<%inherit file="_layout.htm"/>
+<%block name="head">
+<title>商家入驻 - 爱优店</title>
+</%block>
+<%block name="main">
+<div class="position-relative overflow-hidden p-md-5" style="background: url(/static/img/brand-enter.jpeg) no-repeat center center;background-size: cover;">
+     <div class="container" style="padding:10px;border-radius: 0px;">
+    <div class="row align-items-center">
+      <div class="col-md-8 p-lg-3 my-5 text-white" style="z-index:3">
+        <h2 class="display-5">入驻爱优店，做好生意</h2>
+        <p class="lead">基于SaaS模式,向商家提供强大的移动电商解决方案, <br/>用科技创意,赋能商家深度o2o营销能力。</p>
+        <p class="lead mb-5">
+            <span class="mr-2"><i class="bi bi-tablet"></i> 微信小程序</span>
+            <span class="mr-2"><i class="bi bi-shop"></i> 连锁门店营销支付解决</span>
+            <span><i class="bi bi-bar-chart-line"></i> 品牌私域营销方案</span>
+        </p>
+      </div>
+  <div  class="col-md-4 brand-enter rounded p-4">
+        <form id="postform" action="/brand/enter">
+            <div class="form-group pt-3"><h4>入驻申请</h4></div>
+    
+     <div class="form-group">
+          <input type="text" id="brand" name="brand"  data-bv-notempty="true" data-bv-notempty-message="品牌名称不能为空" placeholder="请输入品牌名称" class="form-control">
+      </div>
+      <div class="form-group">
+         <input class="form-control"
+            data-bv-regexp="true"
+            data-bv-regexp-regexp="^[1][3,4,5,6,7,8,9][0-9]{9}$"
+            data-bv-regexp-message="手机号格式错误"
+            data-bv-notempty="true" 
+            data-bv-notempty-message="手机号不能为空" id="phone" name="phone" placeholder="请输入手机号" type="text" value="">
+      </div>
+
+                <div class="form-group clearfix">
+         <div class="row">
+          <div class="col-11">
+            <div class="input-group">
+      <input class="form-control" data-bv-notempty="true" data-bv-notempty-message="短信验证码不能为" id="valid_code" name="valid_code" placeholder="请填写短信验证码！" required type="text" value="">
+         <div class="input-group-append">
+    <button id="sms-button" class="btn btn-outline-secondary"  onclick="sendCode(this, 'entry')"  type="button">获取手机验证码</button>
+  </div>
+
+  </div>
+  </div>
+
+  </div>
+  <span id="helpBlock"></span>
+  </div>
+
+
+      <div class="form-group">
+         <button type="submit" id="submit" class="btn btn-warning " >预约开店顾问</button>
+      </div>
+</form>
+  </div>
+    </div>
+    </div>
+  <div class="mask"></div>
+</div><!-- end header -->
+
+<div class="mt-5 text-center">
+  <h3>3年技术沉淀 可信任的私域营销专家</h3>
+  <p class="lead text-muted">系统稳定高于一切，让商家经营的放心</p>
+</div>
+
+<div class="protect text-center mt-4">
+  <p class="text-muted">爱优店护航：护航店铺稳定、数据安全、消费者体验，服务中断赔偿 <a href="/compensate">查看详情></a></p>
+</div>
+
+<div class="row justify-content-center text-center mt-5">
+    <div class="col-md-10 col-sm-11">
+        <div class="row">
+      <div class="col-lg-4">
+        <img class="mb-3" src="/static/img/weixin.png" style="width:120px">
+
+        <h6 class="text-success">微信公众号媒体系统</h6>
+        <p class="text-black-50 ">包括强大的定制化和扩展功能</p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img class="mb-3"src="/static/img/pay.png" style="width:120px">
+
+        <h6 class="text-success">优化的O2O支付解决方案</h6>
+        <p class="text-black-50">支持多个平台的支付系统、多项支付后延伸的SCRM的功能</p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <img class="mb-3" src="/static/img/bigdata.png" style="width:120px">
+
+        <h6 class="text-success">强大数据库、深入洞查</h6>
+        <p class="text-black-50">基于大数据为企业提供精准营销策略</p>
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+    </div>
+</div>
+
+
+
+<div class="container mt-5 service">
+    <div class="text-center">
+      <h3>微信、支付宝等品牌服务商</h3>
+      <p class="lead text-muted">多平台支持、让品牌扩展范围更广</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2 col-md-4 col-6"><img src="/static/img/s1.png"></div>
+        <div class="col-lg-2 col-md-4 col-6"><img src="/static/img/s2.png"></div>
+        <div class="col-lg-2 col-md-4 col-6"><img src="/static/img/s3.png"></div>
+        <div class="col-lg-2 col-md-4 col-6"><img src="/static/img/s4.png"></div>
+        <div class="col-lg-2 col-md-4 col-6"><img src="/static/img/s5.png"></div>
+        <div class="col-lg-2 col-md-4 col-6"><img src="/static/img/s6.png"></div>
+    </div>
+</div>
+
+<div id="guestbook" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">预约成功</h5>
+                <button id="post" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                我们的营销专家会在24小时内与您联系，谢谢支持！
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                               
+            </div>
+                                                   
+        </div>
+    </div>
+</div>
+<!-- end lianxi-->
+</%block>
+<%block name="foot">
+<script type="text/javascript">
+$(function(){
+    $('#postform').bootstrapValidator({}).on('success.form.bv', function(e) {
+        e.preventDefault();
+        var $form = $(e.target);
+        $.post($form.attr('action'), $form.serialize(), function(res) {
+            let title = "预约成功";
+            let message="我们的营销专家会在24小时内与您联系，谢谢支持！";
+            if(res.code == 201) {
+                title = "预约失败"
+                message = "抱歉，请输入正确的短信验证码"
+            }
+            $(".modal-title").html(title);
+            $(".modal-body").html(message);
+            
+            $('#guestbook').modal({});
+            return true;
+        }, 'json');
+    });;
+   
+});
+</script>
+<script src="${static_url("www/global.js")}"></script>
+</%block>

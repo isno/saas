@@ -1,0 +1,145 @@
+<div class="main-menu">
+    <h1 class=main-menu-title> 
+        <span class=main-menu-ico>
+            <you-ico type=coupon></you-ico>
+        </span>状况
+    </h1>
+    <you-btn type="primary" ng-click=fNewCoupon() text=新增优惠券 ></you-btn>
+</div>
+<div you-mainbody you-fadein>
+  <div class="transition-opacity transition-opacity-fast" ng-style=showSetting>
+    <div class="main-item clearfix version">
+      <div class="version-block version-block-shop">
+        <div class=version-block-content>
+          <div> <span class="t-main version-shop-name" title={{::shop.name}}>{{::shop.name}}</span> <span class="version-cert-btn none" ng-show="shop.certStatus == 0">                            未实名认证                            |                            <a class=text-link ui-sref=m_certification ng-if=isOwner>去认证</a>                        </span> <span class="version-cert-btn doing" ng-show="shop.certStatus == 1">                            {{shop.certType}}中                            |                            <a class=text-link ui-sref=m_certification>查看</a>                        </span> <span class="version-cert-btn done" ng-show="shop.certStatus == 2">                            <span class="ico-certification ico-certification-pass-blue"></span> <span>{{shop.certType}}</span> | <a class=text-link ui-sref=m_certification>查看</a> </span> <span class="version-cert-btn reject" ng-show="shop.certStatus == 3">                            实名认证未通过                            |                            <a class=text-link ui-sref=m_certification>查看</a>                        </span> </div>
+          <div class=t-sub title={{::shop.hostname}}>{{::shop.hostname}}</div>
+        </div>
+      </div>
+      <div class="version-block version-block-version">
+        <div class=version-block-content>
+          <div class=t-sub>当前版本</div>
+          <div> <span class=t-main>{{::YeeLevel.LEVEL_TEXT}}</span> <span class=text-muted ng-show="::YeeLevel.LEVEL == 'free'">（部分功能与资源受到限制，升级版本解锁限定）</span> </div>
+        </div>
+        <div class=version-block-right ng-if=isOwner>
+          <ys-btn type=primary text=升级版本 ys-upgrade ng-show="::(YeeLevel.LEVEL_GRADE > -1 && YeeLevel.LEVEL_GRADE < 4)"></ys-btn>
+          <ys-btn type=primary text=查看版本 ys-upgrade ng-show="::YeeLevel.LEVEL == 'level4'"></ys-btn>
+        </div>
+        <div class=version-block-right ng-show=!isOwner> <span class=text-link ys-upgrade>查看版本</span> </div>
+      </div>
+      <div class="version-block version-block-time" ng-show="::YeeLevel.LEVEL_GRADE > 0">
+        <div class=version-block-content>
+          <div class=t-sub>有效期至</div>
+          <div> <span class=t-main>{{::expires_at | date: 'yyyy-MM-dd'}}</span> <span class=t-warning ng-show=expire_text>{{ expire_text }}</span> </div>
+        </div>
+        <div ng-if=isOwner class=version-block-right> <a href={{::YeePreset.OFFICIAL_WEBSITE_BUY_RENEW}} class="btn btn-primary" target=_blank>续费</a> </div>
+      </div>
+    </div> 
+    <div class="fw-main-item clearfix" style=border:none>
+      <div class="fw-main-warning version-warning" ng-show="isOwner && media_warning_stat == 1"> 您的账号余额不足以缴纳本月多媒体管理费用 <a target=_blank href="{{ YeePreset.OFFICIAL_WEBSITE_BUY_RECHARGE }}" class=text-link>前往充值</a> </div>
+      <div class="fw-main-warning version-warning" ng-show="isOwner && media_warning_stat == 2"> 您因欠费导致多媒体功能被冻结，冻结超过连续14个自然日，视同用户放弃数据所有权， 爱优店有权删除所有数据并不予以恢复，请及时 <a target=_blank href="{{ YeePreset.OFFICIAL_WEBSITE_BUY_RECHARGE }}" class=text-link>前往充值</a>。 </div>
+      <div class=verson-list-bar-wrap ng-switch=currentTab.value>
+        <div class=primary-list-bar>
+          <div class=primary-list-bar-each ng-class="{'primary-list-bar-each-active': tab == currentTab}" ng-repeat="tab in tabData" ng-click=switchTab(tab)> {{ tab.text }} </div>
+        </div>
+        <div ng-switch-when=source style=margin-top:40px>
+          <div class="fw-main-item-content fw-main-item-content-full version-resource"> \x3c!--
+            <div class="text-heading-large">资源详情</div> --\x3e
+            <ys-grid data=dataPointGrid>
+              <table>
+                <colgroup>
+                  <col width=15%>
+                  <col width=20%>
+                  <col>
+                  <col width=15%>
+                  <col width=15% ng-if=isOwner> </colgroup>
+                <thead>
+                  <tr>
+                    <th>资源名称</th>
+                    <th>资源描述</th>
+                    <th></th>
+                    <th></th>
+                    <th ng-if=isOwner>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="i in stats2">
+                    <td>
+                      <ys-ico type="{{ 'stat2-' + i.tag }}"></ys-ico> <span>通知{{i.tagCn}}</span> </td>
+                    <td colspan=3 style=overflow:visible> 剩余：<span style=font-weight:700>{{i.data.avail}}</span>{{i.unit}} &nbsp; <span ng-if="i.data.common_level == 1" class="setting-limit2-warning setting-limit2-warning-1">余量不多</span> <span ng-if="i.data.common_level == 2" class="setting-limit2-warning setting-limit2-warning-2">已无额度</span> <span ng-show=i.data.remainingDaysForecast ys-help ys-help-content={{i.data.remainingDaysForecast}} ys-width=auto style=white-space:nowrap;width:auto;height:32px;vertical-align:middle;line-height:32px;margin-left:5px ys-help-content-translate-y=40>                                                <ys-ico type=calculator></ys-ico>                                            </span> </td>
+                    <td class=version-resource-operate style=overflow:initial ng-if=isOwner>
+                      <ys-btn type=default text=设置 ng-click=onSetLimitBound(i)></ys-btn> <a target=_blank href="{{i.tag == 'email' ? YeePreset.OFFICIAL_WEBSITE_BUY_EMAIL : YeePreset.OFFICIAL_WEBSITE_BUY_SMS}}" class="btn btn-default">购买</a> </td>
+                  </tr>
+                  <tr ng-style=trKeepWhite>
+                    <td>
+                      <ys-ico type=stat2-storage></ys-ico> <span>文件空间</span> </td>
+                    <td style=overflow:initial;position:relative colspan=3>
+                      <div class="setting-limit-content-bar setting-limit-content-bar-inline">
+                        <div class="setting-limit-content-bar-process-2 fw-transition-quick" ng-style=storagePercentStyle></div>
+                      </div> <span class="setting-limit-title-summary setting-span-padding-left">                                                已用 {{ storageUsed }} /总共 {{ storageLimit }}                                                <span ys-help style=top:3px;z-index:1;line-height:1>包括商品的橱窗图片、图片管理<br/>的图片和文件管理中的文件。</span> <span ng-if="storagePercent >= 80" class="setting-limit2-warning setting-limit2-warning-1">余量不多</span> <span ng-if="storagePercent >= 99" class="setting-limit2-warning setting-limit2-warning-2">空间已满</span> </span>
+                    </td>
+                    <td ng-class="{'version-resource-operate': true, 'version-grid-rowspan': limitedStat.length}" style=overflow:initial rowspan="{{ limitedStat.length + 1 }}" ng-mouseenter=onRowSpanMouseEnter() ng-mouseleave=onRowSpanMouseLeave() ng-show=isOwner>
+                      <div ng-show="YeeLevel.LEVEL_GRADE <= 1" style=text-align:center;line-height:28px;margin-bottom:20px>
+                        <ys-ico type=status-warn-large></ys-ico>
+                        <br> 部分功能与资源受限定 </div>
+                      <div ng-show="YeeLevel.LEVEL === 'free' || YeeLevel.LEVEL === 'level1'">
+                        <ys-btn style=margin-left:39px type=primary text=升级版本 ys-upgrade></ys-btn>
+                      </div> <a target=_blank href="{{ YeePreset.OFFICIAL_WEBSITE_BUY_STORAGE }}" class="btn btn-default" ng-if="YeeLevel.LEVEL_GRADE > 1" style=margin-left:66px>购买</a> </td>
+                  </tr>
+                  <tr ng-repeat="i in limitedStat">
+                    <td>
+                      <ys-ico type="{{ 'stat2-' + i.tag }}"></ys-ico> <span>{{i.tagCn}}</span> </td>
+                    <td colspan=3> <span ng-show=i.desc ng-bind=i.desc></span> <span ng-show=!i.desc>                                                剩余：<span style=font-weight:700>{{i.data.remained}}</span> {{i.unit}} / 总共 <span style=font-weight:700>{{i.data.limit}}</span> {{i.unit}} </span>
+                    </td>
+                  </tr>
+                  <tr ng-repeat="i in stats_media" ng-style=trKeepWhite>
+                    <td>
+                      <ys-ico type="{{ 'stat2-' + i.tag }}"></ys-ico> <span>多媒体{{i.tagCn}}</span> </td>
+                    <td> <span class=version-resource-overplus>                                                已用：<b>{{i.GB}}</b>GB                                            </span> </td>
+                    <td style=overflow:initial> <span style=display:inline-block;vertical-align:middle>                                                费用：<b>{{i.amount}}</b>元                                                <span ys-help ys-need-compile=true style=top:3px;z-index:1;line-height:1>{{i.tip}}</span> </span>
+                    </td>
+                    <td> <span class="setting-limit2-warning setting-limit2-warning-1" ng-show="media_warning_stat == 1">余额不足扣费</span> </td>
+                    <td class="version-resource-operate version-grid-rowspan" rowspan=2 ng-if="$first && isOwner" ng-mouseenter=onRowSpanMouseEnter() ng-mouseleave=onRowSpanMouseLeave()>
+                      <div> <span class=text-link ng-click=showRecharge() ng-style="{visibility: media_not_applied ? 'hidden' : 'visible' }" style=width:61px;display:inline-block>查看账单</span> <a href=#/multimedia class="btn btn-default" ng-show=media_not_applied ng-disabled=media_is_applying>{{ media_is_applying ? '开通中' : '开通' }}</a> <a target=_blank class="btn btn-default" ng-show=!media_not_applied href="{{ YeePreset.OFFICIAL_WEBSITE_BUY_RECHARGE }}">充值</a> </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ys-grid>
+          </div>
+        </div>
+        <div ng-switch-when=expense ng-style="{marginTop: bInvoiceRight ? '20px' : '40px' }">
+          <div class="fw-main-item-content fw-main-item-content-full version-resource"> <a class="btn btn-primary" ng-click=fGetInvoice() style=margin-bottom:20px href={{YeePreset.OFFICIAL_WEBSITE_BUY_INVOICE}} target=_blank ng-show=bInvoiceRight>开取发票</a>
+            <ys-grid data=dataPointGrid>
+              <table>
+                <colgroup>
+                  <col width=15%>
+                  <col width=15%>
+                  <col width=15%>
+                  <col width=25%>
+                  <col> </colgroup>
+                <thead>
+                  <tr>
+                    <th>服务</th>
+                    <th>购买数量</th>
+                    <th>消费金额</th>
+                    <th>购买时间</th>
+                    <th>备注</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="i in success_trades">
+                    <td> <span>{{i.service_type}}</span> </td>
+                    <td> {{i.quantity}} </td>
+                    <td> ￥{{i.amount/100 | number:2}} </td>
+                    <td> {{i.created_at | date: 'yyyy-MM-dd HH:mm:ss'}} </td>
+                    <td> {{i.remark}} </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ys-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div

@@ -1,0 +1,237 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+        <span class="main-menu-ico"><you-ico type="order"></you-ico></span>
+    订单列表</h1>
+</div>
+<div ng-show="initModule||!isAllEmpty" you-mainfollow ng-style="showGrid" data="dataMainFollow">
+    <section ng-show="showFilter">
+        <ul class="grid-header-tab">
+            <li ng-repeat="i in headerTabs">
+                <div class=grid-header-tab-i ng-click=onClickHeaderTab(i) ng-class="i.isActive ? 'active':''" ng-if=!i.isSep> 
+                    <span class="grid-header-tab-search" ng-if=i.isSearch>
+                        <i class="ico ico-filter-tab-search-inverse"></i> 
+                    </span>
+                    <i class="ico ico-order-star"  ng-if=i.isStar></i> {{i.text}}
+                    <div ng-if=i.isSearch class=grid-header-tab-arrow>
+                        <i class="ico ico-filter-arrow-inverse"></i>
+                    </div> <span class="grid-header-tab-warning-num grid-header-tab-i" ng-if="i.isShowCount && headerTabWarningNum(i) > 0" ng-class="i.isActive ? 'active':''" ng-if=!i.isSep style=margin-right:0;padding:0>({{ headerTabWarningNum(i) }})</span> </div>
+                <div class="grid-header-tab-sep" ng-if=i.isSep></div>
+            </li>
+        </ul>
+        <div class="grid-filter">
+            <form>
+                <table>
+                    <colgroup>
+                        <col width=180>
+                        <col>
+                        <col width=130> </colgroup>
+                    <tbody class=grid-filter-body>
+                        <tr>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.TRADE_STATUS}} <span class=text-checkbtn-multi>{{YouText.CHECK_BTN_MULTI}}</span>：</div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-v style=width:450px>
+                                    <you-check-btn data=dataOrderStatus></you-check-btn>
+                                </div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.TRADE_CREATED_TIME}}：</div>
+                            </td>
+                            <td style=padding-right:10px>
+                                <div class=grid-filter-v>
+                                    <you-date data=dataDate class=order-filter-date></you-date>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.SHIPMENT_STATUS}} <span class=text-checkbtn-multi>{{YouText.CHECK_BTN_MULTI}}</span>：</div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-v style=width:450px>
+                                    <you-check-btn data=dataShipmentStatus></you-check-btn>
+                                </div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.TRADE_PAID_TIME}}：</div>
+                            </td>
+                            <td style=padding-right:10px>
+                                <div class=grid-filter-v>
+                                    <you-date data=dataPaidDate class=order-filter-date></you-date>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.PAYMENT_GATEWAY}} <span class=text-checkbtn-multi>{{YouText.CHECK_BTN_MULTI}}</span>：</div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-v style=width:450px>
+                                    <you-check-btn data=dataGatewayStatus></you-check-btn>
+                                </div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.TRADE_TOTAL_AMOUNT}}：</div>
+                            </td>
+                            <td style=padding-right:10px>
+                                <div class=grid-filter-v>
+                                    <div class="input-group input-group-iai" style=max-width:286px>
+                                        <div class="input-group input-group-left">
+                                            <div class=input-group-addon>{{YouPreset.$()}}</div>
+                                            <input class="input input-long" type=text ng-keypress=onSearch($event) ng-model=param.amount_smaller you-validation=nonNegativeNumber|float2|maxNumber /> </div> <span class=input-group-addon>-</span>
+                                        <div class="input-group input-group-right">
+                                            <div class=input-group-addon>{{YouPreset.$()}}</div>
+                                            <input class="input input-long" type=text ng-keypress=onSearch($event) ng-model=param.amount_greater you-validation=nonNegativeNumber|float2|maxNumber /> </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                 <div class=grid-filter-k>{{YouText.SEARCH}}：</div>
+                            </td>
+                            <td>
+                                 <div class="grid-filter-v grid-filter-v-drop">
+                                    <input ng-show="param.searchType == 0" type=text class="input input-search" style=padding-left:115px;max-width:286px placeholder={{YouText.SEARCH_HOLDER}}订单编号 ng-keypress=onSearch($event) ng-model=param.search you-validation=trim />
+                                    <input ng-show="param.searchType == 1" type=text class="input input-search" style=padding-left:115px;max-width:284px placeholder={{YouText.SEARCH_HOLDER}}联系电话 ng-keypress=onSearch($event) ng-model=param.mobile you-validation=trim />
+                                    <input ng-show="param.searchType == 2" type=text class="input input-search" style=padding-left:115px;max-width:284px placeholder={{YouText.SEARCH_HOLDER}}收货人姓名 ng-keypress=onSearch($event) ng-model=param.consignee_name you-validation=trim />
+                                    <input ng-show="param.searchType == 3" type=text class="input input-search" style=padding-left:115px;max-width:284px placeholder={{YouText.SEARCH_HOLDER}}商品编号 ng-keypress=onSearch($event) ng-model=param.barcode you-validation=trim />
+                                    <input ng-show="param.searchType == 4" type=text class="input input-search" style=padding-left:115px;max-width:284px placeholder={{YouText.SEARCH_HOLDER}}支付编号 ng-keypress=onSearch($event) ng-model=param.payment_no you-validation=trim />
+                                    <input ng-show="param.searchType == 5" type=text class="input input-search" style=padding-left:115px;max-width:284px placeholder={{YouText.SEARCH_HOLDER}}支付网关编号 ng-keypress=onSearch($event) ng-model=param.gateway_trade_no you-validation=trim />
+                                
+                                    <input ng-show="param.searchType == 7" type=text class="input input-search" style=padding-left:115px;max-width:284px placeholder={{YouText.SEARCH_HOLDER}}运单号 ng-keypress=onSearch($event) ng-model=param.ship_no you-validation=trim />
+                                    <div href=# class=you-fdrop style=width:110px>
+                                        <div ng-click=clickFdropSearch()> <span ng-show="param.searchType == 0">订单编号</span> <span ng-show="param.searchType == 1">联系电话</span> <span ng-show="param.searchType == 2">收货人</span> <span ng-show="param.searchType == 3">商品名称</span> <span ng-show="param.searchType == 4">支付编号</span> <span ng-show="param.searchType == 5">支付网关编号</span><span ng-show="param.searchType == 7">运单号</span> <span class="b64-you-fdrop you-fdrop-arrow"></span> </div>
+                                        <div class=you-fdrop-box ng-show=showFdropSearch> <span class="b64-you-fdrop you-fdrop-box-arrow"></span>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(5)>支付网关编号</div>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(4)>支付编号</div>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(0)>订单编号</div>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(3)>商品名称</div>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(1)>联系电话</div>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(2)>收货人</div>
+                                            <div class=you-fdrop-box-item ng-click=clickFdropSearchItem(7)>运单号</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="grid-filter-btns">
+                    <you-btn type=search ng-click=onSearch()></you-btn>
+                    <you-btn text={{YouText.RESET}} ng-click=onReset()></you-btn>
+                    <you-btn ng-show=isShowReport text=生成导出Excel ng-click=onReport() title=可用上方条件过滤导出数据，每天最多生成3次。></you-btn>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section>
+        <ul class=grid-header-tab ng-hide=showFilter>
+            <li ng-repeat="i in headerTabs">
+                <div class=grid-header-tab-i ng-click=onClickHeaderTab(i) ng-class="i.isActive ? 'active':''" ng-if=!i.isSep> 
+                    <span class=grid-header-tab-search ng-if=i.isSearch>                        
+                        <i class="ico ico-filter-tab-search" ng-hide=i.isActive></i>
+                        <i class="ico ico-filter-tab-search-inverse" ng-show=i.isActive></i>
+                    </span>
+                    <i class="ico ico-order-star" ng-if=i.isStar></i> {{i.text}}
+                    <div class=grid-header-tab-arrow>
+                        <i class="ico ico-filter-arrow"></i>
+                    </div> 
+                    <span class="grid-header-tab-warning-num grid-header-tab-i" ng-if="i.isShowCount && headerTabWarningNum(i) > 0" ng-class="i.isActive ? 'active':''" ng-if=!i.isSep style=margin-right:0;padding:0>({{ headerTabWarningNum(i) }})</span> 
+                </div>
+                <div class="grid-header-tab-sep" ng-if=i.isSep></div>
+            </li>
+        </ul>
+        <div class="grid-header">
+            <you-btn type="refresh" ng-click=onRefresh() ng-show=!isRefreshing></you-btn>
+            <you-btn type="refreshing" ng-show=isRefreshing></you-btn>
+            <div class="grid-header-right">
+                <div class="t-count">{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+    </section>
+</div>
+<div you-mainbody ng-style=showByMainBody ng-show=initModule||!isAllEmpty>
+    <div class="transition-opacity" ng-show=initModule||!isAllEmpty ng-style=showGrid>
+        <div class="grid-body">
+            <you-grid data=dataGrid>
+                <table>
+                    <colgroup>
+                        <col width=28%>
+                        <col width=160>
+                        <col>
+                        <col width=160>
+                        <col width=150>
+                        <col width=150> </colgroup>
+                    <thead>
+                        <tr>
+                            <th>订单编号</th>
+                            <th><span class="grid-body-order" ng-click="setOrder('created_at')">{{YouText.TRADE_CREATED_TIME}}<span ng-class="getOrderClass('created_at')"></span></span>
+                            </th>
+                            <th>收货人</th>
+                            <th>{{YouText.PAYMENT_GATEWAY}}</th>
+                            <th>{{YouText.SHIPMENT_STATUS}}</th>
+                            <th><span class="grid-body-order" ng-click="setOrder('total_amount')">{{YouText.TRADE_TOTAL_AMOUNT}}<span ng-class="getOrderClass('total_amount')"></span></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0" id="gridBody">
+                        <tr ng-repeat="item in list" data-id={{item.id}} data-index={{$index}} class=order-list-tr data-customer-id={{item.address.name}} data-customer-name={{item.address.name}}>
+                            <td> 
+                                
+                                <span class="text-status order-status-unpaid" ng-if="item.status == 1">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-paid" ng-if="item.status == 2">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-delivering" ng-if="item.status == 3">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-done" ng-if="item.status == 4">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-cancel-request" ng-if="item.status == 5">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-closed" ng-if="item.status == 6">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-closed" ng-if="item.status == 7">{{getPresetText(item.status, 'order')}}</span> 
+                                <span class="text-status order-status-closed" ng-if="item.status == 8">{{getPresetText(item.status, 'order')}}</span> 
+                                <a href="#!/orderedit?id={{item.id}}" ng-click="onClickItem(item, $event)" title={{item.id}}>{{item.id}}</a> 
+                                <span class="b64-order-device ico-device-{{ item.device }}" title="订单来源：{{ getDeviceName(item.device) }}"></span> 
+                              
+                            </td>
+                            <td>
+                                <span title="{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}">
+                                {{item.created_at | date: 'yyyy/MM/dd HH:mm'}}</span>
+                            </td>
+                            <td title="{{item.address.name + '/' + item.address.phone}}">
+                                {{item.address.name}}
+                                <span ng-show="item.address.phone" class=text-muted>/{{item.address.phone}}</span>
+                            </td>
+                            <td class="grid-body-payment" title="{{ getGatewayTips(item) }}"> 
+                                <span class="b64-order-payment ico-payment-order-{{ item.gateway }}"></span>
+                            </td>
+                            <td>{{getPresetText(item.shipment_status, 'shipment')}}</td>
+                            <td><span title="{{YouPreset.$()}}{{item.total_amount / 100}}">{{YouPreset.$()}}{{item.total_amount / 100}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+            <div class="grid-body-empty" ng-show="isAllEmpty"> <span class="grid-ico-empty grid-ico-empty-trade"></span>
+                <div class="grid-body-empty-title">顾客的订单将出现在这里</div>
+                <div class="grid-body-empty-desc">在这里你可以查看和处理订单</div>
+                <div class="grid-body-empty-bottom"></div>
+            </div>
+        </div>
+        <div class="grid-body-none" ng-show="!isAllEmpty && isEmpty">
+            {{YouText.GRID_SEARCH_NONE}}
+        </div>
+        <div class="grid-footer" ng-show=!isAllEmpty>
+            <div class="grid-footer-right">
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="global-guide-wrap" ng-hide=initModule||!isAllEmpty>
+    <you-global-guide-empty data=dataGlobalGuideEmpty> </you-global-guide-empty>
+</div>

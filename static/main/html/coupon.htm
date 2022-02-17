@@ -1,0 +1,146 @@
+ <div class="main-menu">
+    <h1 class=main-menu-title> 
+        <span class=main-menu-ico>
+            <you-ico type=coupon></you-ico>
+        </span>优惠券列表
+    </h1>
+    <you-btn type="primary" ng-click=fNewCoupon() text=新增优惠券 ></you-btn>
+</div>
+<div you-mainfollow ng-style="showGrid">
+    <section>
+        <div class="grid-filter">
+            <form>
+                <table>
+                    <colgroup>
+                        <col width=130>
+                        <col width=400>
+                        <col width=130> </colgroup>
+                    <tbody class=grid-filter-body>
+                        <tr>
+                            <td>
+                                <div class=grid-filter-k>类型：</div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-v>
+                                    <you-check-btn data=dataTypes></you-check-btn>
+                                </div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-k>有效时间：</div>
+                            </td>
+                            <td style=padding-right:10px>
+                                <div class=grid-filter-v>
+                                    <you-date data=dataDate></you-date>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class=grid-filter-k>状态：</div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-v>
+                                    <you-check-btn data=dataStatus></you-check-btn>
+                                </div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-k>{{YouText.SEARCH}}：</div>
+                            </td>
+                            <td>
+                                <div class=grid-filter-v>
+                                    <input type=text class="input input-search" placeholder={{YouText.SEARCH_HOLDER}}优惠券名称 ng-keypress=onSearch($event) ng-model=param.search you-validation=trim /> </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class=grid-filter-btns>
+                    <you-btn type=search ng-click=onSearch()></you-btn>
+                    <you-btn text={{YouText.RESET}} ng-click=onReset()></you-btn>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div class="grid-header">
+            <you-btn type="refresh" ng-click="onRefresh()" ng-show=!isRefreshing></you-btn>
+            <you-btn type="refreshing" ng-show=isRefreshing></you-btn>
+            <div class="grid-header-right">
+                <div class=t-count>
+                    {{YouText.LIST_ITEM_COUNT_P1}}
+                    <span class=t-number>{{baseItemCount}}</span>
+                    {{YouText.LIST_ITEM_COUNT_P2}}
+                </div>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+    </section>
+</div>
+<div you-mainbody ng-style="showByMainBody" ng-show="initModule||!isAllEmpty" class="coupon-block">
+    <div class="transition-opacity" ng-style="showGrid">
+        <div class=grid-body>
+            <you-grid data=dataGrid>
+                <table>
+                    <colgroup>
+                        <col width=20%>
+                        <col width=7%>
+                        <col width=9%>
+                        <col width=15%>
+                        <col width=24%>
+                        <col width=15%>
+                        <col width=12%> </colgroup>
+                    <thead>
+                        <tr>
+                            <th>优惠券名称</th>
+                            <th>类型 <span you-help you-help-dir=bottom style=position:relative;z-index:3;vertical-align:middle;line-height:1;top:-1px>普通券：一种可生成一个批次的只可单张使用的现金/折扣优惠券<br>复用券：一种可自定义编号，可以被顾客重复使用的现金/折扣优惠券</span> </th>
+                            <th>面值/折扣</th>
+                            <th>已使用</th>
+                            <th>有效时间</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0">
+                        <tr ng-repeat="item in list">
+                            <td> 
+                                <span class=text-status ng-if="item.status == 'actived'">{{getStatusText(item.status)}}</span> 
+                                <span class="text-status text-status-coming" ng-if= "item.status == 'unactived'">{{getStatusText(item.status)}}</span> 
+                                <span class= "text-status text-status-invalid" ng-if= "item.status == 'expired'">{{getStatusText(item.status)}}</span> 
+                              
+                                <a href="#!/coupon{{item.ctype === 'single' ? 'single' : ''}}edit?id={{item.id}}" title={{item.name}}>{{item.name}}</a> 
+                            </td>
+                            <td>{{getTypesText(item.ctype)}}</td>
+                            <td>{{item.utype === 'percentage' ? item.discount_percentage / 10 + '折' : YouPreset.$() + item.discount_amount / 100 }}</td>
+                            <td>{{item.quantity_used}}/{{item.quantity_type ? '不限使用次数' : item.quantity_provided}}</td>
+                            <td> <span title= "{{item.actived_at == -1 ? '永久': (item.actived_at | date:'yyyy/MM/dd HH:mm')}} - {{item.expired_at == -1 ? '永久': (item.expired_at | date:'yyyy/MM/dd HH:mm')}}">                            {{item.actived_at == -1 ? '永久': (item.actived_at | date:'yyyy/MM/dd HH:mm')}} - {{item.no_expires == true ? '永久': (item.expired_at | date:'yyyy/MM/dd HH:mm')}}                            </span> </td>
+                            <td>{{ (item.created_at | date:'yyyy/MM/dd HH:mm') }}</td>
+                            <td>
+                                <div ng-show= "item.status == '4'"> - </div>
+                                <div ng-hide= "item.status == '4'"> 
+                                    <span class=text-link ng-if= "item.ctype == 'normal'" ng-click=distributeCoupon(item)>派发</span> 
+                                    <span class=text-link ng-class= "{'text-link-disabled': !item.exported}" ng-if= "item.ctype == 'normal'" ng-click=getExportInfo(item)>领取</span> 
+                                    <span class=text-link ng-click=discardCoupon(item)>废弃</span> 
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+            <div class=grid-body-empty ng-show=isAllEmpty> <span class= "grid-ico-empty grid-ico-empty-coupon"></span>
+                <div class=grid-body-empty-title>你还没有创建过优惠券</div>
+                <div class=grid-body-empty-desc>创建的优惠券信息将出现在这里</div>
+                <you-btn type=primary text=新增优惠券 class=grid-body-empty-btn ng-click=fNewCoupon()></you-btn>
+                <div class=grid-body-empty-bottom></div>
+            </div>
+        </div>
+        <div class=grid-body-none ng-show= "!isAllEmpty && isEmpty" ng-if=!isGridLoading>{{YouText.GRID_SEARCH_NONE}}</div>
+        <div class=grid-body-none ng-if=isGridLoading>{{YouText.GRID_SEARCH_LOADING}}</div>
+        <div class=grid-footer ng-show=!isAllEmpty>
+            <div class=grid-footer-right>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<div class=global-guide-wrap ng-hide=initModule||!isAllEmpty>
+    <you-global-guide-empty data=dataGlobalGuideEmpty> </you-global-guide-empty>
+</div>

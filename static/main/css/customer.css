@@ -1,0 +1,215 @@
+.customer-block .customer-list-level-icon {
+    position: relative;
+    top: -1px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 3px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 0;
+    vertical-align: middle
+}
+
+.customer-block .customer-list-level-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle
+}
+
+.customer-edit {
+    position: relative
+}
+
+.customer-edit>.c-left {
+    float: left;
+    width: 72%
+}
+
+.customer-edit>.c-left .tab-group {
+    margin-left: 50px;
+    margin-right: 40px
+}
+
+.customer-edit>.c-right {
+    float: left;
+    width: 28%
+}
+
+.customer-edit>.c-right>.edit-field {
+    padding: 0 40px 5px 0;
+    margin-top: 38px
+}
+
+.customer-edit-info {
+    position: relative;
+    float: left;
+    border: 1px solid #bcd;
+    width: 35%;
+    padding: 11px 10px 12px;
+    line-height: 2.2
+}
+
+.customer-edit-info>.t-line {
+    position: absolute;
+    top: 0;
+    left: 80px;
+    height: 100%;
+    border-left: 1px solid #bcd
+}
+
+.customer-edit-info>.t-promotion {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    color: #81b1cf;
+    font-size: 12px
+}
+
+.customer-edit-info>.t-promotion>.ico {
+    position: relative;
+    top: 3px;
+    margin-right: 5px
+}
+
+.customer-edit-info>.t-k {
+    position: absolute;
+    top: 11px;
+    left: 0;
+    width: 70px;
+    color: #777;
+    text-align: right
+}
+
+.customer-edit-info>.t-v {
+    margin-left: 80px;
+    margin-right: 100px
+}
+
+.customer-edit-info>.t-v>.t-item {
+    height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.customer-edit-info>.t-c {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+    font-size: 0
+}
+
+.customer-edit-info>.t-c img {
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle
+}
+
+.customer-edit-col {
+    float: left;
+    margin-left: 1.5%;
+    height: 325px;
+    min-width: 190px;
+    max-width: 20%
+}
+
+.customer-edit-opint .customer-edit-count {
+    height: 100%
+}
+
+.customer-edit-opint .customer-edit-count>.t-v {
+    margin-top: 60px
+}
+
+.customer-edit-opint .customer-edit-count>.t-k {
+    line-height: 24px
+}
+
+.customer-edit-count {
+    width: 100%;
+    height: 156px;
+    margin-bottom: 13px;
+    border: 1px solid #bcd;
+    padding: 0 30px;
+    background-color: #f2f7fb;
+    text-align: center;
+    line-height: 1
+}
+
+.customer-edit-count>.t-v {
+    margin-top: 40px;
+    color: #434343;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.customer-edit-count>.t-k {
+    height: 20px;
+    line-height: 20px;
+    color: #999;
+    margin-top: 5px
+}
+
+.customer-edit-count>.t-extra {
+    margin-top: 60px;
+    font-size: 13px;
+    line-height: 20px;
+    color: #999
+}
+
+.customer-edit-count .customer-level-setting-link a {
+    display: inline-block;
+    margin: 0 5px
+}
+
+.customer-edit-count .customer-level-icon {
+    position: relative;
+    z-index: 0;
+    top: -1px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 3px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 0;
+    vertical-align: middle
+}
+
+.customer-edit-count .customer-level-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle
+}
+
+.customer-edit-tag>.t-tips {
+    color: #a9a9a9;
+    margin-top: 5px
+}
+
+.customer-point-edit-dropdown .reference-link {
+    display: inline-block;
+    margin-bottom: 20px
+}
+
+.customer-point-edit-dropdown .label-block {
+    min-height: 48px;
+    padding-right: 20px
+}
+
+.customer-point-edit-dropdown .input-short {
+    width: 48px;
+    margin-top: -6px;
+    height: 26px
+}

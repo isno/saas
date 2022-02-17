@@ -1,0 +1,13 @@
+ <div><h3 class="summit-h3" style="position:relative;">
+    <span ng-show="showStatus">
+        <span ng-hide="isWatermarking" class="imgmgr-imgname-long">正在上传
+            <span ng-bind="uploadingName"  title="{{uploadingName}}"></span>
+        </span>
+    </span>
+    &nbsp;
+    <span style="position:absolute;right:0">已上传图片：<span ng-bind="uploadCount"></span> / 总共：<span ng-bind="uploadTotal"></span>
+</span>
+</h3>    
+<div class="setting-limit-content-bar imgmgr-imgname-bar">        
+    <div class="setting-limit-content-bar-process {{ barclass }}" style="width:0%" ng-style="uploadPercentStyle"></div></div>
+</div>

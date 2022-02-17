@@ -1,0 +1,425 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+    <span class="main-menu-ico"><you-ico type="customer"></you-ico></span>顾客详情</h1>
+    <you-btn text="返回" ng-click=onClickBaseBack()></you-btn>
+    <div class="main-menu-right">
+        <!--<you-btn text=取消黑名单 ng-click=cancelBlackList() ng-if=customer.black_list></you-btn>
+        <you-btn text=加入黑名单 ng-click=pullInBlackList() ng-if=!customer.black_list></you-btn>-->
+        <you-appentry type="customer_detail"></you-appentry>
+    </div>
+</div>
+<div you-mainbody you-fadein>
+    <div class="transition-opacity">
+        <div class="edit-field" style="margin-bottom:15px">
+            <h2 style="width:35%;display:inline-block">基本信息</h2>
+            <h2 style="margin-left:1.5%;width:63%;display:inline-block">资产信息</h2>
+            <div class="customer-edit-info">
+                <div class="t-line"></div>
+                <div class=t-promotion ng-show=customer.accept_marketing>
+                    <you-ico type=promotion></you-ico>接受推广</div>
+                <div class="t-k">
+                    <!--<div>注册来源</div>-->
+                    <div>昵称</div>
+                    <div>手机</div>
+                    <div>生日</div>
+                    <div>{{YouText.CUSTOMER_CREATED_TIME}}</div>
+                    <div>最近登录</div>
+                    <!--<div>备注</div>-->
+                </div>
+                <div class="t-v">
+                    <!--<div class="t-item"> 
+                        <span ng-hide="customer.regist_source == 100" class="ico ico-social ico-social-{{customer.regist_source}}" style="top:3px;margin-right:4px"></span> 
+                        <span title=getRegistName(customer)>{{getRegistName(customer)}}</span> 
+                    </div>-->
+                    <div class=t-item style="overflow:initial"> 
+                        <span title={{customer.name}}>{{customer.name ? customer.name: '-'}}</span> 
+                        <span ng-hide="!customer.sex || customer.sex == 'undefined'" you-help-content="性别：{{ customer.sex === 'male' ? '男性' : '女性' }}" you-help you-width=auto you-help-dir=bottom>
+                            <span class="ico ico-{{customer.sex}}"></span> 
+                        </span>
+                    </div>
+                    <div class=t-item>
+                        <span title={{customer.account}}>{{customer.account ? customer.account: '-'}}</span>
+                    </div>
+                
+                    
+                    <div class=t-item><span title={{customer.birthday}}>
+                        {{customer.birthday ? customer.birthday : '-' | date: 'yyyy/MM/dd'}}</span>
+                    </div>
+                   
+                    <div class=t-item>{{customer.created_at | date: 'yyyy/MM/dd HH:mm'}}</div>
+                    <div class=t-item>{{customer.last_in | date: 'yyyy/MM/dd HH:mm'}}</div>
+                </div>
+                <!--
+                <div style=margin-left:80px><span title={{customer.note}} style=word-break:break-all>{{customer.note ? customer.note: '-'}}</span>
+                    <button style=margin-left:3% class="btn btn-xsmall-blue" ng-click=editInfo(datatime)>编辑</button>
+                </div>-->
+                <div class=t-c ng-if=customer> 
+                    <img ng-src={{getCustomerAvatar(customer)}}>
+                    <you-cover></you-cover>
+                </div>
+            </div>
+            <div class=customer-edit-col>
+                <div class=customer-edit-count>
+                    <div class="t-v"><span title="{{YouPreset.$()}}{{customer.trade_total_amount / 100}}">{{YouPreset.$()}}{{customer.trade_total_amount / 100}}</span></div>
+                    <div class="t-v">{{YouText.CUSTOMER_TRADE_TOTAL_AMOUNT}}</div>
+                </div>
+                <div class=customer-edit-count>
+                    <div class="t-v"><span title={{customer.trade_count}}>{{customer.trade_count}}</span></div>
+                    <div class="t-v">{{YouText.CUSTOMER_TRADE_COUNT}}</div>
+                </div>
+            </div>
+            <div class="customer-edit-col customer-edit-opint">
+                <div class=customer-edit-count>
+                    <div class="t-v"><span title={{customer.total_point}}>{{customer.total_point}}</span></div>
+                    <div class="t-v"> <span style=vertical-align:middle>{{YouText.CUSTOMER_TRADE_AVAIL_POINT}}</span>
+                        <br>
+                        <you-dropdown data=youDropdownConfig ng-show=YouLevel.CUSTOMER_REWARD_POINT_ENABLE>
+                            <button you-dropdown-trigger class="btn btn-xsmall-blue">编辑</button>
+                            <div you-dropdown-content class=customer-point-edit-dropdown>
+                                <div class=dropdown-head>编辑积分</div>
+                                <div class=dropdown-body>
+                                    <div class=dropdown-item>
+                                        <div ng-repeat="label in labelBlocks" ng-style="$index == 0 ? null: {marginTop: '12px'}">
+                                            <label class=label-block ng-class="{checked: data.adjust_type == label.value}">
+                                                <input you-check type=radio ng-model=data.adjust_type value="{{ label.value }}" />
+                                                <div class=label-block-content> {{ label.text }}
+                                                    <i class="ico ico-arrow-1"></i> 
+                                                    <span ng-if="data.adjust_type == label.value">
+                                                        <input type=text class="input input-short" you-validation=required|noZero|positiveNumber|integer|maxNumber ng-model=data.point>&nbsp;积分</span> 
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class=dropdown-item>
+                                        <p class=dropdown-item-title>详细说明（顾客可见）</p>
+                                        <textarea class="input input-long" rows=2 you-validation=maxlength(30) ng-model=data.desc placeholder=最多30字></textarea>
+                                    </div>
+                                    <div class=dropdown-item>
+                                        <p class=dropdown-item-title>管理员备注</p>
+                                        <textarea class="input input-long" rows=2 you-validation=maxlength(30) ng-model=data.admin_memo placeholder=最多30字></textarea>
+                                    </div>
+                                </div>
+                                <div class=dropdown-foot>
+                                    <you-btn text=取消 ng-click=$dropdown.$toggleDropdown() ng-disabled=isSaving></you-btn>
+                                    <you-btn type=primary text=保存 ng-click=saveEditPoint() ng-hide=isSaving></you-btn>
+                                    <you-btn type=loading ng-show=isSaving></you-btn>
+                                </div>
+                            </div>
+                        </you-dropdown>
+                        <you-upgrade ng-show=!YouLevel.CUSTOMER_REWARD_POINT_ENABLE style=display:inline-block;margin-top:65px></you-upgrade>
+                    </div>
+                    <div class=t-extra ng-show=YouLevel.CUSTOMER_REWARD_POINT_ENABLE> {{thisYearEnd | date: 'yyyy-MM-dd'}}
+                        <br> 
+                    将过期 {{customer.last_year_point || 0}} 积分 </div>
+                </div>
+            </div>
+            <div class="customer-edit-col customer-edit-opint">
+                <div class=customer-edit-count>
+                    <div class=t-v><span title={{customer.credit}}>{{customer.credit || 0}}</span></div>
+                    <div class=t-k> <span style=vertical-align:middle>{{YouText.CUSTOMER_TRADE_EXP}}</span>
+                        <br>
+                        <you-dropdown data=youDropdownExpConfig ng-show=YouLevel.CUSTOMER_LEVEL_ENABLE>
+                            <button you-dropdown-trigger class="btn btn-x small-blue">编辑</button>
+                            <div you-dropdown-content class=customer-point-edit-dropdown>
+                                <div class=dropdown-head>编辑经验值</div>
+                                <div class=dropdown-body>
+                                    <div class=dropdown-item> <a class="text-link reference-link" ng-click=popCustomerLevel()>会员等级参考</a>
+                                        <div ng-repeat="label in labelBlocks" ng-style="$index == 0 ? null: {marginTop: '12px'}">
+                                            <label class=label-block ng-class="{checked: data.adjust_type == label.value}">
+                                                <input you-check type=radio ng-model=data.adjust_type value="{{ label.value }}" />
+                                                <div class=label-block-content> {{ label.text }}
+                                                    <i class="ico ico-arrow-1"></i> <span ng-if="data.adjust_type == label.value">                                                        <input type=text class="input input-short" you-validation=required|noZero|positiveNumber|integer|maxNumber ng-model=data.credit>&nbsp;经验值                                                    </span> </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class=dropdown-item>
+                                        <p class=dropdown-item-title>详细说明（顾客可见）</p>
+                                        <textarea class="input input-long" rows=2 you-validation=maxlength(30) ng-model=data.desc placeholder=最多30字></textarea>
+                                    </div>
+                                    <div class=dropdown-item>
+                                        <p class=dropdown-item-title>管理员备注</p>
+                                        <textarea class="input input-long" rows=2 you-validation=maxlength(30) ng-model=data.admin_memo placeholder=最多30字></textarea>
+                                    </div>
+                                </div>
+                                <div class=dropdown-foot>
+                                    <you-btn text=取消 ng-click=$dropdown.$toggleDropdown() ng-disabled=isSaving></you-btn>
+                                    <you-btn type=primary text=保存 ng-click=saveEditCredit() ng-hide=isSaving></you-btn>
+                                    <you-btn type=loading ng-show=isSaving></you-btn>
+                                </div>
+                            </div>
+                        </you-dropdown>
+                        <you-upgrade ng-show=!YouLevel.CUSTOMER_LEVEL_ENABLE style=display:inline-block;margin-top:65px></you-upgrade>
+                    </div>
+                    <div class=t-extra ng-show=YouLevel.CUSTOMER_LEVEL_ENABLE> 
+                        <span class=customer-level-icon>
+                            <img ng-src="{{ customer.customer_level.icon }}" alt="">                            <you-cover></you-cover>
+                        </span>
+                        {{ customer.customer_level.name }}
+                        <p class=customer-level-setting-link> 
+                            <a href="#!/customer_level?popup=true" class=text-link>经验值设置</a> 
+                            <a href=#!/customer_level class=text-link>会员等级设置</a> 
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class=clearfix></div>
+        </div> 
+
+        <ul class="tab-group tab-group-offset50">
+            <li ng-repeat="i in dataTabs" ng-class="{active: currentTab == i}" ng-click=setCurrentTab(i) ng-hide=i.hide> {{ i.text }} <a ng-if=i.doc href="{{ i.doc }}" target=_blank title=点击查看帮助><span class="b64-you-help you-help-ico you-help-position"></span></a> </li>
+        </ul>
+        <div class="text-nodata text-nodata-margin" ng-show=loadingGridData> <span class="ico ico-loading"></span> <span class=text-warning>{{ currentTab.text }}数据获取中...</span> </div>
+        <div ng-hide=loadingGridData>
+            <div ng-show="currentTab.tag == 'trade'">
+                <div ng-show="!tradeList || tradeList.length === 0" class=edit-field>
+                    <h2 style=color:#aaa>暂无购买记录</h2> </div>
+                <div ng-hide="!tradeList || tradeList.length === 0">
+                    <div class=grid-header>
+                        <you-btn type=refresh ng-click=onTradeRefresh() ng-show=!isTradeRefreshing></you-btn>
+                        <you-btn type=refreshing ng-show=isTradeRefreshing></you-btn>
+                        <div class="grid-header-right right-0">
+                            <div class="t-count t-sp">{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{tradeItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                            <you-pagination data=tradePagination></you-pagination>
+                        </div>
+                    </div>
+                    <div class=grid-body>
+                        <you-grid data=dataTradeGrid>
+                            <table>
+                                <colgroup>
+                                    <col>
+                                    <col width=20%>
+                                    <col width=18%>
+                                    <col width=18%>
+                                    <col width=18%> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>购买商品</th>
+                                        <th>{{YouText.TRADE_NO}}</th>
+                                        <th>{{YouText.TRADE_CREATED_TIME}}</th>
+                                        <th>{{YouText.TRADE_STATUS}}</th>
+                                        <th>{{YouText.TRADE_TOTAL_AMOUNT}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in tradeList">
+                                        <td>
+                                            <div class=grid-list-thumbnails>
+                                                <a class=grid-list-thumbnail target=_blank ng-repeat="itemImg in item.items" href={{itemImg.page_url}}> <img ng-src={{itemImg.image}}>
+                                                    <you-cover></you-cover>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td> <a href="#/orderedit?id={{item.id}}" title={{item.id}}>{{item.id}}</a> </td>
+                                        <td><span title="{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}">{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}</span></td>
+                                        <td> <span class="text-status order-status-unpaid" ng-if="item.new_status == 1">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-paid" ng-if="item.new_status == 2">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-delivering" ng-if="item.new_status == 3">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-done" ng-if="item.new_status == 4">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-cancel-request" ng-if="item.new_status == 5">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-closed" ng-if="item.new_status == 6">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-closed" ng-if="item.new_status == 7">{{getOrderStatusText(item.new_status, 'order')}}</span> <span class="text-status order-status-closed" ng-if="item.new_status == 8">{{getOrderStatusText(item.new_status, 'order')}}</span> </td>
+                                        <td><span title="{{YouPreset.$()}}{{item.total_amount / 100}}">{{YouPreset.$()}}{{item.total_amount / 100}}</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                    </div>
+                    <div class=grid-footer>
+                        <div class=grid-footer-right>
+                            <you-pagination data=tradePagination></you-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="currentTab.tag == 'point'">
+                <div ng-show="!pointList || pointList.length === 0" class=edit-field>
+                    <h2 style=color:#aaa>暂无积分明细</h2> </div>
+                <div ng-hide="!pointList || pointList.length === 0">
+                    <div class=grid-header>
+                        <you-btn type=refresh ng-click=onPointRefresh() ng-show=!isPointRefreshing></you-btn>
+                        <you-btn type=refreshing ng-show=isPointRefreshing></you-btn>
+                        <div class="grid-header-right right-0">
+                            <div class="t-count t-sp">{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{pointTotalCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                            <you-pagination data=pointPagination></you-pagination>
+                        </div>
+                    </div>
+                    <div class=grid-body>
+                        <you-grid data=dataPointGrid>
+                            <table>
+                                <colgroup>
+                                    <col width=20%>
+                                    <col width=15%>
+                                    <col width=30%>
+                                    <col> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>日期</th>
+                                        <th>收入/支出</th>
+                                        <th>管理员备注</th>
+                                        <th>详细说明（顾客可见）</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in pointList">
+                                        <td> <span title="{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}">{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}</span> </td>
+                                        <td> <span ng-class="item.point > 0 ? 'text-positive' : 'text-negative'">                                            {{ item.point > 0 ? '+' + item.point : item.point }}                                        </span> </td>
+                                        <td>{{ item.admin_memo || '-'}}</td>
+                                        <td>{{ item.reward_point_desc || '-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                    </div>
+                    <div class=grid-footer>
+                        <div class=grid-footer-right>
+                            <you-pagination data=pointPagination></you-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="currentTab.tag == 'credit'">
+                <div ng-show="!creditList || creditList.length === 0" class=edit-field>
+                    <h2 style=color:#aaa>暂无经验值明细</h2> </div>
+                <div ng-hide="!creditList || creditList.length === 0">
+                    <div class=grid-header>
+                        <you-btn type=refresh ng-click=onCreditRefresh() ng-show=!isCreditRefreshing></you-btn>
+                        <you-btn type=refreshing ng-show=isCreditRefreshing></you-btn>
+                        <div class="grid-header-right right-0">
+                            <div class="t-count t-sp">{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{creditTotalCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                            <you-pagination data=creditPagination></you-pagination>
+                        </div>
+                    </div>
+                    <div class=grid-body>
+                        <you-grid data=dataCreditGrid>
+                            <table>
+                                <colgroup>
+                                    <col width=20%>
+                                    <col width=15%>
+                                    <col width=30%>
+                                    <col> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>日期</th>
+                                        <th>收入/支出</th>
+                                        <th>管理员备注</th>
+                                        <th>详细说明（顾客可见）</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in creditList">
+                                        <td> <span title="{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}">{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}</span> </td>
+                                        <td> <span ng-class="item.credit > 0 ? 'text-positive' : 'text-negative'">                                            {{ item.credit > 0 ? '+' + item.credit : item.credit }}                                        </span> </td>
+                                        <td>{{ item.admin_memo || '-'}}</td>
+                                        <td>{{ item.credit_record_desc || '-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                    </div>
+                    <div class=grid-footer>
+                        <div class=grid-footer-right>
+                            <you-pagination data=creditPagination></you-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="currentTab.tag == 'meta_field'">
+                <div ng-show="!attributeMetaField.fields || Object.get(attributeMetaField.fields).length === 0" class=edit-field>
+                    <h2 style=color:#aaa>暂无附加信息</h2> </div>
+                <div ng-hide="!attributeMetaField.fields || Object.get(attributeMetaField.fields).length === 0">
+                    <div style="margin:10px 40px 0 50px">
+                        <div style=margin-bottom:10px ng-repeat="(key, value) in attributeMetaField.fields">
+                            <div class=text-heading>{{key}}</div>
+                            <div>
+                                <input type=text class="input input-long" ng-model=value>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=grid-footer>
+                        <you-btn type=primary text=保存 ng-click=onClickSaveMetaField() ng-hide=isSavingMetaField></you-btn>
+                        <you-btn type=loading ng-show=isSavingMetaField></you-btn>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="currentTab.tag == 'address'">
+                <div ng-show="!addresses || addresses.length === 0" class=edit-field>
+                    <h2 style=color:#aaa>暂无地址数据</h2> </div>
+                <div ng-hide="!addresses || addresses.length === 0">
+                    <div class=grid-body>
+                        <you-grid data=dataAddressesGrid>
+                            <table>
+                                <colgroup>
+                                    <col width=10%>
+                                    <col width=15%>
+                                    <col width=50%>
+                                    <col> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>收件人</th>
+                                        <th>电话号码</th>
+                                        <th>收件地址</th>
+                                        <th>是否默认</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in addresses">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.phone}}</td>
+                                        <td>{{item.location_full_titles}} {{item.detail}}</td>
+                                        <td>{{item.is_default ? '是' : '否'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="currentTab.tag == 'coupon'">
+                <div ng-show="!coupons || coupons.length === 0" class=edit-field>
+                    <h2 style=color:#aaa>暂无优惠券记录</h2> </div>
+                <div ng-hide="!coupons || coupons.length === 0">
+                    <div class=grid-header>
+                        <you-btn type=refresh ng-click=onCouponRefresh() ng-show=!isCouponRefreshing></you-btn>
+                        <you-btn type=refreshing ng-show=iCcouponRefreshing></you-btn>
+                        <div class="grid-header-right right-0">
+                            <div class="t-count t-sp">{{YouText.LIST_ITEM_COUNT_P1}}<span class=t-number>{{couponsCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                            <you-pagination data=couponsPagination></you-pagination>
+                        </div>
+                    </div>
+                    <div class=grid-body>
+                        <you-grid data=dataCouponsGrid>
+                            <table>
+                                <colgroup>
+                                    <col width=15%>
+                                    <col width=20%>
+                                    <col width=12%>
+                                    <col>
+                                    <col>
+                                    <col> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>优惠券名称</th>
+                                        <th>优惠码</th>
+                                        <th>状态</th>
+                                        <th>创建时间</th>
+                                        <th>使用时间</th>
+                                        <th>使用订单</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in coupons">
+                                        <td> <a ui-sref=m_couponedit({id:item.coupon_group_id}) ng-show="item.ctype === 'normal'">{{ item.name }}</a> <a ui-sref=m_couponsingleedit({id:item.coupon_group_id}) ng-show="item.ctype === 'single'">{{ item.name }}</a> </td>
+                                        <td>{{ item.code }}</td>
+                                        <td>{{ getStatusText(item.coupon_status, item.use_status) }}</td>
+                                        <td> <span title="{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}">{{item.created_at | date: 'yyyy/MM/dd HH:mm'}}</span> </td>
+                                        <td> <span title="{{item.used_at | date: 'yyyy/MM/dd HH:mm'}}" ng-if=item.used_at>{{item.used_at | date: 'yyyy/MM/dd HH:mm'}}</span> <span ng-if=!item.used_at>-</span> </td>
+                                        <td> <a ui-sref=m_orderedit({id:item.trade_id}) ng-show=item.trade_no>{{item.trade_no}}</a> <span ng-hide=item.trade_no>-</span> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                    </div>
+                    <div class=grid-footer>
+                        <div class=grid-footer-right>
+                            <you-pagination data=couponsPagination></you-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+        <span class="main-menu-ico"><you-ico type=admin></you-ico></span>管理员列表</h1>
+    <you-btn type="primary" ng-click=onClickNew() text="新增管理员"></you-btn>
+    <div class=main-menu-right>
+        <a href=#/operatelog>
+            <you-btn type=default text=操作日志></you-btn>
+        </a>
+    </div>
+</div>
+<div you-mainbody you-fadein style="padding-top:10px">
+    <div class="transition-opacity" ng-style=showGrid>
+        <div class=grid-header>
+            <you-btn type="refresh" ng-click="onRefresh()" ng-show=!isRefreshing></you-btn>
+            <you-btn type="refreshing" ng-show="isRefreshing"></you-btn>
+            <div class="grid-header-right right-0">
+                <div class=t-count>{{YouText.LIST_ITEM_COUNT_P1}}
+                    <span class=t-number>{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}
+                </div>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+        <div class=grid-body>
+            <you-grid data=dataGrid>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>管理员称呼</th>
+
+                            <th>管理员手机号码</th>
+                            <th>备注</th>
+                            <th>账号类型</th>   
+                            <th>最近登录</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0">
+                        <tr ng-repeat="item in list">
+                            <td> 
+                                <span class="text-status text-status-invalid" ng-if=!item.is_actived>未激活</span>
+                                <a href="#!/accountedit?id={{item.id}}" ng-click="onClickItem(item, $event)" title={{item.name}}>{{util.htmlEnDeCode.htmlDecode(item.name)}}</a> 
+                            </td>
+                            <td><span title={{item.account}}>{{item.account}}</span></td>
+                            <td>
+                                <span title="{{item.remark ? util.htmlEnDeCode.htmlDecode(item.remark) : '-'}}">{{item.remark ? util.htmlEnDeCode.htmlDecode(item.remark) : '-'}}</span>
+                            </td>
+                            
+                            <td><span ng-show="item.account_type === 0">店铺拥有者</span> <span ng-show="item.account_type === 1">管理员</span> </td>
+                            <td>
+                                <span ng-show="item.last_in" title="{{item.last_in | date:'yyyy/MM/dd HH:mm:ss'}}" ng-bind="item.last_in | date:'yyyy/MM/dd HH:mm:ss'"></span>
+                                <span ng-hide=item.last_in>尚未登录</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+            <div class="grid-body-empty" ng-show=isAllEmpty> <span class="grid-ico-empty grid-ico-empty-account"></span>
+                <div class="grid-body-empty-title">目前暂未添加管理员</div>
+                <div class="grid-body-empty-desc">管理员可参与管理你的网站</div>
+                <you-btn type=primary text=新增管理员 class="grid-body-empty-btn" ng-click=onClickNew()></you-btn>
+                <div class="grid-body-empty-bottom"></div>
+            </div>
+        </div>
+        <div class="grid-body-none" ng-show="!isAllEmpty && isEmpty">{{YouText.GRID_SEARCH_NONE}}</div>
+        <div class="grid-footer" ng-show=!isAllEmpty>
+            <div class="grid-footer-right">
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+    </div>
+</div>

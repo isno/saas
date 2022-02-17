@@ -1,0 +1,108 @@
+you-dropdown-content {
+  display: none; 
+}
+
+.dropdown-wrap {
+  position: absolute; 
+  z-index: 1000;
+}
+
+.dropdown-wrap [you-dropdown-content] {
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 3px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+
+.dropdown-wrap .dropdown-head {
+  padding: 20px 30px;
+  font-size: 14px;
+  font-weight: 700; }
+
+.dropdown-wrap .dropdown-item {
+  padding: 20px 30px;
+  border: 1px solid #ddd;
+  border-left: 0;
+  border-right: 0;
+  margin-top: -1px; }
+
+.dropdown-wrap .dropdown-item .dropdown-item-title {
+  margin-top: 0; }
+
+.dropdown-wrap .dropdown-item .ico-arrow-1 {
+  margin: 0 10px; }
+
+.dropdown-wrap .dropdown-foot {
+  padding: 18px 25px;
+  text-align: right; }
+
+.dropdown-wrap .dropdown-foot button {
+  margin: 0 5px; }
+
+.dropdown-wrap textarea {
+  resize: none; }
+
+.dropdown-wrap .dropdown-arrow {
+  position: absolute;
+  line-height: 1;
+  z-index: 1; }
+
+.dropdown-wrap .dropdown-arrow:after, .dropdown-wrap .dropdown-arrow:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent; }
+
+.dropdown-wrap-top .dropdown-arrow {
+  top: 100%;
+  margin-left: -6px;
+  width: 12px;
+  height: 12px; }
+
+.dropdown-wrap-top .dropdown-arrow:before {
+  border-top-color: #333; }
+
+.dropdown-wrap-top .dropdown-arrow:after {
+  top: -1px;
+  border-top-color: #fff; }
+
+.dropdown-wrap-bottom .dropdown-arrow {
+  bottom: 100%;
+  margin-left: -6px;
+  width: 12px;
+  height: 12px; }
+
+.dropdown-wrap-bottom .dropdown-arrow:before {
+  border-bottom-color: #333; }
+
+.dropdown-wrap-bottom .dropdown-arrow:after {
+  bottom: -1px;
+  border-bottom-color: #fff; }
+
+.dropdown-wrap-left .dropdown-arrow {
+  left: 100%;
+  margin-top: -6px;
+  width: 12px;
+  height: 12px; }
+
+.dropdown-wrap-left .dropdown-arrow:before {
+  border-left-color: #c2c2c2; }
+
+.dropdown-wrap-left .dropdown-arrow:after {
+  left: -1px;
+  border-left-color: #fff; }
+
+.dropdown-wrap-right .dropdown-arrow {
+  right: 100%;
+  margin-top: -6px;
+  width: 12px;
+  height: 12px; }
+
+.dropdown-wrap-right .dropdown-arrow:before {
+  border-right-color: #c2c2c2; }
+
+.dropdown-wrap-right .dropdown-arrow:after {
+  right: -1px;
+  border-right-color: #fff; }
+
+/*# sourceMappingURL=dropdown.css.map */

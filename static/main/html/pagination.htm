@@ -1,0 +1,7 @@
+<div class="pagination">
+  <select class="input input-select" ng-disabled="data.lock || list.length == 1" ng-change="onSelectChange()" ng-show="hasSelect && list.length > 0" ng-model="currentSelect" ng-options="item.value as item.text for item in list"></select>
+  <div class="btn-group">
+    <button class="btn btn-default" ng-disabled="data.lock || data.current == 1 || (data.count == 0)" ng-click="onClickPrev()"><span class="ico ico-arrow-left"></span></button>
+    <button class="btn btn-default" ng-disabled="data.lock || (data.current == data.count) || (data.count == 0)" ng-click="onClickNext()"><span class="ico ico-arrow-right"></span></button>
+  </div>
+</div>

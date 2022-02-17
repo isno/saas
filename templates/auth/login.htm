@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
+    <meta name="keywords" content="私域营销,公众号运营,微信小程序开发,品牌电商服务,微信营销,电商ERP,微商城,o2o电子券系统,微信储值卡,社交礼品卡">
+    <meta name="description" content="爱优店,值得信赖的私域营销专家。基于SaaS模式,向商家提供强大的移动电商解决方案,用科技创意,赋能商家深度o2o营销能力。">
+    <title>商家管理后台 - 爱优店</title>
+  <link rel="stylesheet" href="${static_url("lib/bootstrap.min.css")}">
+  <link href="${static_url("www/base.css")}" rel="stylesheet">
+<style>
+  body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f2f3f5;
+}
+  </style>
+  </head>
+  <body>
+<div class="container">
+  <div class="text-center">
+    <a href="/"><img class="mb-4" src="/static/www/logo.png" width="70"></a>
+  </div>
+
+<div class="row justify-content-center">
+<div class="col-md-7" style="background:#fff;border: 1px solid #efefef;padding: 20px;border-radius: 5px;">
+
+<h1 class="h3 mb-3 font-weight-normal mt-2">品牌登录</h1>
+<form class="form" method="POST" id="postform" style="margin-top: 25px;">
+
+<%include file="/include/notice.htm" />
+
+ <div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label text-right font-weight-bold">注册的手机号</label>
+    <div class="col-sm-8">
+       <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">+86</div>
+        </div>
+       ${form.account(class_="form-control",**{
+        "data-bv-notempty":"true",
+        "data-bv-notempty-message":"手机号不能为空",
+        "placeholder":"请输入登录手机号"
+        })}
+      </div>
+    </div>
+  </div>
+
+ <div class="form-group row ">
+    <label for="password" class="col-sm-3 col-form-label text-right font-weight-bold">密码</label>
+     <div class="col-sm-8">
+    ${form.password(class_="form-control",**{
+        "data-bv-notempty":"true",
+        "data-bv-notempty-message":"密码不能为空",
+        "placeholder":"请输入登录密码"
+        })}
+      </div>
+  </div>
+ <div class="form-group row ">
+    <label for="captcha" class="col-sm-3 col-form-label text-right font-weight-bold">验证码</label>
+     <div class="col-sm-8">
+    <div class="row">
+              <div class="col-5">
+                <input type="text" class="form-control" 
+                name="captcha" id="captcha" 
+                placeholder="请填写左图数字"  
+                data-bv-notempty="true" 
+                data-bv-notempty-message="请输入验证码">
+                <span class="text-muted"><small>不限大小写</small></span>
+              </div>
+              <div class="col-7">
+              <img src="/auth/captcha?type=login" width="100" style="cursor: pointer;" id="valid_img">
+                <a href="javascript:;" id="valid_link"><small>看不清图片？ 换一个</small></a>
+              </div>
+            </div>
+          </div>
+  </div>
+
+  <div class="form-group row">
+     <label  class="col-sm-3 col-form-label"></label>
+     <div class="col-sm-8">
+      <input type="checkbox" class="form-check-input" name="remember_me">
+      <label class="form-check-label" for="remember_me">记住我(30天内无需再登录)</label>
+  </div>
+  </div>
+
+    <div class="form-group row">
+     <label class="col-sm-3 col-form-label"></label>
+     <div class="col-sm-8">
+   <button type="submit" class="btn btn-warning btn-lg">登录</button>
+   <p style="margin-top: 10px;">
+    <span>没有账号？ <a href="/brand/enter">入驻申请</a></span>
+
+  </p>
+  </div>
+  </div>
+
+  ${xsrf_form_html()}
+  
+</form>
+  </div>
+  </div></div>
+  </body>
+<script src="${static_url("lib/jquery.min.js")}" crossorigin="anonymous"></script>
+<script src="${static_url("lib/bootstrap.bundle.min.js")}" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+<script src="${static_url("lib/bootstrapValidator.min.js")}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#postform').bootstrapValidator({});
+    $("#valid_img,#valid_link").click(function(){
+        var timestamp = new Date().getTime();
+        $("#valid_img").attr('src',$("#valid_img").attr('src') + '&' +timestamp );
+      });
+});
+</script>
+  </html>
+  
+

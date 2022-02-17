@@ -1,0 +1,289 @@
+<div class="main-menu">
+    <h2 class=main-menu-title>
+        <span class=main-menu-ico>
+            <you-ico type=coupon></you-ico>
+        </span>
+        <span ng-if=!baseAvailable>{{ titleAction }}</span>普通优惠券</h2> 
+        <span you-help you-help-dir=bottom class=you-help-position-l3-t3 style="position:relative;z-index:3;vertical-align:top;line-height:1;top:20px;left:-20px">  普通优惠券，每张限用一次，可派发<br>给顾客，也可让顾客通过链接领取。    
+        </span>
+    <you-btn text=返回 ng-click=onClickBaseBack() ng-hide="!isNew && !baseAvailable"></you-btn>
+    <you-btn type=primary text=编辑 ng-click=toggleCouponEditalbe() ng-if="!isNew && (data.quantity_used < data.quantity_provided)" ng-show="!isBaseSaving && baseAvailable" ng-disabled="data.status == '4'"></you-btn>
+    <you-btn type=default text=取消 ng-click=toggleCouponEditalbe() ng-if=!isNew ng-show="!isBaseSaving && !baseAvailable"></you-btn>
+    <you-btn type=primary text=保存 ng-click=onClickBaseUpdate() ng-if=!isNew ng-show="!isBaseSaving && !baseAvailable"></you-btn>
+    <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-show="!isBaseSaving && !(!isNew && !baseAvailable)" ng-disabled=isBaseLoading ng-if=!baseAvailable></you-btn>
+    <you-btn type=primary text=派发 ng-click=distributeCoupon() ng-hide="data.assigning || !baseAvailable || isExpired" ng-disabled="isBaseLoading || !canDistribute()"></you-btn>
+    <you-btn type=loading ng-show="isBaseSaving || data.assigning"></you-btn> <span class=main-menu-desc title={{data.name}} ng-bind=data.name></span>
+    <div class="main-menu-right">
+        <you-btn type=default text=导出优惠券 ng-click=exportCoupon() ng-hide="data.dealing || !baseAvailable"></you-btn>
+        <you-btn type=danger text=作废 ng-click=discardCoupon() ng-disabled="isBaseLoading || !canDiscard()" ng-hide="!baseAvailable || isExpired"></you-btn>
+    </div>
+</div>
+<div you-mainbody you-fadein>
+    <div class="promotion-block coupon-edit-block transition-opacity" ng-style=showGrid ng-hide=baseAvailable>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>优惠券名称<span class=text-muted>(限制1-100字)</span></h2>
+                <input class="input input-long" type=text ng-model=data.name placeholder=请输入优惠券名称 you-validation=required|maxlength(100) ng-disabled=baseAvailable /> </div>
+        </div>
+        <div class="main-item clearfix" ng-hide=!isNew>
+            <div class="main-item-content main-item-content-full">
+                <h2>优惠券生成方式</h2>
+                <div class=option-tile-wrap>
+                    <div class="option-tile option-tile-horizontal" ng-class="{checked : !data.imported}">
+                        <label class=option-tile-flex>
+                            <div class=option-tile-left>
+                                <input you-check type=radio ng-model=data.imported name=createType ng-value=false /> 系统生成 </div>
+                            <div class=option-tile-right ng-if=!data.imported>
+                                <div class=option-tile-headline>
+                                    <i class="ico ico-arrow-1"></i> 
+                                    <span class=justify-text>自定义优惠码前缀</span>
+                                    <div class=input-unit>
+                                        <input type=text class=input ng-model=data.prefix you-validation=couponCode|maxlength(6) placeholder="如YOUDIAN"> </div>
+                                </div>
+                                <div class=option-tile-extra> <span class=justify-text>发放数量</span>
+                                    <div class=input-unit>
+                                        <input class=input type=text ng-model=data.quantity_provided you-validation=required|positiveInteger maxlength=4 /> <span class=input-unit-text>张</span> </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class=option-tile-wrap>
+                    <div class=option-tile ng-class="{checked : data.imported}">
+                        <label class=option-tile-flex>
+                            <div class=option-tile-left>
+                                <input you-check type=radio ng-model=data.imported name=createType ng-value=true /> 文件导入 </div>
+                            <div class=option-tile-right ng-if=data.imported>
+                                <i class="ico ico-arrow"></i>
+                                <input type=text class=input readonly=readonly style=width:150px ng-model=csvFile.name you-validation=required>
+                                <you-btn text=上传优惠券 ng-click="uploadCouponFiles()"></you-btn>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>订单金额限制</h2>
+                <div class="label-block-wrap coupon-active-rule">
+                    <label class=label-block ng-class="{checked: !data.isActiveAmount}">
+                        <input you-check type=radio ng-model=data.isActiveAmount ng-value=false />
+                        <div class=label-block-content>不限购物金额（无门槛）</div>
+                    </label>
+                </div>
+                <div class="label-block-wrap coupon-active-rule">
+                    <label class=label-block ng-class="{checked: data.isActiveAmount}">
+                        <input you-check type=radio ng-model=data.isActiveAmount ng-value=true />
+                        <div class=label-block-content>限制购物金额（有门槛） <span class=setting-status-pw-edit ng-if=data.isActiveAmount><i class="ico ico-arrow-1"></i>                                     订单满                                    <div class="input-unit input-unit-short">                                        <div class=input-group>                                            <div class=input-group-addon>{{YouPreset.$()}}</div>                                            <input class=input ng-model=data.active_amount type=text you-validation=required|positiveNumber|float2|maxNumber ng-blur=blurOff() />                                        </div>                                    </div>                                    才可使用                                </span> </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="main-item clearfix">
+            <div class="main-item-content main-item-content-full">
+                <h2>优惠券抵扣方式</h2>
+                <div class="label-block-wrap coupon-active-rule">
+                    <label class=label-block ng-class="{checked : data.isTypeAmount}">
+                        <input you-check type=radio ng-model=data.isTypeAmount ng-value=true />
+                        <div class=label-block-content>现金 <span class=setting-status-pw-edit ng-if=data.isTypeAmount><i class="ico ico-arrow-1"></i>                                     优惠券金额                                        <div class="input-unit input-unit-normal">                                            <div class=input-group>                                                <div class=input-group-addon>{{YouPreset.$()}}</div>                                                <input type=text class=input ng-model=data.discount_amount you-validation=required|positiveNumber|float2|maxNumber ng-change=unSaved()>                                            </div>                                        </div>                                </span> </div>
+                    </label>
+                </div>
+                <div class="label-block-wrap coupon-active-rule">
+                    <label class=label-block ng-class="{checked : !data.isTypeAmount}">
+                        <input you-check type=radio ng-model=data.isTypeAmount ng-value=false />
+                        <div class=label-block-content>折扣 <span class=setting-status-pw-edit ng-if=!data.isTypeAmount><i class="ico ico-arrow-1"></i>                                     优惠券折扣                                        <div class=input-unit>                                            <input type=text class=input ng-model=data.discount_percentage you-validation=required|discount ng-change=unSaved() placeholder=输入折扣>                                            <span class=input-unit-text>折</span> </div>
+                        </span>
+                </div>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="main-item clearfix">
+        <div class="main-item-content main-item-content-full">
+            <h2>有效期</h2>
+            <you-datetime data=dataDatetime you-datetime-dir=bottom></you-datetime>
+            <div style=position:relative;left:50px;top:-48px>
+                <input style=display:none name=begin_data you-validation />
+            </div>
+            <div style=position:relative;left:50px>
+                <input style=display:none name=expire_data you-validation />
+            </div>
+        </div>
+    </div>
+    <div class="main-item clearfix">
+        <div class="main-item-content main-item-content-full">
+            <h2>使用规则                        <span you-help class=you-help-position-l3-t3>设置每个账户能够使用<br>同一批次优惠券的张数</span>                    </h2>
+            <div class="label-block-wrap coupon-active-rule">
+                <label class=label-block ng-class="{checked: data.isSingleAtype}">
+                    <input you-check type=radio ng-model=data.isSingleAtype ng-value=true />
+                    <div class=label-block-content>每个账号限用一张</div>
+                </label>
+            </div>
+        </div>
+        <div class="main-item-content main-item-content-full">
+            <div class="label-block-wrap coupon-active-rule">
+                <label class=label-block ng-class="{checked: !data.isSingleAtype}">
+                    <input you-check type=radio ng-model=data.isSingleAtype ng-value=false />
+                    <div class=label-block-content>每个账号不限使用张数</div>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="main-item clearfix">
+        <div class="main-item-content main-item-content-full">
+            <h2>领取限制</h2>
+            <div class=option-tile-wrap>
+                <div class="option-tile option-tile-horizontal" ng-class="{checked: data.exported}">
+                    <label class=option-tile-flex>
+                        <div class=option-tile-left>
+                            <input you-check type=radio ng-model=data.exported ng-value=true />
+                            <div class=label-block-content>开放领取</div>
+                        </div>
+                        <div class=option-tile-right ng-show=data.exported>
+                            <!--
+                            <div class="option-tile-right"> -->
+                            <div class=option-tile-headline>
+                                <i class="ico ico-arrow-1"></i>  选择领取页面头部色块
+                                <div class=btn-group>
+                                    <div class=color-template> <span class=color-template-item ng-repeat="i in colors" ng-click=setColor(i) ng-style="{'background-color': i.color}" ng-class="{'color-template-checked': exportColor == i}" title={{i.text}}>                                                </span> </div>
+                                </div>
+                            </div>
+                            <div class=option-tile-extra>
+                                <p style=margin-top:0>设置领取页面使用说明</p>
+                                <textarea class=input style=width:520px;resize:none rows=5 ng-model=data.export_text placeholder=可填写活动介绍、相关产品信息或者其他补充说明。 you-validation=maxlengthSpecial(255)></textarea>
+                                <p><a href="" class=text-link ng-click="couponPageImgH = couponPageImgH ? 0 : '608px'">领取页面示例</a></p>
+                                <div class="coupon-page-img transition-quick" ng-style="{height: couponPageImgH}"></div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class=option-tile-wrap>
+                <div class="option-tile option-tile-single" ng-class="{checked: !data.exported}">
+                    <label>
+                        <input you-check type=radio ng-model=data.exported ng-value=false />
+                        <div class=label-block-content>关闭领取</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix item-bottom">
+        <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-hide="!isNew || isBaseSaving"></you-btn>
+        <you-btn type=primary text=保存 ng-click=onClickBaseUpdate() ng-if=!isNew ng-show="!isBaseSaving && !baseAvailable"></you-btn>
+        <you-btn type=loading ng-show=isBaseSaving></you-btn>
+    </div>
+</div> <!-- 查看模式 -->
+<div class="promotion-block coupon-edit-block transition-opacity" ng-style=showGrid ng-show=baseAvailable>
+    <div class="main-item clearfix">
+        <div class=coupon-info-column style=width:30%>
+            <h2>详细信息</h2>
+            <div class=coupon-info-profile>
+                <div class=t-line></div>
+                <div class=t-k>
+                    <div>名称</div>
+                    <div>抵扣方式</div>
+                    <div>订单金额</div>
+                    <div>有效时间</div>
+                    <div>创建时间</div>
+                    <div>使用规则</div>
+                    <div>使用情况</div>
+                    <div>领取链接</div>
+                </div>
+                <div class=t-v>
+                    <div class=t-item title="{{ data.name }}"> <span class=text-status ng-if="data.status == '1'">{{getStatusText(data.status)}}</span> <span class="text-status text-status-coming" ng-if="data.status == '2'">{{getStatusText(data.status)}}</span> <span class="text-status text-status-invalid" ng-if="data.status == '3'">{{getStatusText(data.status)}}</span> <span class="text-status text-status-invalid" ng-if="data.status == '4'">{{getStatusText(data.status)}}</span> {{ data.name }} </div>
+                    <div class=t-item> <span ng-show=data.isTypeAmount>                                    现金 {{ YouPreset.$() + data.discount_amount }}                                </span> <span ng-hide=data.isTypeAmount>                                    折扣 {{ data.discount_percentage }}折                                </span> </div>
+                    <div class=t-item> <span ng-show=data.active_amount>订单满{{ YouPreset.$() + data.active_amount }}才可使用</span> <span ng-hide=data.active_amount>不限购物金额</span> </div>
+                    <div class=t-item> <span>{{ dataDatetime.timeStart | date: 'yyyy/MM/dd' }}</span> ~ <span ng-hide=data.no_expires>{{ dataDatetime.timeEnd | date: 'yyyy/MM/dd' }}</span> <span ng-show=data.no_expires>永久</span> </div>
+                    <div class=t-item>{{data.created_at | date: 'yyyy/MM/dd HH:mm'}}</div>
+                    <div class=t-item>{{ data.isSingleAtype ? '每个账号限用一张' : '每个账号不限使用张数' }}</div>
+                    <div class=t-item>{{ data.quantity_used }}/{{ data.quantity_provided }}</div>
+                    <div class=t-item> {{ data.exported ? '开放' : '关闭' }} </div>
+                </div>
+            </div>
+        </div>
+        <div class=coupon-info-column style=width:50% ng-if=data.exported>
+            <h2>领取链接</h2>
+            <div class="coupon-info-approach clearfix">
+                <div class=coupon-info-qrcode>
+                    <p>领取二维码：</p>
+                    <div id=coupon-info-qrcode>
+                        <img src="{{data.qrcode}}" width="120px" height="120px">
+                    </div> 
+                    <a href="" class="btn btn-default" download=领取二维码.png ng-href={{data.qrcode_url}} ng-hide=isExpired>下载二维码图片</a>
+                </div>
+                <div class=coupon-info-link>
+                    <p>领取链接：</p>
+                    <input type=text class="input input-long" ng-model=data.export_url readonly=readonly style=margin-bottom:10px> <a href=javascript:; class=text-link id=copy-coupon-info-link ng-hide=isExpired>复制链接</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-item clearfix" ng-show=data.dealing>
+        <div class=text-nodata> <span class="ico ico-loading"></span> <span class=text-warning>优惠券正在生成中...</span> </div>
+    </div>
+    <div class="main-item clearfix" style="border-bottom:0;/*padding:0 0 40px 0;margin-top:-1px*/" ng-hide=data.dealing>
+        <!--
+        <ul class="tab-group tab-group-offset50">
+            <li ng-repeat="i in dataTabs" ng-class="{active: currentTab == i}" ng-click=setCurrentTab(i) ng-hide=i.hide> {{ i.text }}
+                <a ng-if=i.doc href="{{ i.doc }}" target=_blank title=点击查看帮助> <span class="b64-you-help you-help-ico you-help-position"></span> </a>
+            </li>`
+        </ul>
+        <div class="text-nodata text-nodata-margin" ng-show=loadingGridData> 
+            <span class="ico ico-loading"></span> 
+            <span class=text-warning>数据获取中...</span> 
+        </div>
+    -->
+        <div ng-hide=loadingGridData>
+            <div ng-style=gridStyle>
+                <div class=grid-header>
+                    <you-btn type=refresh ng-click=onRefresh() ng-show=!isRefreshing></you-btn>
+                    <you-btn type=refreshing ng-show=isRefreshing></you-btn>
+                    <div class="grid-header-right right-0">
+                        <div class=t-count>{{YouText.LIST_ITEM_COUNT_P1}} <span class=t-number>{{distributedCoupon.item_count}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                        <you-pagination data=dataPagination></you-pagination>
+                    </div>
+                </div>
+                <div class=grid-body>
+                    <you-grid data=dataGrid>
+                        <table>
+                            <colgroup> <!--
+                                <col>-->
+                                <col width=15%>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>优惠码</th>
+                                    <th>顾客</th>
+                                    <th>订单号</th>
+                                    <th>使用时间</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-show="distributedCoupon.coupons.length > 0">
+                                <tr ng-repeat="item in distributedCoupon.coupons">
+                                    <td> <span>{{item.code}}</span> </td>
+                                    <td>
+                                        <a ng-if="item.customer_id != null" class=text-link ng-href="#/customeredit?id={{item.customer_id}}"> <span class=grid-list-thumbnail>                                                        <img ng-src={{getCustomerAvatar(item)}}>                                                        <div class=imgcover></div>                                                    </span> {{item.customer_name}} </a> <span ng-if="item.customer_id == null">-</span> </td>
+                                    <td> <a ng-if="item.trade_id != null" class=text-link ng-href="#/orderedit?id={{item.trade_no}}">                                                    {{item.trade_no}}                                                </a> <span ng-if="item.trade_id == null">-</span> </td>
+                                    <td> <span nf-if=item.used_at>{{item.used_at | date: 'yyyy/MM/dd HH:mm'}}</span> <span ng-if=!item.used_at>-</span> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </you-grid>
+                </div>
+                <div class=grid-body-none ng-show="distributedCoupon.coupons.length == 0">{{YouText.GRID_SEARCH_NONE}}</div>
+                <div class=grid-footer ng-show=!isAllEmpty>
+                    <div class=grid-footer-right>
+                        <div class=t-count>{{YouText.LIST_ITEM_COUNT_P1}} <span class=t-number>{{distributedCoupon.item_count}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                        <you-pagination data=dataPagination></you-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,68 @@
+<div class="main-menu">
+    <h1 class=main-menu-title>会员等级管理</h1>
+    <you-btn type=default ng-click=onClickBaseBack() text=返回></you-btn>
+    <you-btn type=primary ng-click=newOrModifyCustomerLevel() text=新增会员等级 ng-show="YouLevel.CUSTOMER_LEVEL_ENABLE"></you-btn>
+    <div class=main-menu-right>
+        <you-btn type=default text=经验值设置 ng-click=popupCreditSetting() ng-show="YouLevel.CUSTOMER_LEVEL_ENABLE"></you-btn>
+    </div>
+</div>
+<div you-mainbody ng-style=showGrid ng-show=YouLevel.CUSTOMER_LEVEL_ENABLE class=customer-level>
+    <div class=transition-opacity ng-style=showGrid>
+        <section>
+            <div class=grid-header>
+                <div class="grid-header-right right-0">
+                    <div class=t-count> {{YouText.LIST_ITEM_COUNT_P1}} <span class=t-number>{{baseItemCount}}</span> {{YouText.LIST_ITEM_COUNT_P2}} </div>
+                    <you-pagination data=dataPagination></you-pagination>
+                </div>
+            </div>
+        </section>
+        <div class=grid-body>
+            <you-grid data=dataGrid>
+                <table>
+                    <colgroup>
+                        <col>
+                        <col width=25%>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>等级名称</th>
+                            <th>等级图标</th>
+                            <th>所需经验值<span class=you-help-position you-help you-need-compile=true you-width=auto>{{ creditData.enable ? '消费' + YeePreset.$() + '1累计' + creditData.ratio + '经验值' : YouText.CUSTOMER_CREDITS_DISABLED }}</span></th>
+                            <th>全场折扣</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="list.length >0">
+                        <tr ng-repeat="item in list">
+                            <td>
+                                <a class=t-title href=javascript:void(0); ng-click="newOrModifyCustomerLevel(item, $event)" title={{item.name}}> <span class="text-status text-status-invalid" ng-if=!item.deletable>默认</span> <span class=penname-txtcls>{{ HTMLDECODE(item.name) }}</span> </a>
+                            </td>
+                            <td>
+                                <a class=grid-list-thumbnail href=javascript:void(0); ng-click="newOrModifyCustomerLevel(item, $event)" title={{item.name}}> <img ng-src={{getLevelIcon(item)}} class=face-img>
+                                    <you-cover></you-cover>
+                                </a>
+                            </td>
+                            <td><span>{{ item.credits }}</span></td>
+                            <td><span>{{ item.discount == 100 ? '无折扣' : item.discount/10 + '折' }}</span></td>
+                            <td>
+                                <you-btn type=simple-delete ng-if=item.deletable ng-click=onClickRemove(item.id)></you-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+        </div>
+        <div class=grid-footer>
+            <div class=grid-footer-right>
+                <you-pagination data=dataPagination></you-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="customer-level-disable" ng-show=!YouLevel.CUSTOMER_LEVEL_ENABLE>
+    <div class=tips-box> 一个好的会员等级体系能够和顾客产生良好的互动
+        <br> 为你的网站开启自定义会员等级，升级到专业版或以上版本，即可启用
+        <you-btn type=primary you-upgrade text=升级版本></you-btn>
+        <br> <span class=text-muted>            更多帮助，请点击            <a class=text-link target=_blank href={{YouPreset.DOCS_HELP_CUSTOMER_LEVEL}}>帮助文档</a>        </span> </div>
+</div>'

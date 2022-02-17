@@ -1,0 +1,22 @@
+% if handler.session.get('notice'):
+    <% message = handler.session.get('notice').split("\n") %>
+    <% message_type = "alert-warning" if message[0] == "err" else "alert-warning" %>
+    <% message_icon = "glyphicon-remove" if message[0] == "err" else "glyphicon-ok" %>
+
+    <div class="alert ${message_type} alert-dismissible" role="alert">
+        <span class="glyphicon ${message_icon}"></span>
+        ${message[1]}
+    </div>
+   
+    ${ handler.notice_clear() }
+% endif
+
+% if form and form.errors:
+    <div class="alert alert-warning alert-dismissible" role="alert">
+    % for field in form:
+            % if field.errors:
+            ${field.errors[0]} <br/>
+            % endif
+    % endfor
+    </div>
+% endif

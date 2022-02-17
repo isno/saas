@@ -1,0 +1,42 @@
+<div class="main-navigation">
+    <div class="logo">
+        <center><a href="/shop/{{data.shop_id}}/console/#/"><img src="/static/main/img/logo.png" /></a></center>
+
+        <div class="shopinfos">
+            <div class="shopdesc">
+                <div style="clear:both;display: inline-block;">
+                    <div class="icon">
+                        <img src="http://iyoudian.shengyi8.com/image/2020/8/a06157f6eeb496d6e4f3a86bca4c5734.png!118x118.jpg">
+                    </div>
+                    <div class="shopname">
+                        <p>{{data.shop_name}}</p>
+                        <p style="color:#7c838e;font-size: 12px;">店铺ID：{{data.shop_id}}</p>
+                    </div>
+                </div>
+                <div class="upgrade">
+                    <a href="/" class="btn btn-primary">立即升级</a>
+                    <a href="/" class="btn btn-default">查看权益</a>
+                </div>
+            </div>
+            <div class="menus">
+                <ul>
+                    <li><a href="/">返回首页</a></li>
+                    <li><a href="/my/shops">切换店铺</a></li>
+                    <li><a href="/auth/logout">退出当前账户</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="main-navigation-slide transition-quick {{ data.isExpand ? 'main-navigation-slide-expand' : '' }}">
+        <div class="main-navigation-slide-main">
+            <div ng-repeat="part in data.navList" class="main-navigation-part">
+                <you-navigationlink ng-repeat="nav in part" data="nav" click-link="fClickLink($event, nav)"></you-navigationlink></div>
+        </div>
+        <div class="main-navigation-slide-sub" ng-repeat="subNavList in data.subNavLists" ng-show="data.currentGroup === subNavList.group.name">
+            <a class="main-navigation-link main-navigation-link-unexpand youNavigationlink" href="javascript:void(0);" ng-click="fUnExpand();">
+                <you-ico type="back"></you-ico>返回</a><span class="main-navigation-split"></span>
+            <div class="main-navigation-slide-sub-title">{{subNavList.group.text}}</div>
+            <you-navigationlink ng-repeat="nav in subNavList.sub" data="nav" click-link="fClickLink($event, nav)"></you-navigationlink>
+        </div>
+    </div>
+</div>

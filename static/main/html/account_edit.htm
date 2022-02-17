@@ -1,0 +1,176 @@
+<div class="main-menu">
+    <h2 class="main-menu-title">
+    {{titleAction }}管理员</h2>
+    <you-btn text="返回" ng-click="onClickBaseBack()"></you-btn>
+    <you-btn type="primary" text="{{btnAction}}" ng-click="onClickBaseSave()" 
+    ng-show="!isBaseSaving && !isOwner" ng-disabled=isBaseLoading></you-btn>
+    <you-btn type=loading ng-show=isBaseSaving></you-btn>
+    <div class="main-menu-right" ng-hide="isOwner">
+        <you-btn type="danger" text=删除 ng-click=onClickBaseDelete() ng-disabled="!baseAvailable || isBaseLoading"></you-btn> 
+        <span>
+            <you-btn type="danger"ng-show="!is_actived" text="转让店铺所有权" title="该管理员尚未激活，无法转让" ng-disabled="true"></you-btn>
+            <you-btn type="danger" ng-show="is_actived" text="转让店铺所有权" ng-click=onClickChangeOwner() ng-disabled="isBaseLoading"></you-btn>
+        </span> 
+    </div>
+</div>
+<div you-mainbody you-fadein>
+    <div class="transition-opacity" ng-style=showGrid> <!--新建-->
+        <div ng-show=isNew>
+             <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                    <h2>管理员称呼</h2>
+                    <input class="input" type="text" style="min-width:200px;max-width:50%" ng-disabled=data.id ng-model="data.name" placeholder={{YouText.INPUT_PLACEHOLDER}}管理员称呼 you-validation=required /> 
+                      <h2>登录手机号</h2>
+                    <input class="input input-long" type="text" style="min-width:200px;max-width:25%" ng-disabled=data.id ng-model="data.account" placeholder={{YouText.INPUT_PLACEHOLDER}}登录账户 you-validation=required /> 
+                </div>
+            </div>
+
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                   
+
+                    <h2>备注</h2>
+                    <input class="input input-long" type=text style=min-width:300px;max-width:50% ng-model=data.remark placeholder={{YouText.INPUT_PLACEHOLDER}}备注 maxlength=499 you-validation/> </div>
+            </div>
+            <div class="main-item clearfix">
+                <div class="main-item-content main-item-content-full">
+                    <h2>
+                        管理员权限
+                        <span class=text-link style="margin-left:15px" ng-click=imitateClickCheckAll() ng-show=!showCancelAll>选择全部</span>
+                        <span class=text-link style="margin-left:15px" ng-click=imitateClickCancelAll() ng-show=showCancelAll>取消选择全部</span>
+                    </h2>
+                    <div class="account-typeSel clearfix" > <!-- -->
+                        <div class="account-typeSel-part">
+                            <h4>商城管理</h4>
+                            <div class="account-typeSel-part-cont">
+                                <label class="account-sel-label" style="cursor:pointer" ng-repeat="item in modules_shop">
+                                    <input you-check type=checkbox ng-model=item.checked value={{item.code}} ng-change="onChangeModule('shop')" ng-disabled=isOwner /> {{item.name}} </label>
+                            </div>
+                        </div> 
+               
+                        <div class="account-typeSel-part">
+                            <h4>配置管理</h4>
+                            <div class="account-typeSel-part-cont">
+                                <label class="account-sel-label" style=cursor:pointer ng-repeat="item in modules_config">
+                                    <input you-check type=checkbox ng-model=item.checked value={{item.code}} ng-change="onChangeModule('config')" ng-disabled=isOwner /> {{item.name}} </label>
+                            </div>
+                        </div>
+                    </div>
+          
+                </div>
+            </div>
+            <div class="clearfix item-bottom">
+                <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-show="!isBaseSaving && !isOwner" ng-disabled=isBaseLoading></you-btn>
+                <you-btn type=loading ng-show=isBaseSaving></you-btn>
+            </div>
+        </div> <!--编辑-->
+        <div ng-if=!isNew>
+            <div class=accountedit-field style=margin-bottom:15px;padding-left:30px>
+                <div class=accountedit-ifo> 
+                    <img ng-src="{{ avatar_url }}">
+                    <p>名称：{{data.name}}</p>
+                    <p>登录账户：{{data.account}}</p>
+                    <p>备注：{{data.remark ? data.remark : '--'}}</p>
+                    <p>账号状态：{{data.is_actived ? '已激活' : '未激活'}}</p>
+                    <p>最近登录：{{ data.last_in ? data.last_in : '--' | date:"yyyy/MM/dd"}}</p>
+                </div>
+                <div class="accountedit-right">
+                  
+                    <h2>备注</h2>
+                    <input class="input" type=text style="max-width:70%;margin-bottom:15px" ng-model="data.remark" placeholder="{{YouText.INPUT_PLACEHOLDER}}备注" maxlength="499" you-validation/>
+                    <div class="account-typeSel clearfix"> 
+                        <div class="account-typeSel-part">
+                            <h3><label>商城管理</label></h3>
+                            <div class="account-typeSel-part-cont">
+                                <label class="account-sel-label" style="cursor:pointer" ng-repeat="item in modules_shop">
+                                    <input you-check type="checkbox" ng-model=item.checked value={{item.code}} ng-change="onChangeModule('shop')" ng-disabled=isOwner /> {{item.name}} </label>
+                            </div>
+                        </div>  
+                        <div class="account-typeSel-part" style="margin-top: 10px;">
+                            <h3><label>配置管理</label></h3>
+                            <div class="account-typeSel-part-cont">
+                                <label class="account-sel-label" style="cursor:pointer" ng-repeat="item in modules_config">
+                                    <input you-check type="checkbox" ng-model=item.checked value={{item.code}} ng-change="onChangeModule('config')" ng-disabled=isOwner /> {{item.name}} </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <you-btn type=primary text={{btnAction}} ng-click=onClickBaseSave() ng-show="!isBaseSaving && !isOwner" ng-disabled=isBaseLoading></you-btn>
+                    <you-btn type=loading ng-show=isBaseSaving></you-btn>
+                </div>
+            </div>
+            <div class=clearfix style=padding:0>
+                <ul class=tab-group style=padding-left:30px;margin-bottom:20px>
+                    <li ng-class="{'active': tab == currentTab}" ng-repeat="tab in tabData" ng-click=switchTab(tab)> {{ tab.text }} </li>
+                </ul>
+                <div class="main-item-content main-item-content-full" ng-show="currentTab.value == 'login'">
+                    <div style="margin:20px 30px -5px 30px">
+                        <you-grid data=dataGrid>
+                            <table>
+                                <colgroup>
+                                    <col width=180>
+                                    <col width=160>
+                                    <col>
+                                    <col> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>登录时间</th>
+                                        <th>IP</th>
+                                        <th>网络服务商</th>
+                                        <th>所在地</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="showLoginList">
+                                    <tr ng-repeat="item in logins">
+                                        <td ng-bind=" item.created_at | date:'yyyy/MM/dd HH:mm:ss' "></td>
+                                        <td ng-bind=item.request_ip></td>
+                                        <td title="{{ item.isp }}" ng-bind=item.isp></td>
+                                        <td title="{{ item.areas }}" ng-bind=item.areas></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                    </div>
+                    <div ng-hide=showLoginList class="grid-body-none">该管理员尚未登录</div>
+                </div>
+                <div class="main-item-content main-item-content-full" ng-show="currentTab.value == 'log'">
+                    <div class="grid-header">
+                        <you-btn type="refresh" ng-click=onRefresh() ng-show=!isRefreshing></you-btn>
+                        <you-btn type="refreshing" ng-show=isRefreshing></you-btn>
+                        <div class="grid-header-right right-0">
+                            <div class="t-count t-sp">{{YouText.LIST_ITEM_COUNT_P1}}<span class="t-number">{{operateLogsCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                            <you-pagination data=dataPagination></you-pagination>
+                        </div>
+                    </div>
+                    <div class="grid-body">
+                        <you-grid data="dataGrid">
+                            <table>
+                                <colgroup>
+                                    <col width=300>
+                                    <col> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>操作时间</th>
+                                        <th>操作内容</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-show="showLoginList">
+                                    <tr ng-repeat="item in operateLogs">
+                                        <td ng-bind=" item.time | date:'yyyy/MM/dd HH:mm:ss' "></td>
+                                        <td ng-bind="item.oid === 0 ? item.code_name : item.code_name + '，对象ID:' + item.oid"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </you-grid>
+                        <div ng-hide="showLoginList" class="grid-body-none">该管理员尚无操作记录</div>
+                    </div>
+                    <div class="grid-footer">
+                        <div class="grid-footer-right">
+                            <you-pagination data="dataPagination"></you-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

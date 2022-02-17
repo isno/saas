@@ -1,0 +1,90 @@
+<div class="shop-stat">
+    <span class="name">{{shop.name}}</span>
+    <you-ico type="weapp" style="color:#07c160;font-size: 21px;line-height: 52px;"></you-ico>
+    <div ng-show="shop.vip_type==0">
+        <span  style="margin-left:15px;" class="iconfont icon-warn"></span>
+        <span ng-show="shop.expired_days>0" class="alert tip" >
+            您当前使用的为免费试用版，剩余{{shop.expired_days}}天到期，如需继续服务请订购正式版。
+        </span>
+        <span ng-show="shop.expired_days==0" class="alert tip" >
+            您的店铺已到期，如需继续服务请订购正式版。
+        </span>
+        <a style="margin-left: 10px;" class="btn btn-primary" href="/wo/pay?pay_type=0&shop_id={{shop.id}}">订购正式版</a>
+    </div>
+</div>
+
+<div you-mainbody you-fadein style="background:#f7f8fa;display:flex;padding:15px;font-size: 13px;">
+    <div class="main-content">
+      <div class="stat">
+          <a href="#!/order?pending=true" class="module"><div>待发货订单</div> <b>{{data.today_order_pending}}</b></a>
+          <a href="#!/order?refunding=true" class="module"><div>退款售后订单</div> <b>0</b></a>
+          <a href="#!/order" class="module"><div>日流水</div> <b>{{YouPreset.$()}}{{data.today_amount / 100}}</b></a>
+      </div>
+
+      <!-- 常用服务 -->
+      <div class="main-box">
+                <div class="header">
+                    <h2>常用服务</h2>
+                </div>
+                <div class="main-box-items">
+                    <a class="main-box-item" href="#!/productedit?id=new">
+                        <svg class="main-icon icon-wrap" aria-hidden="true">
+                            <use xlink:href="#icon-main-product"></use>
+                        </svg>
+                        发布商品
+                    </a>
+                    <a class="main-box-item" href="#!/order">
+                        <svg class="main-icon icon-wrap" aria-hidden="true">
+                            <use xlink:href="#icon-main-order"></use>
+                        </svg>
+                        查询订单
+                    </a>
+                    <a class="main-box-item" href="#!/order?refunding=true">
+                        <svg class="main-icon icon-wrap" aria-hidden="true">
+                            <use xlink:href="#icon-main-refund"></use>
+                        </svg>
+                        退货
+                    </a>
+                    <a class="main-box-item" href="#!/promotion">
+                        <svg class="main-icon icon-wrap" aria-hidden="true">
+                            <use xlink:href="#icon-main-promotion"></use>
+                        </svg>
+                        营销
+                    </a>
+                </div>
+        </div>
+      <!-- end -->
+    </div>
+    <div class="main-side">
+        <div class="intro main-box">
+            <span class="shop-name" style="font-weight:400" title="{{shop.name}}">{{data.shop.name}}</span>
+            <div>
+                <p>当前版本: 
+                    <span style="color:gray;font-weight: bold">{{shop.vip_type_name}}</span> 
+                    <span ng-show="data.shop.vip_type==0"><a href="/wo/pay?pay_type=0&shop_id={{data.shop.id}}" class="link">购买正式版</a></span>
+                </p>
+                <p >到期时间: 
+                    <span style="color:green" ng-show="data.shop.expired_days>0">{{shop.vip_expired_at | date:'yyyy/MM/dd HH:mm'}}</span>
+                    <span ng-show="shop.expired_days==0" style="color:gray;text-decoration: line-through;" >已过期</span>
+                    <span ng-show="shop.vip_type!=0">
+                    <a href="/wo/pay?pay_type=1&shop_id={{data.shop.id}}" class="link">续费</a>
+                    </span>
+                </p>
+            </div>
+            <a class="btn" href="/pricing" target="_blank" style="border:1px solid #fd5c52;color:#fd5c52;border-radius: 16px;font-size: 12px;">购买爱优店SLA，获取赔付支持</a>
+        </div>
+        <div class="main-box">
+            <div style="font-weight:400;font-size: 16px;">功能更新</div>
+            
+        </div>
+
+        <div class="help main-box">
+            <div style="font-weight:400;font-size: 16px;">联系客服</div>
+            <span style="color:gray;font-size: 12px;">微信扫码添加技术专家</span>
+            <div style="width:160px;margin:10px auto;">
+
+                <div style="margin-top: 15px;"><img src="/static/www/qrcode.png" style="width:160px;"></div>
+            </div>
+        </div>
+    </div>
+</div>

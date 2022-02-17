@@ -1,0 +1,5 @@
+<a class="main-navigation-link" ng-class="{selected: data.selected}" href="{{data.url}}" ng-click="clickLink({nav: data, $event: $event})">
+    <you-ico type="{{data.ico}}"></you-ico>{{ data.text }}
+    <you-ico type="menuexpand" ng-if="data.type === 'group'"></you-ico>
+    <you-navigation-link-notification ng-if="data.notification" data-type="{{data.name}}"></you-navigation-link-notification>
+</a>

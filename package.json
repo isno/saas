@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "grunt": "^1.4.1"
+  },
+  "dependencies": {
+    "grunt-contrib-concat": "^2.0.0",
+    "grunt-contrib-uglify": "^5.0.1",
+    "grunt-css": "^0.5.4"
+  }
+}

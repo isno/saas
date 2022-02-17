@@ -1,0 +1,65 @@
+<div class="main-menu">
+    <h1 class="main-menu-title">
+        <span class="main-menu-ico"><you-ico type="shipment"></you-ico></span>运费模板列表
+        <a href="{{YouPreset.DOCS_HELP_SHIPMENT}}" target="_blank" title="点击查看帮助"><span class="iconfont icon-help" ></span></a>
+    </h1>
+    <a href="#/shipmentedit?id=new"><you-btn type="primary" ng-click="onClickNew($event)" text="新增运费模板"></you-btn></a>
+</div>
+<div you-mainbody you-fadein style="padding-top:10px">
+    <div class="transition-opacity" ng-style="showGrid">
+
+        <div class="grid-header">
+            <you-btn type="refresh" ng-click="onRefresh()" ng-show="!isRefreshing"></you-btn>
+            <you-btn type="refreshing" ng-show="isRefreshing"></you-btn>
+            <div class="grid-header-right right-0">
+                <div class="t-count t-sp">{{YouText.LIST_ITEM_COUNT_P1}}<span class="t-number">{{baseItemCount}}</span>{{YouText.LIST_ITEM_COUNT_P2}}</div>
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+
+        <div class="grid-body">
+            <you-grid data="dataGrid">
+                <table>
+                    <colgroup>
+                        <col width="400">
+                        <col width="100">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>运费模板名称</th>
+                        <th>计价方式</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody ng-show="list.length > 0">
+                    <tr ng-repeat="item in list">
+                        <td>
+                            <a href="#!/shipmentedit?id={{item.id}}" ng-click="onClickItem(item, $event)" title="{{item.name}}">{{item.name}}</a>
+                        </td>
+                         <td>
+                            <a href="#/shipmentedit?id={{item.id}}" ng-click="onClickItem(item, $event)" title="{{item.calculate_type}}">按{{getPresetText(item.calculate_type)}}</a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </you-grid>
+            <div class="grid-body-empty" ng-show="isAllEmpty">
+                <span class="grid-ico-empty grid-ico-empty-shipment"></span>
+                <div class="grid-body-empty-title">你还没有设置过运费模板</div>
+                <div class="grid-body-empty-desc">设置好的运费模板将在这里出现</div>
+                <you-btn type="primary" text="新建运费模板" class="grid-body-empty-btn" ng-click="onClickNew($event)"></you-btn>
+         
+            </div>
+        </div>
+
+        <div class="grid-body-none" ng-show="!isAllEmpty &&isEmpty">{{YouText.GRID_SEARCH_NONE}}</div>
+
+        <div class="grid-footer" ng-show="!isAllEmpty" >
+            <div class="grid-footer-right">
+                <you-pagination data="dataPagination"></you-pagination>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<%inherit file="_layout.htm"/>
+<%block name="head">
+<title>商家管理后台 - 爱优店</title>
+</%block>
+<%block name="main">
+<div class="container shops-container">
+<div class="row justify-content-center">
+<div class="col-md-10 col-sm-11">
+    <div class="row ml-1  mt-5">
+        <div class="ml-auto mr-3">
+            <a class="btn btn-light btn-sm" href="/my/shops/new" role="button"> + 创建品牌店</a>
+        </div>
+    </div>
+    % if not shops:
+    <div class="blank10"></div>
+    <div class="alert alert-warning" role="alert">
+      您还没有创建品牌店铺
+    </div>
+    % else:
+    <div class="row">
+        % for shop in shops:
+         <div class="col-sm-4 mt-3">
+        <div class="card rounded shadow-sm">
+          <div class="card-body">
+            <h6 class="card-title">${shop.name|h}</h6>
+            <div class="card-text">服务类型：
+                <h5 style="display:inline-block;">
+                    <span class="badge badge-light">${shop.vip_type_name}</span>
+                </h5>
+                % if shop.vip_type == 0:
+                <a href="/wo/pay?pay_type=0&shop_id=${shop.entity_id}">购买正式版本</a>
+                % endif
+                % if shop.vip_type == 1:
+                <a href="/wo/pay?pay_type=2&shop_id=${shop.entity_id}">升级</a>
+                % endif
+
+            </div>
+            <p class="card-text ">到期时间：
+                <span class="text-danger">
+                    % if not shop.expired_days:
+                    <i class="bi bi-clock"></i>
+                    ${shop.vip_expired_at.strftime('%Y-%m-%d %H:%M')}
+                    % else:
+                    已过期
+                    % endif
+                </span> 
+                % if shop.vip_type != 0:
+                <a href="/my/pay?pay_type=1&shop_id=${shop.entity_id}">续费</a>
+                % endif
+            </p>
+            
+             <a class="btn btn-sm btn-warning" href="/shop/${shop.entity_id}/console/#!/" role="button">选择管理</a>
+           
+          </div>
+        </div>
+    </div>
+        % endfor
+    </div>
+    % endif
+</div>
+</div>
+</div>
+</%block>

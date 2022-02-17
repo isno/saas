@@ -1,0 +1,38 @@
+<div class="pro-edit-tagshow clearfix">
+  <you-btn type="{{ btnnameUniq ? 'down' : 'default' }}" class="{{ btnnameUniq ? 'tag-uniq-down' : '' }}" text="{{ data.btnname }}" ng-show="!bEmpty && bShowBtn" title="{{ data.btnname }}" ng-click="fShow($event);"></you-btn>
+  <you-btn type="primary" text="{{ data.btnname }}" ng-click="fShow($event);" ng-show="bEmpty && bShowBtn"></you-btn>
+  <i class="ico ico-add-1" ng-show="data.addPicBtn" title="{{ data.btnname }}" ng-click="fShow($event);"></i>
+  <i class="ico ico-add-1" ng-show="data.addPicBtnBig" title="{{ data.btnname }}" ng-click="fShow($event);"></i>
+  <span ng-show="data.addTextBtn" ng-click="fShow($event);">
+    <i class="ico ico-add-3" title="{{ data.btnname }}" ></i> 新增商品属性
+  </span>
+  <div class="tag-select" ng-style="listStyle" ng-hide="btnnameUniq">
+    <div class="tag-select-inner">
+      <span class="{{ itemclass }}" ng-style="impactStyle" ng-repeat="item in active" title="{{HTMLDECODE(item.name || item.desc || item.title) }}">{{ HTMLDECODE(item.name || item.desc || item.title) }}
+        <a class="tag-select-selected-tag-a" href="javascript:void(0);" ng-click="fDel($index)" ng-hide="isUniq"><span class="ico ico-select-remove"></span></a><span ng-hide="forbiddenDel">
+        <a ng-show="isUniq" title="删除" href="javascript:void(0);" ng-click="fDelUniq($index)"><span class="ico ico-delete"></span></a>
+      </span>
+      </span><span class="tag-select-selected-tag-btm">{{ placeholder }}</span></div>
+  </div>
+  <div ng-click="stopProp($event)" class="tag-select-box transition-fast"><span class="ico ico-box-arrow {{ arrowDownStyle }}" ng-style="arrowStyle"></span>
+    <div class="tag-select-box-header">
+      <div class="tag-select-box-header-search-add" ng-hide="data.hideSearch">
+        <input type="text" class="input" ng-model="searchTxt" ng-style="{width : searchinput}" ng-change="fTextChange();" placeholder="{{ inputplaceholder }}" maxlength="{{ inputMaxLength }}" you-validation="maxlength({{ inputMaxLength }})" you-validation-encodehtml="true" />
+        <button class="btn btn-default" ng-hide="isSearchingMode" ng-click="fCreate();">创建</button>
+      </div>
+    </div>
+    <div class="tag-select-box-body">
+      <div ng-repeat="i in allData" ng-click="fClick($index)" class="tag-select-box-item {{i.classname}}"><span class="ico ico-select-add"></span><span ng-hide="forbiddenDel" class="ico ico-select-delete"></span><span class="ico ico-loading ico-loading-default-small"></span><span class="name" title="{{HTMLDECODE(i.name || i.desc || i.title)}}"><span class="text-muted" ng-if="i.nameprefix">{{ i.nameprefix }}</span>{{HTMLDECODE(i.name || i.desc || i.title)}}</span><span class="suffix" ng-if="i.suffix">{{ i.suffix }}</span></div>
+      <div class="tag-select-box-loading" ng-show="showTips" style="height:240px;padding-top:30px"><span class="ico ico-loading" ng-show="isSearching"></span>{{tips[0]}}
+        <br/>{{tips[1]}}
+        <div ng-click="noResultExtHTMLClick()" ng-show="noResultExtHTML" ng-bind-html="noResultExtHTML"></div>
+      </div>
+    </div>
+    <div class="tag-select-box-footer" ng-hide="data.hideFooter">
+      <div class="tag-select-box-footer-left">
+        <you-btn ng-show="showmanager" ng-click="popManager();" type="simple-manager" title="管理{{ cnname }}"></you-btn>
+      </div>
+    </div>
+    <div ng-show="data.hideFooter" style="height:18px;"></div>
+  </div>
+</div>
